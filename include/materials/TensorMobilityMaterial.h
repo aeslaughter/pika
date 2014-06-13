@@ -62,10 +62,6 @@ private:
   MaterialProperty<Real> & _M_parallel;
   MaterialProperty<Real> & _M_perpendicular;
   MaterialProperty<RealTensorValue> & _M_tensor;
-
-
-
-
 };
 
 #endif //TENSORMOBILITYMATERIAL_H

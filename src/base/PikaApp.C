@@ -16,6 +16,7 @@
 #include "IceProperties.h"
 #include "AirProperties.h"
 #include "TensorMobilityMaterial.h"
+#include "ModelAMaterial.h"
 
 // Kernels
 #include "PikaTimeDerivative.h"
@@ -81,6 +82,7 @@ PikaApp::registerObjects(Factory & factory)
   registerMaterial(IceProperties);
   registerMaterial(AirProperties);
   registerMaterial(TensorMobilityMaterial);
+  registerMaterial(ModelAMaterial);
 
   // Kernels
   registerKernel(PikaTimeDerivative);
