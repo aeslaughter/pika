@@ -26,6 +26,7 @@
 #include "MassTransportSourceMMS.h"
 #include "HeatEquationSourceMMS.h"
 #include "MaterialUserForcingFunction.h"
+#include "ModelAKernel.h"
 
 // AuxKernels
 #include "ErrorFunctionAux.h"
@@ -92,6 +93,7 @@ PikaApp::registerObjects(Factory & factory)
   registerKernel(MassTransportSourceMMS);
   registerKernel(HeatEquationSourceMMS);
   registerKernel(MaterialUserForcingFunction);
+  registerKernel(ModelAKernel);
 
   // InitialConditions
   registerInitialCondition(ChemicalPotentialIC);
