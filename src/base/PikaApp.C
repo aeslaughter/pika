@@ -7,6 +7,9 @@
 #include "PhaseFieldApp.h"
 #include "HeatConductionApp.h"
 
+// Mesh
+#include "PikaMesh.h"
+
 // UserObjects
 #include "PropertyUserObject.h"
 
@@ -37,6 +40,7 @@
 // InitialConditions
 #include "ChemicalPotentialIC.h"
 #include "KaempferAnalyticPhaseIC.h"
+#include "PikaBinaryIC.h"
 
 // Actions
 #include "PikaMaterialAction.h"
@@ -81,6 +85,9 @@ PikaApp::registerApps()
 void
 PikaApp::registerObjects(Factory & factory)
 {
+  // Mesh
+  registerMesh(PikaMesh);
+
   // UserObjects
   registerUserObject(PropertyUserObject);
 
@@ -108,6 +115,7 @@ PikaApp::registerObjects(Factory & factory)
   // InitialConditions
   registerInitialCondition(ChemicalPotentialIC);
   registerInitialCondition(KaempferAnalyticPhaseIC);
+  registerInitialCondition(PikaBinaryIC);
 
   // AuxKernels
   registerAux(ErrorFunctionAux);
