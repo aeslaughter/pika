@@ -1,9 +1,9 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 340
-  ny = 340
-  uniform_refine = 0
+  nx = 85
+  ny = 85
+  uniform_refine = 2
 []
 
 [Variables]
@@ -24,7 +24,7 @@
   [./bmp]
     variable = u
     type = PikaBinaryIC
-    file = input.bmp
+    file = input_8bit.bmp
   [../]
 []
 
