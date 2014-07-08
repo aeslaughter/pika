@@ -1,4 +1,7 @@
 
+#include "libmesh/equation_systems.h"
+#include "libmesh/explicit_system.h"
+
 // Pika includes
 #include "PikaBinaryIC.h"
 #include "PropertyUserObject.h"
@@ -21,42 +24,86 @@ InputParameters validParams<PikaBinaryIC>()
 
 PikaBinaryIC::PikaBinaryIC(const std::string & name, InputParameters parameters) :
     InitialCondition(name, parameters),
-    _file_name(getParam<MeshFileName>("file"))
+    _file_name(getParam<MeshFileName>("file")),
+    _image_mesh_ptr(NULL),
+    _image_es_ptr(NULL),
+    _image_mesh_function(NULL)
 {
-
-
-
-
-
-
-
-
-
 }
 
-Real
-PikaBinaryIC::value(const Point & /*p*/)
+PikaBinaryIC::~PikaBinaryIC()
 {
-  return _centroid_map[_current_elem->id()];
+  delete _image_mesh_ptr;
+  delete _image_es_ptr;
+  delete _image_mesh_function;
+}
+
+
+Real
+PikaBinaryIC::value(const Point & p)
+{
+  return (*_image_mesh_function)(p);
+
+  //return _centroid_map[_current_elem->id()];
 }
 
 void
 PikaBinaryIC::initialSetup()
 {
   // Read the image
+  vtkSmartPointer<vtkPNGReader> reader = vtkSmartPointer<vtkPNGReader>::New();
+  reader->SetFileName(_file_name.c_str());
+  reader->Update();
+  vtkImageData * data = reader->GetOutput();
+  int* dims = data->GetDimensions();
 
   // create mesh from dims read from file (see Generated Mesh)
+
+  _image_mesh_ptr = new Mesh(_communicator);
+
+  MeshTools::Generation::build_square(*_image_mesh_ptr,
+                                      dims[0], dims[1],
+                                      0, 1, // TODO: add params for xmax,ymax,zmax...
+                                      0, 1,
+                                      QUAD4);
+
+
+
   // create a EquationSystems
+  _image_es_ptr = new EquationSystems(*_image_mesh_ptr);
+
   // add ExplicitSystem
+  ExplicitSystem & image_sys = _image_es_ptr->add_system<ExplicitSystem>("_pika_mesh_system");
+
   // add constant monomial variable
+  image_sys.add_variable("_pika_mesh_variable", FEType(CONSTANT, MONOMIAL));
+
+
+  AutoPtr<NumericVector<Number> > serialized_solution = NumericVector<Number>::build(_communicator);
+  serialized_solution->init(_image_mesh_ptr->n_elem(), false, SERIAL);
+
+
+  readImage(*serialized_solution);
+
+
+  _image_es_ptr->init();
+
+
+  _image_es_ptr->print_info(std::cout);
+
+
+  std::cout << "n_dofs = " << image_sys.n_dofs() << std::endl;
+
+
   // create mesh function
+  _image_mesh_function = new MeshFunction(*_image_es_ptr, *serialized_solution, image_sys.get_dof_map(), 0);
 
 
-  readImage(_file_name);
+//  readImage(_file_name);
 }
 
 void
-PikaBinaryIC::readImage(std::string file)
+PikaBinaryIC::readImage(NumericVector<Number> & solution)
 {
 
   MooseMesh & mesh = _fe_problem.mesh();
@@ -93,12 +140,13 @@ PikaBinaryIC::readImage(std::string file)
 //  vtkSmartPointer<vtkBMPReader> reader = vtkSmartPointer<vtkBMPReader>::New();
 
 
-//  vtkSmartPointer<vtkPNGReader> reader = vtkSmartPointer<vtkPNGReader>::New();
-//  reader->SetFileName(file.c_str());
-//  reader->Update();
+  vtkSmartPointer<vtkPNGReader> reader = vtkSmartPointer<vtkPNGReader>::New();
+  reader->SetFileName(_file_name.c_str());
+  reader->Update();
+  vtkImageData * data = reader->GetOutput();
 
-    PikaImageUtils::PikaImage image(getParam<FileName>("image"));
-    vtkImageData * data = image.data();
+  //  PikaImageUtils::PikaImage image(getParam<FileName>("image"));
+  //  vtkImageData * data = image.data();
 
   int* dims = data->GetDimensions();
   std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2] << std::endl;
@@ -113,6 +161,7 @@ std::cout << "Type: " << data->GetScalarTypeAsString() << std::endl;
 
   Point centroid;
 
+  unsigned int idx;
 
   for (int z = 0; z < dims[2]; z++)
     for (int y = 0; y < dims[1]; y++)
@@ -121,7 +170,8 @@ std::cout << "Type: " << data->GetScalarTypeAsString() << std::endl;
       {
         double pixel = data->GetScalarComponentAsDouble(x,y,z,0);
 
-std::cout << "pixel(" << x << ", " << y <<  ") = " << pixel << std::endl;
+
+        //std::cout << "pixel(" << x << ", " << y <<  ") = " << pixel << std::endl;
 
 //std::cout << "pixel(" << x << ", " << y <<  ") = " << pixel[0] << " " << pixel[1] << " " << pixel[2] << std::endl;
 
@@ -131,6 +181,10 @@ std::cout << "pixel(" << x << ", " << y <<  ") = " << pixel << std::endl;
         int value = 1;
         if (pixel > 20) // add threshold param (auto to 10% the min???)
           value = -1;
+
+        solution.set(idx, pixel);
+        idx++;
+
 
         const Elem * elem = pl(centroid);
         if (elem == NULL)

@@ -1,6 +1,13 @@
 #ifndef PIKABINARYIC_H
 #define PIKABINARYIC_H
 
+#include "libmesh/mesh.h"
+#include "libmesh/mesh_generation.h"
+#include "libmesh/mesh_function.h"
+#include "libmesh/numeric_vector.h"
+
+
+
 // MOOSE includes
 #include "InitialCondition.h"
 
@@ -16,7 +23,7 @@ class PikaBinaryIC :
 public:
   PikaBinaryIC(const std::string & name, InputParameters parameters);
 
-  virtual ~PikaBinaryIC(){};
+  virtual ~PikaBinaryIC();
 
   virtual void initialSetup();
 
@@ -30,11 +37,18 @@ protected:
   virtual Real value(const Point & p);
 
 private:
-  void readImage(std::string file);
+  void readImage(NumericVector<Number> & solution);
 
   std::map<dof_id_type, double> _centroid_map;
 
   std::string _file_name;
+
+  Mesh * _image_mesh_ptr;
+
+  EquationSystems * _image_es_ptr;
+
+  MeshFunction * _image_mesh_function;
+
 };
 
 #endif // PIKABINARYIC_H
