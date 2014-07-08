@@ -1,13 +1,13 @@
+
+// Pika includes
 #include "PikaBinaryIC.h"
 #include "PropertyUserObject.h"
+#include "PikaImageUtils.h"
 
 #include <stdio.h>
 
 
 // VTK includes
-#include "vtkSmartPointer.h"
-#include "vtkBMPReader.h"
-#include "vtkPNGReader.h"
 #include "vtkImageData.h"
 
 
@@ -46,6 +46,7 @@ PikaBinaryIC::readImage(std::string file)
 
   const PointLocatorBase & pl = mesh.getMesh().point_locator();
 
+
   Real r = std::pow(2., (int)mesh.uniformRefineLevel());
 
   int nx = mesh.getParam<int>("nx");
@@ -58,7 +59,7 @@ PikaBinaryIC::readImage(std::string file)
   voxel[1] = mesh.dimensionWidth(1) / (ny * r);
   voxel[2] = mesh.dimensionWidth(2) / (nz * r);
 
-
+/*
   std::cout << "nx = " << nx*r << std::endl;
   std::cout << "mesh.dimensionWidth(0) = " << mesh.dimensionWidth(0) << std::endl;
   std::cout << "mesh.dimensionWidth(1) = " << mesh.dimensionWidth(1) << std::endl;
@@ -67,19 +68,20 @@ PikaBinaryIC::readImage(std::string file)
 
   std::cout << "voxel[0] = " << voxel[0] << std::endl;
   std::cout << "voxel[1] = " << voxel[1] << std::endl;
-
+*/
 
 
 
   // Read VTK data
 //  vtkSmartPointer<vtkBMPReader> reader = vtkSmartPointer<vtkBMPReader>::New();
 
-  vtkSmartPointer<vtkPNGReader> reader = vtkSmartPointer<vtkPNGReader>::New();
-  reader->SetFileName(file.c_str());
-  reader->Update();
+
+//  vtkSmartPointer<vtkPNGReader> reader = vtkSmartPointer<vtkPNGReader>::New();
+//  reader->SetFileName(file.c_str());
+//  reader->Update();
 
 
-  vtkImageData * data = reader->GetOutput();
+  vtkImageData * data = PikaImageUtils::readImage(file); //reader->GetOutput();
 
   int* dims = data->GetDimensions();
   std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2] << std::endl;

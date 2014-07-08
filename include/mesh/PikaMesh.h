@@ -30,11 +30,10 @@ InputParameters validParams<PikaMesh>();
 class PikaMesh : public GeneratedMesh
 {
 public:
-
-
   PikaMesh(const std::string & name, InputParameters parameters);
   PikaMesh(const GeneratedMesh & other_mesh);
   virtual ~PikaMesh();
+
 
 };
 
