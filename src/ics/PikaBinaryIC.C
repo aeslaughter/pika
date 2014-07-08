@@ -22,8 +22,16 @@ InputParameters validParams<PikaBinaryIC>()
 PikaBinaryIC::PikaBinaryIC(const std::string & name, InputParameters parameters) :
     InitialCondition(name, parameters),
     _file_name(getParam<MeshFileName>("file"))
-
 {
+
+
+
+
+
+
+
+
+
 }
 
 Real
@@ -35,6 +43,15 @@ PikaBinaryIC::value(const Point & /*p*/)
 void
 PikaBinaryIC::initialSetup()
 {
+  // Read the image
+
+  // create mesh from dims read from file (see Generated Mesh)
+  // create a EquationSystems
+  // add ExplicitSystem
+  // add constant monomial variable
+  // create mesh function
+
+
   readImage(_file_name);
 }
 
@@ -80,8 +97,8 @@ PikaBinaryIC::readImage(std::string file)
 //  reader->SetFileName(file.c_str());
 //  reader->Update();
 
-
-  vtkImageData * data = PikaImageUtils::readImage(file); //reader->GetOutput();
+    PikaImageUtils::PikaImage image(getParam<FileName>("image"));
+    vtkImageData * data = image.data();
 
   int* dims = data->GetDimensions();
   std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2] << std::endl;
@@ -92,7 +109,7 @@ std::cout << "Type: " << data->GetScalarTypeAsString() << std::endl;
 
 
 
-  std::vector<std::vector<unsigned int> > img(dims[1], std::vector<unsigned int>(dims[0], 0));
+// std::vector<std::vector<unsigned int> > img(dims[1], std::vector<unsigned int>(dims[0], 0));
 
   Point centroid;
 

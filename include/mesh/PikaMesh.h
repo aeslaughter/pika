@@ -18,7 +18,7 @@
 // MOOSE includes
 #include "GeneratedMesh.h"
 
-// Forward declerations
+// Forward declarations
 class PikaMesh;
 
 template<>
@@ -31,9 +31,12 @@ class PikaMesh : public GeneratedMesh
 {
 public:
   PikaMesh(const std::string & name, InputParameters parameters);
-  PikaMesh(const GeneratedMesh & other_mesh);
+
   virtual ~PikaMesh();
 
+
+
+  int multiplicity(int value, int level=0);
 
 };
 

@@ -1,9 +1,10 @@
 [Mesh]
-  type = GeneratedMesh
+  type = PikaMesh
+  image = input_8bit_80x80.png
   dim = 2
-  nx = 85
-  ny = 85
-  uniform_refine = 2
+  width = 0.005
+  height = 0.005
+  variable = u
 []
 
 [Variables]

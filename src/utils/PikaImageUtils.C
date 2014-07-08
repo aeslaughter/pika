@@ -5,17 +5,30 @@
 // Moose includes
 #include "MooseError.h"
 
-vtkImageData *
-PikaImageUtils::readImage(std::string file_name)
+namespace PikaImageUtils
+{
+
+
+PikaImage::PikaImage(const std::string & file_name)
 {
   if (MooseUtils::hasExtension(file_name, "png"))
-    return readImageHelper<vtkPNGReader>(file_name);
 
-  else if (MooseUtils::hasExtension(file_name, "bmp"))
-    return readImageHelper<vtkBMPReader>(file_name);
+    _reader = vtkSmartPointer<vtkImageReader2>::Take(vtkPNGReader::SafeDownCast(readImageHelper<vtkPNGReader>(file_name)));
+
+
+  //else if (MooseUtils::hasExtension(file_name, "bmp"))
+  //  _reader = readImageHelper<vtkBMPReader>(file_name);
 
   else
-    mooseError("Un-able to read the image " << file_name);
+    mooseError("Unable to read the image " << file_name);
 
-  //return NULL;
 }
+
+vtkImageData *
+PikaImage::data()
+{
+  return _reader->GetOutput();
+
+}
+
+} // namespace PikaImageUtils

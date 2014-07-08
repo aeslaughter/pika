@@ -1,6 +1,7 @@
 
 // VTK includes
 #include "vtkSmartPointer.h"
+#include "vtkImageReader2.h"
 #include "vtkBMPReader.h"
 #include "vtkPNGReader.h"
 #include "vtkImageData.h"
@@ -11,15 +12,35 @@
 namespace PikaImageUtils
 {
 
+class PikaImage
+{
+public:
+  PikaImage(const std::string & file_name);
+
+  vtkImageData * data();
+
+private:
+
+  vtkSmartPointer<vtkImageReader2> _reader;
+
+  //vtkImageData * _data;
+
+  template<typename T>
+  vtkSmartPointer<T> readImageHelper(std::string file_name);
+
+};
+
+
 template<typename T>
-vtkImageData * readImageHelper(std::string file_name)
+vtkSmartPointer<T>
+PikaImage::readImageHelper(std::string file_name)
 {
   vtkSmartPointer<T> reader = vtkSmartPointer<T>::New();
   reader->SetFileName(file_name.c_str());
   reader->Update();
-  return reader->GetOutput();
+//  _data = reader->GetOutput();
+  return reader;
 }
 
-vtkImageData * readImage(std::string file_name);
 
 } // namespace PikaImageUitls
