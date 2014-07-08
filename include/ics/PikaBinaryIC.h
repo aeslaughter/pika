@@ -37,7 +37,7 @@ protected:
   virtual Real value(const Point & p);
 
 private:
-  void readImage(NumericVector<Number> & solution);
+  void readImage();
 
   std::map<dof_id_type, double> _centroid_map;
 

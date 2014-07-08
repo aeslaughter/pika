@@ -78,15 +78,15 @@ PikaBinaryIC::initialSetup()
   // add constant monomial variable
   image_sys.add_variable("_pika_mesh_variable", FEType(CONSTANT, MONOMIAL));
 
-
-  AutoPtr<NumericVector<Number> > serialized_solution = NumericVector<Number>::build(_communicator);
-  serialized_solution->init(_image_mesh_ptr->n_elem(), false, SERIAL);
-
-
-  readImage(*serialized_solution);
-
-
   _image_es_ptr->init();
+
+
+  // Need to figure out population of the local_solution
+  //  In readImage the idx == elem->id(), so this could be used to only update values on the local solution
+
+  readImage();
+
+
 
 
   _image_es_ptr->print_info(std::cout);
@@ -96,15 +96,21 @@ PikaBinaryIC::initialSetup()
 
 
   // create mesh function
-  _image_mesh_function = new MeshFunction(*_image_es_ptr, *serialized_solution, image_sys.get_dof_map(), 0);
+  AutoPtr<NumericVector<Number> > serialized_solution = NumericVector<Number>::build(_communicator);
+  serialized_solution->init(image_sys.n_dofs(), false, SERIAL);
+  image_sys.solution->localize(*serialized_solution);
 
+
+  _image_mesh_function = new MeshFunction(*_image_es_ptr, *serialized_solution, image_sys.get_dof_map(), 0);
+  _image_mesh_function->init();
 
 //  readImage(_file_name);
 }
 
 void
-PikaBinaryIC::readImage(NumericVector<Number> & solution)
+PikaBinaryIC::readImage()
 {
+  ExplicitSystem & image_sys = _image_es_ptr->get_system<ExplicitSystem>("_pika_mesh_system");
 
   MooseMesh & mesh = _fe_problem.mesh();
 
@@ -179,10 +185,11 @@ std::cout << "Type: " << data->GetScalarTypeAsString() << std::endl;
         centroid(1) = y*voxel[1] + voxel[1]/2;
 
         int value = 1;
-        if (pixel > 20) // add threshold param (auto to 10% the min???)
+        if (pixel > 20) // add threshold param (auto to 2 * min???)
           value = -1;
 
-        solution.set(idx, pixel);
+        // This needs to be fixed to work in parallel
+//        image_sys.current_local_solution->set(idx, pixel);
         idx++;
 
 
