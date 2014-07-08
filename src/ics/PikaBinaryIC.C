@@ -7,6 +7,7 @@
 // VTK includes
 #include "vtkSmartPointer.h"
 #include "vtkBMPReader.h"
+#include "vtkPNGReader.h"
 #include "vtkImageData.h"
 
 
@@ -71,7 +72,9 @@ PikaBinaryIC::readImage(std::string file)
 
 
   // Read VTK data
-  vtkSmartPointer<vtkBMPReader> reader = vtkSmartPointer<vtkBMPReader>::New();
+//  vtkSmartPointer<vtkBMPReader> reader = vtkSmartPointer<vtkBMPReader>::New();
+
+  vtkSmartPointer<vtkPNGReader> reader = vtkSmartPointer<vtkPNGReader>::New();
   reader->SetFileName(file.c_str());
   reader->Update();
 
@@ -83,6 +86,7 @@ PikaBinaryIC::readImage(std::string file)
 
   std::cout << "Number of points: " << data->GetNumberOfPoints() << std::endl;
   std::cout << "Number of cells: " << data->GetNumberOfCells() << std::endl;
+std::cout << "Type: " << data->GetScalarTypeAsString() << std::endl;
 
 
 
@@ -96,13 +100,17 @@ PikaBinaryIC::readImage(std::string file)
     {
       for (int x = 0; x < dims[0]; x++)
       {
-        unsigned int* pixel = static_cast<unsigned int*>(data->GetScalarPointer(x,y,z));
+        double pixel = data->GetScalarComponentAsDouble(x,y,z,0);
+
+std::cout << "pixel(" << x << ", " << y <<  ") = " << pixel << std::endl;
+
+//std::cout << "pixel(" << x << ", " << y <<  ") = " << pixel[0] << " " << pixel[1] << " " << pixel[2] << std::endl;
 
         centroid(0) = x*voxel[0] + voxel[0]/2;
         centroid(1) = y*voxel[1] + voxel[1]/2;
 
         int value = 1;
-        if (pixel[0] > 0)
+        if (pixel > 20) // add threshold param (auto to 10% the min???)
           value = -1;
 
         const Elem * elem = pl(centroid);

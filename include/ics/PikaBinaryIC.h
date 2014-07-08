@@ -32,7 +32,7 @@ protected:
 private:
   void readImage(std::string file);
 
-  std::map<dof_id_type, int> _centroid_map;
+  std::map<dof_id_type, double> _centroid_map;
 
   std::string _file_name;
 };

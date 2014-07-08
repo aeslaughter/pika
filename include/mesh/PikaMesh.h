@@ -15,32 +15,27 @@
 #ifndef PIKAMESH_H
 #define PIKAMESH_H
 
-#include "MooseMesh.h"
-#include "libmesh/exodusII_io.h"
+// MOOSE includes
+#include "GeneratedMesh.h"
 
-//forward declaration
+// Forward declerations
 class PikaMesh;
 
 template<>
 InputParameters validParams<PikaMesh>();
 
-class PikaMesh : public MooseMesh
+/**
+ *
+ */
+class PikaMesh : public GeneratedMesh
 {
 public:
+
+
   PikaMesh(const std::string & name, InputParameters parameters);
-  PikaMesh(const PikaMesh & other_mesh);
+  PikaMesh(const GeneratedMesh & other_mesh);
   virtual ~PikaMesh();
-
-  virtual void buildMesh();
-
-  virtual MooseMesh & clone() const;
-
-protected:
-  /// the file_name from whence this mesh came
-  std::string _file_name;
-
-  std::vector<Real> readImage(std::string file);
 
 };
 
-#endif // PIKAMESH_H
+#endif //PIKAMESH_H
