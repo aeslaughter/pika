@@ -188,8 +188,8 @@ std::cout << "Type: " << data->GetScalarTypeAsString() << std::endl;
         if (pixel > 20) // add threshold param (auto to 2 * min???)
           value = -1;
 
-        // This needs to be fixed to work in parallel
-//        image_sys.current_local_solution->set(idx, pixel);
+        // elem->id() == idx, this could be use to check if the value is off-processes
+        image_sys.solution->set(idx, pixel);
         idx++;
 
 
