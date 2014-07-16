@@ -40,7 +40,9 @@
 // InitialConditions
 #include "ChemicalPotentialIC.h"
 #include "KaempferAnalyticPhaseIC.h"
-#include "PikaBinaryIC.h"
+
+// Functions
+#include "BinaryImageFunction.h"
 
 // Actions
 #include "PikaMaterialAction.h"
@@ -115,12 +117,14 @@ PikaApp::registerObjects(Factory & factory)
   // InitialConditions
   registerInitialCondition(ChemicalPotentialIC);
   registerInitialCondition(KaempferAnalyticPhaseIC);
-  registerInitialCondition(PikaBinaryIC);
+
+  // Functions
+  registerFunction(BinaryImageFunction);
 
   // AuxKernels
   registerAux(ErrorFunctionAux);
 
-  //outputs
+  // Outputs
   registerOutput(PikaDebug);
 }
 

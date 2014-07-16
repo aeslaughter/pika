@@ -35,11 +35,18 @@
   num_steps = 1
 []
 
-[ICs]
+[Functions]
   [./bmp]
-    variable = u
-    type = PikaBinaryIC
+    type = BinaryImageFunction
     file = input_8bit_80x80.png
+  [../]
+[]
+
+[ICs]
+  [./u_ic]
+    type = FunctionIC
+    function = bmp
+    variable = u
   [../]
 []
 
@@ -52,4 +59,3 @@
   phi = u
   temperature = 270
 []
-
