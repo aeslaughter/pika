@@ -27,7 +27,7 @@
 []
 
 [AuxKernels]
-  [./stress_aux]
+  [./stress_yy_aux]
     type = RankTwoAux
     rank_two_tensor = stress
     index_i = 1
@@ -44,7 +44,7 @@
   [./gravity_y]
     type = Gravity
     variable = disp_y
-    value = -9.81
+    value = -9000
   [../]
 []
 
@@ -72,7 +72,7 @@
 [Materials]
   [./elasticity_tensor]
     type = ComputeIsotropicElasticityTensor
-    youngs_modulus = 200e6
+    youngs_modulus = 200e9
     poissons_ratio = 0.3
   [../]
   [./strain]
@@ -89,6 +89,14 @@
     block = 0
     prop_names = density
     prop_values = 8050
+  [../]
+[]
+
+[Postprocessors]
+  [./avg_stress_yy]
+    type = SideAverageValue
+    variable = stress_yy
+    boundary = bottom
   [../]
 []
 
