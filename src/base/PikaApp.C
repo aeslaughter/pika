@@ -31,6 +31,7 @@
 #include "PikaMaterial.h"
 #include "TensorMobilityMaterial.h"
 #include "IbexSnowMaterial.h"
+#include "ComputeIsotropicViscousStress.h"
 
 // Kernels
 #include "PikaTimeDerivative.h"
@@ -119,6 +120,7 @@ PikaApp::registerObjects(Factory & factory)
   registerMaterial(PikaMaterial);
   registerMaterial(TensorMobilityMaterial);
   registerMaterial(IbexSnowMaterial);
+  registerMaterial(ComputeIsotropicViscousStress);
 
   // Kernels
   registerKernel(PikaTimeDerivative);
