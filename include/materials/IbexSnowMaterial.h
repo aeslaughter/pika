@@ -37,7 +37,7 @@ public:
 protected:
   void computeQpProperties();
 
-private:
+  Real poissonsRatioBar(const Real & density, const Real & temperature);
 
   const VariableValue & _temperature;
 
@@ -56,6 +56,18 @@ private:
 
   bool _use_conductivity_variable;
   const VariableValue & _conductivity_variable;
+
+  const MooseEnum & _viscosity_model;
+  Real _eta_s;
+
+  MaterialProperty<Real> & _viscosity;
+  MaterialProperty<Real> & _poissons_ratio;
+
+  const Real & _density_reference;
+  const Real & _poissons_ratio_max;
+  const Real & _density_reference_coefficient;
+  const Real & _temperature_reference_coefficient;
+
 
 };
 

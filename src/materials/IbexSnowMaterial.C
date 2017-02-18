@@ -14,6 +14,9 @@
 template<>
 InputParameters validParams<IbexSnowMaterial>()
 {
+  MooseEnum model("Teufelsbasur2011=0 Kojima1974=1", "Teufelsbasur2011");
+
+
   InputParameters params = validParams<Material>();
   params.addRequiredCoupledVar("temperature", "The snow temperature variable to couple");
   params.addCoupledVar("density", 200, "Density of snow.");
@@ -21,6 +24,14 @@ InputParameters validParams<IbexSnowMaterial>()
   params.addParam<Real>("specific_heat", "Specific heat of snow; if omitted it is estimated based on temperature");
 
   params.addCoupledVar("thermal_conductivity_name", "Name of a variable to utilize for thermal conductivity; this superceeds all other values");
+
+  params.addParam<MooseEnum>("viscosity_model", model, "The viscosity model to utilze.");
+
+  params.addRangeCheckedParam<Real>("poissons_ratio_max", 0.49, "poissons_ratio_max<0.5 & poissons_ratio_max>-1", "The maximum allowable poissons ratio to compute.");
+  params.addRangeCheckedParam<Real>("density_reference", 300, "density_reference>0 & density_reference<900", "The reference density for computing poissons ratio.");
+  params.addParam<Real>("temperature_reference_coefficient", 15., "The linear temperature coefficient ($r_{T}$) for computing poissons ratio.");
+  params.addParam<Real>("density_reference_coefficient", 15., "The linear density coefficient ($r_{\\rho}$) for computing poissons ratio.");
+
   return params;
 }
 
@@ -36,7 +47,14 @@ IbexSnowMaterial::IbexSnowMaterial(const InputParameters & parameters) :
     _conductivity(declareProperty<Real>("thermal_conductivity")),
     _specific_heat(declareProperty<Real>("specific_heat")),
     _use_conductivity_variable(isParamValid("thermal_conductivity_name")),
-    _conductivity_variable(_use_conductivity_variable ? coupledValue("thermal_conductivity_name") : _zero)
+    _conductivity_variable(_use_conductivity_variable ? coupledValue("thermal_conductivity_name") : _zero),
+    _viscosity_model(getParam<MooseEnum>("viscosity_model")),
+    _viscosity(declareProperty<Real>("viscosity")),
+    _poissons_ratio(declareProperty<Real>("poissons_ratio")),
+    _density_reference(getParam<Real>("density_reference")),
+    _poissons_ratio_max(getParam<Real>("poissons_ratio_max")),
+    _density_reference_coefficient(getParam<Real>("density_reference_coefficient")),
+    _temperature_reference_coefficient(getParam<Real>("temperature_reference_coefficient"))
 {
 }
 
@@ -56,4 +74,33 @@ IbexSnowMaterial::computeQpProperties()
     _specific_heat[_qp] = 1000 * (2.115 + 0.00779 * (273.15 - _temperature[_qp]));
   else
     _specific_heat[_qp] = _input_specific_heat;
+
+
+  switch (_viscosity_model)
+  {
+  case 0: // Teufelsbasur2011
+    _eta_s = -0.05 * std::pow(_density[_qp], -0.0317 * _temperature[_qp] + 4.4) * (10E-4 * exp(0.018 * _density[_qp]) + 1);
+    break;
+  case 1: // Kojima1974
+    _eta_s = 8.64 * 10E6 * exp(0.021 * _density[_qp]);
+    break;
+  }
+
+  Real v_p_T = poissonsRatioBar(_density[_qp], _temperature[_qp]);
+  Real v_0_T = poissonsRatioBar(0.0, _temperature[_qp]);
+  Real v_1000_T = poissonsRatioBar(1000., _temperature[_qp]);
+
+  _poissons_ratio[_qp] = _poissons_ratio_max * (v_p_T - v_0_T) / (v_1000_T - v_0_T);
+
+  _viscosity[_qp] = _eta_s * (2 * _poissons_ratio[_qp] - 1) / (2 * (_poissons_ratio[_qp] - 1));
+
+
+
+}
+
+Real
+IbexSnowMaterial::poissonsRatioBar(const Real & density, const Real & temperature)
+{
+  Real rho_p = _density_reference - _temperature_reference_coefficient * temperature;
+  return std::atan((density - rho_p) / _density_reference_coefficient);
 }
