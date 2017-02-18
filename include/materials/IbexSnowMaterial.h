@@ -43,7 +43,7 @@ private:
 
 
 
-  const Real _input_density;
+  const VariableValue & _input_density;
 
   bool _compute_conductivity;
 

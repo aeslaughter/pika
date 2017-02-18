@@ -16,7 +16,7 @@ InputParameters validParams<IbexSnowMaterial>()
 {
   InputParameters params = validParams<Material>();
   params.addRequiredCoupledVar("temperature", "The snow temperature variable to couple");
-  params.addParam<Real>("snow_density", 200, "Density of snow [kg/m^3]");
+  params.addCoupledVar("density", 200, "Density of snow.");
   params.addParam<Real>("thermal_conductivity", "Thermal conductivity of snow; if omitted it is estimated based on density");
   params.addParam<Real>("specific_heat", "Specific heat of snow; if omitted it is estimated based on temperature");
 
@@ -27,7 +27,7 @@ InputParameters validParams<IbexSnowMaterial>()
 IbexSnowMaterial::IbexSnowMaterial(const InputParameters & parameters) :
     Material(parameters),
     _temperature(coupledValue("temperature")),
-    _input_density(getParam<Real>("snow_density")),
+    _input_density(coupledValue("density")),
     _compute_conductivity(!isParamValid("thermal_conductivity")),
     _input_conductivity(_compute_conductivity ? 0 : getParam<Real>("thermal_conductivity")),
     _compute_specific_heat(!isParamValid("specific_heat")),
@@ -43,7 +43,7 @@ IbexSnowMaterial::IbexSnowMaterial(const InputParameters & parameters) :
 void
 IbexSnowMaterial::computeQpProperties()
 {
-  _density[_qp] = _input_density;
+  _density[_qp] = _input_density[_qp];
 
   if (_use_conductivity_variable)
     _conductivity[_qp] = _conductivity_variable[_qp];
