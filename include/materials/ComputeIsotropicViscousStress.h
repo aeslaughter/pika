@@ -29,13 +29,16 @@ public:
 protected:
   virtual void computeQpProperties() override;
 
+  const unsigned int _mesh_dim;
 
   std::vector<MooseVariable *> _deformation_velocities;
 
   MaterialProperty<RankTwoTensor> & _stress;
 
   const MaterialProperty<Real> & _poissons_ratio;
-  const MaterialProperty<Real> & _viscous_coefficient;
+  const MaterialProperty<Real> & _viscosity;
+
+
 
 };
 

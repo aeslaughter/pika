@@ -6,7 +6,7 @@ InputParameters validParams<MassBalanceVelocity>()
   MooseEnum component("x=0 y=1 z=2");
 
   InputParameters params = validParams<Kernel>();
-  params.addParam<MooseEnum>("component", component, "The compoment to operate against.");
+  params.addRequiredParam<MooseEnum>("component", component, "The compoment to operate against.");
   params.addCoupledVar("velocity", "The velocity variable.");
   return params;
 }

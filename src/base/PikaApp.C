@@ -19,7 +19,7 @@
 // Modules
 #include "PhaseFieldApp.h"
 #include "HeatConductionApp.h"
-#include "SolidMechanicsApp.h"
+#include "TensorMechanicsApp.h"
 
 // UserObjects
 #include "PropertyUserObject.h"
@@ -48,6 +48,8 @@
 #include "AntiTrapping.h"
 #include "IbexShortwaveForcingFunction.h"
 #include "PikaHomogenizedKernel.h"
+#include "MassBalanceVelocity.h"
+#include "MomentumStress.h"
 
 // AuxKernels
 #include "ErrorFunctionAux.h"
@@ -87,13 +89,13 @@ PikaApp::PikaApp(InputParameters parameters) :
   Moose::registerObjects(_factory);
   PhaseFieldApp::registerObjects(_factory);
   HeatConductionApp::registerObjects(_factory);
-  SolidMechanicsApp::registerObjects(_factory);
+  TensorMechanicsApp::registerObjects(_factory);
   PikaApp::registerObjects(_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   PhaseFieldApp::associateSyntax(_syntax, _action_factory);
   HeatConductionApp::associateSyntax(_syntax, _action_factory);
-  SolidMechanicsApp::associateSyntax(_syntax, _action_factory);
+  TensorMechanicsApp::associateSyntax(_syntax, _action_factory);
   PikaApp::associateSyntax(_syntax, _action_factory);
 }
 
@@ -137,6 +139,8 @@ PikaApp::registerObjects(Factory & factory)
   registerKernel(AntiTrapping);
   registerKernel(IbexShortwaveForcingFunction);
   registerKernel(PikaHomogenizedKernel);
+  registerKernel(MassBalanceVelocity);
+  registerKernel(MomentumStress);
 
   // InitialConditions
   registerInitialCondition(KaempferAnalyticPhaseIC);

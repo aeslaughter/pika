@@ -101,6 +101,6 @@ IbexSnowMaterial::computeQpProperties()
 Real
 IbexSnowMaterial::poissonsRatioBar(const Real & density, const Real & temperature)
 {
-  Real rho_p = _density_reference - _temperature_reference_coefficient * temperature;
+  Real rho_p = _density_reference - _temperature_reference_coefficient * (273.15 - temperature);
   return std::atan((density - rho_p) / _density_reference_coefficient);
 }
