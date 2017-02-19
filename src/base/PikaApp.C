@@ -48,7 +48,7 @@
 #include "AntiTrapping.h"
 #include "IbexShortwaveForcingFunction.h"
 #include "PikaHomogenizedKernel.h"
-#include "MassBalanceVelocity.h"
+#include "CoupledDiffusion.h"
 #include "MomentumStress.h"
 
 // AuxKernels
@@ -139,7 +139,7 @@ PikaApp::registerObjects(Factory & factory)
   registerKernel(AntiTrapping);
   registerKernel(IbexShortwaveForcingFunction);
   registerKernel(PikaHomogenizedKernel);
-  registerKernel(MassBalanceVelocity);
+  registerKernel(CoupledDiffusion);
   registerKernel(MomentumStress);
 
   // InitialConditions
