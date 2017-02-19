@@ -33,6 +33,7 @@ protected:
 
   std::vector<MooseVariable *> _deformation_velocities;
 
+  MaterialProperty<RankTwoTensor> & _strain_rate;
   MaterialProperty<RankTwoTensor> & _stress;
 
   const MaterialProperty<Real> & _poissons_ratio;

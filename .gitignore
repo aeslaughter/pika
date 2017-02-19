@@ -75,6 +75,7 @@ traceout*.txt
 .ipynb_checkpoints/
 doc/doxygen/html/
 *.#*
+/**/.failed_tests
 
 # Allow files in gold directories
 !/**/gold/*.e

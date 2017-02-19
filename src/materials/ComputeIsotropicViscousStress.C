@@ -33,6 +33,7 @@ ComputeIsotropicViscousStress::ComputeIsotropicViscousStress(const InputParamete
     Material(parameters),
     _mesh_dim(_mesh.dimension()),
     _deformation_velocities(_mesh_dim),
+    _strain_rate(declareProperty<RankTwoTensor>("strain_rate")),
     _stress(declareProperty<RankTwoTensor>(getParam<std::string>("stress"))),
     _poissons_ratio(getMaterialProperty<Real>("poissons_ratio")),
     _viscosity(getMaterialProperty<Real>("viscosity"))
@@ -49,15 +50,14 @@ ComputeIsotropicViscousStress::ComputeIsotropicViscousStress(const InputParamete
 void
 ComputeIsotropicViscousStress::computeQpProperties()
 {
-  RankTwoTensor strain_rate;
   for (unsigned int i = 0; i < _mesh_dim; ++i)
     for (unsigned int j = 0; j < _mesh_dim; ++j)
-      strain_rate(i, j) = 0.5 * (_deformation_velocities[i]->gradSln()[_qp](j) + _deformation_velocities[j]->gradSln()[_qp](i));
+      _strain_rate[_qp](i, j) = 0.5 * (_deformation_velocities[i]->gradSln()[_qp](j) + _deformation_velocities[j]->gradSln()[_qp](i));
 
-  Real lambda = 2 * _poissons_ratio[_qp] * _viscosity[_qp] / (1 - 2 * _poissons_ratio[_qp]);
+  Real lambda = - 2 * _poissons_ratio[_qp] * _viscosity[_qp] / (1 - 2 * _poissons_ratio[_qp]);
 
-  _stress[_qp] = 2 * _viscosity[_qp] * strain_rate;
+  _stress[_qp] = 2 * _viscosity[_qp] * _strain_rate[_qp];
   for (unsigned int i = 0; i < _mesh_dim; ++i)
-    _stress[_qp](i,i) = lambda * strain_rate(i,i);
+    _stress[_qp](i,i) += lambda * _strain_rate[_qp](i,i);
 
 }

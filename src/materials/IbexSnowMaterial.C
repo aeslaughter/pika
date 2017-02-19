@@ -51,6 +51,7 @@ IbexSnowMaterial::IbexSnowMaterial(const InputParameters & parameters) :
     _viscosity_model(getParam<MooseEnum>("viscosity_model")),
     _viscosity(declareProperty<Real>("viscosity")),
     _poissons_ratio(declareProperty<Real>("poissons_ratio")),
+    _lambda(declareProperty<Real>("lambda")),
     _density_reference(getParam<Real>("density_reference")),
     _poissons_ratio_max(getParam<Real>("poissons_ratio_max")),
     _density_reference_coefficient(getParam<Real>("density_reference_coefficient")),
@@ -71,7 +72,7 @@ IbexSnowMaterial::computeQpProperties()
     _conductivity[_qp] = _input_conductivity;
 
   if (_compute_specific_heat)
-    _specific_heat[_qp] = 1000 * (2.115 + 0.00779 * (273.15 - _temperature[_qp]));
+    _specific_heat[_qp] = 1000 * (2.115 + 0.00779 * (_temperature[_qp] - 273.15));
   else
     _specific_heat[_qp] = _input_specific_heat;
 
@@ -79,7 +80,7 @@ IbexSnowMaterial::computeQpProperties()
   switch (_viscosity_model)
   {
   case 0: // Teufelsbasur2011
-    _eta_s = -0.05 * std::pow(_density[_qp], -0.0317 * _temperature[_qp] + 4.4) * (10E-4 * exp(0.018 * _density[_qp]) + 1);
+    _eta_s = 0.05 * std::pow(_density[_qp], -0.0371 * (_temperature[_qp] - 273.15) + 4.4) * (10E-4 * exp(0.018 * _density[_qp]) + 1);
     break;
   case 1: // Kojima1974
     _eta_s = 8.64 * 10E6 * exp(0.021 * _density[_qp]);
@@ -92,15 +93,18 @@ IbexSnowMaterial::computeQpProperties()
 
   _poissons_ratio[_qp] = _poissons_ratio_max * (v_p_T - v_0_T) / (v_1000_T - v_0_T);
 
-  _viscosity[_qp] = _eta_s * (2 * _poissons_ratio[_qp] - 1) / (2 * (_poissons_ratio[_qp] - 1));
-
-
-
+  std::cout << "mu = " << _poissons_ratio[_qp] << std::endl;
+  std::cout << "_eta_s = " << _eta_s << std::endl;
+  _viscosity[_qp] = _eta_s * (2 * _poissons_ratio[_qp] - 1) / (2 * (_poissons_ratio[_qp] - 2));
+  std::cout << "eta = " << _viscosity[_qp] << std::endl;
+  _lambda[_qp] = -(2 * _viscosity[_qp] * _poissons_ratio[_qp]) / (2 * _poissons_ratio[_qp] - 1 );
+  std::cout << "lambda = " << _lambda[_qp] << std::endl;
 }
 
 Real
 IbexSnowMaterial::poissonsRatioBar(const Real & density, const Real & temperature)
 {
-  Real rho_p = _density_reference - _temperature_reference_coefficient * (273.15 - temperature);
+  Real rho_p = _density_reference - _temperature_reference_coefficient * (temperature - 273.15);
+  std::cout << "rho_p = " << rho_p << std::endl;
   return std::atan((density - rho_p) / _density_reference_coefficient);
 }

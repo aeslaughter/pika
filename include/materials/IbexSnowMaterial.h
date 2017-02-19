@@ -62,6 +62,7 @@ protected:
 
   MaterialProperty<Real> & _viscosity;
   MaterialProperty<Real> & _poissons_ratio;
+  MaterialProperty<Real> & _lambda;
 
   const Real & _density_reference;
   const Real & _poissons_ratio_max;

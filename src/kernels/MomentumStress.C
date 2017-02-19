@@ -22,7 +22,7 @@ MomentumStress::MomentumStress(const InputParameters & parameters) :
 Real
 MomentumStress::computeQpResidual()
 {
-  return _grad_test[_i][_qp] * _stress[_qp].row(_component);
+  return _stress[_qp].row(_component) * _grad_test[_i][_qp];
 }
 
 Real

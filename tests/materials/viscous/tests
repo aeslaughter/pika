@@ -1,0 +1,7 @@
+[Tests]
+  [./eta_mu_lambda]
+    type = Exodiff
+    input = eta_mu_lambda.i
+    exodiff = eta_mu_lambda_out.e
+  [../]
+[]
