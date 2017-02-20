@@ -4,4 +4,14 @@
     input = eta_mu_lambda.i
     exodiff = eta_mu_lambda_out.e
   [../]
+  [./strain_rate]
+    type = Exodiff
+    input = strain_rate.i
+    exodiff = strain_rate_out.e
+  [../]
+  [./stress]
+    type = Exodiff
+    input = stress.i
+    exodiff = stress_out.e
+  [../]
 []

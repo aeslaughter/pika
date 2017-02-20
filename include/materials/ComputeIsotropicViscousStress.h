@@ -38,6 +38,7 @@ protected:
 
   const MaterialProperty<Real> & _poissons_ratio;
   const MaterialProperty<Real> & _viscosity;
+  const MaterialProperty<Real> & _lambda;
 
 
 
