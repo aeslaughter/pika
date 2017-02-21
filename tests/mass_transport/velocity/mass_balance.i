@@ -55,22 +55,22 @@
   [./time]
     type = TimeDerivative
     variable = density
-    use_displaced_mesh = true
+#    use_displaced_mesh = true
   [../]
   [./diffusive]
     type = CoupledDiffusion
     variable = density
     velocities = 'velocity_x velocity_y velocity_z'
-    use_displaced_mesh = true
+#    use_displaced_mesh = true
   [../]
 []
 
 [Functions]
   [./mass]
     type = ParsedFunction
-    vars =  'density volume'
+    vars =  'd v'
     vals =  'density volume'
-    value = 'density*volume'
+    value = 'd*v'
   [../]
 []
 
@@ -78,7 +78,7 @@
   [./density]
     type = ElementAverageValue
     variable = density
-    #use_displaced_mesh = true
+#    use_displaced_mesh = true
     execute_on = 'initial timestep_end'
   [../]
   [./volume]
@@ -88,9 +88,7 @@
   [../]
   [./mass]
     type = FunctionValuePostprocessor
-    use_displaced_mesh = true
     function = mass
-    execute_on = 'initial timestep_end'
   [../]
 []
 

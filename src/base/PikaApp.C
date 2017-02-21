@@ -50,6 +50,7 @@
 #include "PikaHomogenizedKernel.h"
 #include "CoupledDiffusion.h"
 #include "MomentumStress.h"
+#include "MomentumTimeDerivative.h"
 
 // AuxKernels
 #include "ErrorFunctionAux.h"
@@ -142,6 +143,7 @@ PikaApp::registerObjects(Factory & factory)
   registerKernel(PikaHomogenizedKernel);
   registerKernel(CoupledDiffusion);
   registerKernel(MomentumStress);
+  registerKernel(MomentumTimeDerivative);
 
   // InitialConditions
   registerInitialCondition(KaempferAnalyticPhaseIC);
