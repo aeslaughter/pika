@@ -1,27 +1,27 @@
-#include "MomentumTimeDerivative.h"
+#include "MomentumMaterialDerivativeTime.h"
 
 template<>
-InputParameters validParams<MomentumTimeDerivative>()
+InputParameters validParams<MomentumMaterialDerivativeTime>()
 {
   InputParameters params = validParams<TimeDerivative>();
   params.addParam<MaterialPropertyName>("density", "density", "The material property for the density.");
   return params;
 }
 
-MomentumTimeDerivative::MomentumTimeDerivative(const InputParameters & parameters) :
+MomentumMaterialDerivativeTime::MomentumMaterialDerivativeTime(const InputParameters & parameters) :
     TimeDerivative(parameters),
     _density(getMaterialProperty<Real>("density"))
 {
 }
 
 Real
-MomentumTimeDerivative::computeQpResidual()
+MomentumMaterialDerivativeTime::computeQpResidual()
 {
   return _density[_qp] * TimeDerivative::computeQpResidual();
 }
 
 Real
-MomentumTimeDerivative::computeQpJacobian()
+MomentumMaterialDerivativeTime::computeQpJacobian()
 {
   return _density[_qp] * TimeDerivative::computeQpJacobian();
 }

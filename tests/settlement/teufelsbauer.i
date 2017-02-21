@@ -1,9 +1,13 @@
+[GlobalParams]
+  use_displaced_mesh = true
+[]
+
 [Mesh]
   type = GeneratedMesh
   dim = 3
-  nx = 10
-  ny = 10
-  nz = 10
+  nx = 8
+  ny = 8
+  nz = 8
   ymin = -1
   ymax = 0
   displacements = 'disp_x disp_y disp_z'
@@ -24,8 +28,6 @@
 []
 
 [AuxVariables]
-#  [./density]
-#  [../]
   [./disp_x]
     initial_condition = 0
   [../]
@@ -46,38 +48,36 @@
   [./time]
     type = TimeDerivative
     variable = density
-    use_displaced_mesh = true
   [../]
   [./diffusive]
-    type = CoupledDiffusion
+    type = MassBalanceDivergence
     variable = density
     velocities = 'velocity_x velocity_y velocity_z'
-    use_displaced_mesh = true
   [../]
   [./time_x]
-    type = MomentumTimeDerivative
+    type = MomentumMaterialDerivativeTime
     variable = velocity_x
   [../]
   [./time_y]
-    type = MomentumTimeDerivative
+    type = MomentumMaterialDerivativeTime
     variable = velocity_y
   [../]
   [./time_z]
-    type = MomentumTimeDerivative
+    type = MomentumMaterialDerivativeTime
     variable = velocity_z
   [../]
   [./diffusive_x]
-    type = CoupledDiffusion
+    type = MomentumMaterialDerivativeVelocity
     variable = velocity_x
     velocities = 'velocity_x velocity_y velocity_z'
   [../]
   [./diffusive_y]
-    type = CoupledDiffusion
+    type = MomentumMaterialDerivativeVelocity
     variable = velocity_y
     velocities = 'velocity_x velocity_y velocity_z'
   [../]
   [./diffusive_z]
-    type = CoupledDiffusion
+    type = MomentumMaterialDerivativeVelocity
     variable = velocity_z
     velocities = 'velocity_x velocity_y velocity_z'
   [../]
@@ -108,13 +108,18 @@
     value = 1
     function = -cos(30*2*pi/360)*9.81
   [../]
+  [./gravity_z]
+    type = Gravity
+    variable = velocity_z
+    value = 0
+  [../]
 []
 
 [ICs]
   [./density]
     type = FunctionIC
     variable = density
-    function = 200#'if(x>0.5,250,150)'
+    function = 'if(x>0.5,250,150)'
   [../]
 []
 
@@ -180,20 +185,28 @@
   [../]
 []
 
+[Postprocessors]
+  [./mass]
+    type = Mass
+    variable = density # not used
+    execute_on = 'initial timestep_end'
+  [../]
+[]
+
 [Preconditioning]
-  #active = ''
   [./fdp]
     type = FDP
+    full = true
   [../]
 []
 
 [Executioner]
   type = Transient
   num_steps = 10
-  dt = 7200
-  solve_type = 'PJFNK'
-  line_search = none
-  l_max_its = 30
+  dt = 7200 # 2 hours
+  solve_type = 'NEWTON'
+#  line_search = none
+#  l_max_its = 30
 #  petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
 #  petsc_options_value = 'hypre    boomeramg      1000'
   petsc_options_iname = '-pc_type -ksp_gmres_restart'
