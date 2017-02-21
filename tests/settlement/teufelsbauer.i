@@ -1,16 +1,17 @@
 [GlobalParams]
   use_displaced_mesh = true
+  #  displacements = 'disp_x disp_y disp_z'
+    displacements = 'disp_x disp_y'
 []
 
 [Mesh]
   type = GeneratedMesh
-  dim = 3
+  dim = 2
   nx = 8
   ny = 8
-  nz = 8
+#  nz = 8
   ymin = -1
   ymax = 0
-  displacements = 'disp_x disp_y disp_z'
 []
 
 [Variables]
@@ -22,9 +23,9 @@
   [./velocity_y]
     initial_condition = 0
   [../]
-  [./velocity_z]
-    initial_condition = 0
-  [../]
+#  [./velocity_z]
+#    initial_condition = 0
+#  [../]
 []
 
 [AuxVariables]
@@ -34,9 +35,9 @@
   [./disp_y]
     initial_condition = 0
   [../]
-  [./disp_z]
-    initial_condition = 0
-  [../]
+#  [./disp_z]
+#    initial_condition = 0
+#  [../]
   [./stress_yy]
     order = CONSTANT
     family = MONOMIAL
@@ -52,7 +53,7 @@
   [./diffusive]
     type = MassBalanceDivergence
     variable = density
-    velocities = 'velocity_x velocity_y velocity_z'
+    velocities = 'velocity_x velocity_y' # velocity_z'
   [../]
   [./time_x]
     type = MomentumMaterialDerivativeTime
@@ -62,25 +63,25 @@
     type = MomentumMaterialDerivativeTime
     variable = velocity_y
   [../]
-  [./time_z]
-    type = MomentumMaterialDerivativeTime
-    variable = velocity_z
-  [../]
+#  [./time_z]
+#    type = MomentumMaterialDerivativeTime
+#    variable = velocity_z
+#  [../]
   [./diffusive_x]
     type = MomentumMaterialDerivativeVelocity
     variable = velocity_x
-    velocities = 'velocity_x velocity_y velocity_z'
+    velocities = 'velocity_x velocity_y' # velocity_z'
   [../]
   [./diffusive_y]
     type = MomentumMaterialDerivativeVelocity
     variable = velocity_y
-    velocities = 'velocity_x velocity_y velocity_z'
+    velocities = 'velocity_x velocity_y' # velocity_z'
   [../]
-  [./diffusive_z]
-    type = MomentumMaterialDerivativeVelocity
-    variable = velocity_z
-    velocities = 'velocity_x velocity_y velocity_z'
-  [../]
+#  [./diffusive_z]
+#    type = MomentumMaterialDerivativeVelocity
+#    variable = velocity_z
+#    velocities = 'velocity_x velocity_y velocity_z'
+#  [../]
   [./momentum_stress_x]
     type = MomentumStress
     variable = velocity_x
@@ -91,11 +92,11 @@
     variable = velocity_y
     component = y
   [../]
-  [./momentum_stress_z]
-    type = MomentumStress
-    variable = velocity_z
-    component = z
-  [../]
+#  [./momentum_stress_z]
+#    type = MomentumStress
+#    variable = velocity_z
+#    component = z
+#  [../]
   [./gravity_x]
     type = Gravity
     variable = velocity_x
@@ -108,11 +109,11 @@
     value = 1
     function = -cos(30*2*pi/360)*9.81
   [../]
-  [./gravity_z]
-    type = Gravity
-    variable = velocity_z
-    value = 0
-  [../]
+#  [./gravity_z]
+#    type = Gravity
+#    variable = velocity_z
+#    value = 0
+#  [../]
 []
 
 [ICs]
@@ -143,12 +144,12 @@
     velocity = velocity_y
     execute_on = 'initial timestep_end'
   [../]
-  [./disp_z]
-    type = VelocityDeformation
-    variable = disp_z
-    velocity = velocity_z
-    execute_on = 'initial timestep_end'
-  [../]
+#  [./disp_z]
+#    type = VelocityDeformation
+#    variable = disp_z
+#    velocity = velocity_z
+#    execute_on = 'initial timestep_end'
+#  [../]
 []
 
 [BCs]
@@ -164,12 +165,12 @@
     value = 0
     boundary = bottom
   [../]
-  [./bottom_z]
-    type = DirichletBC
-    variable = velocity_z
-    value = 0
-    boundary = front
-  [../]
+#  [./bottom_z]
+#    type = DirichletBC
+#    variable = velocity_z
+#    value = 0
+#    boundary = front
+#  [../]
 []
 
 [Materials]
@@ -181,7 +182,8 @@
   [../]
   [./stress]
     type = ComputeIsotropicViscousStress
-    velocities = 'velocity_x velocity_y velocity_z'
+#    velocities = 'velocity_x velocity_y velocity_z'
+    velocities = 'velocity_x velocity_y'
   [../]
 []
 
