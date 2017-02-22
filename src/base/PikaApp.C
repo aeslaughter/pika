@@ -50,8 +50,7 @@
 #include "PikaHomogenizedKernel.h"
 #include "MassBalanceDivergence.h"
 #include "MomentumStress.h"
-#include "MomentumMaterialDerivativeTime.h"
-#include "MomentumMaterialDerivativeVelocity.h"
+#include "CoefficientMaterialDerivative.h"
 
 // AuxKernels
 #include "ErrorFunctionAux.h"
@@ -144,8 +143,7 @@ PikaApp::registerObjects(Factory & factory)
   registerKernel(PikaHomogenizedKernel);
   registerKernel(MassBalanceDivergence);
   registerKernel(MomentumStress);
-  registerKernel(MomentumMaterialDerivativeTime);
-  registerKernel(MomentumMaterialDerivativeVelocity);
+  registerKernel(CoefficientMaterialDerivative);
 
   // InitialConditions
   registerInitialCondition(KaempferAnalyticPhaseIC);

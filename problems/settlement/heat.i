@@ -25,7 +25,7 @@
 [Functions]
   [./shortwave]
     type = ParsedFunction
-    value = sin(2*pi*t/(h*3600))*(SW/w*sin(pi*x/w)*z+300)
+    value = sin(2*pi*t/(h*3600))*(SW/w*sin(pi*x/w)*z)
     vals = '950 100 12'
     vars = 'SW w h'
   [../]

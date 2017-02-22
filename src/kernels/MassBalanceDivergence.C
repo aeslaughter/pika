@@ -9,7 +9,6 @@ InputParameters validParams<MassBalanceDivergence>()
   MooseEnum component("x=0 y=1 z=2");
 
   InputParameters params = validParams<Kernel>();
-  params.addCoupledVar("velocity", "The velocity variable.");
   params.addRequiredCoupledVar("velocities", "The deformation velocity variables.");
   return params;
 }

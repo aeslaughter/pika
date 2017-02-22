@@ -1,15 +1,15 @@
 [GlobalParams]
   use_displaced_mesh = true
-  #  displacements = 'disp_x disp_y disp_z'
-    displacements = 'disp_x disp_y'
+  displacements = 'disp_x disp_y disp_z'
+  velocities = 'velocity_x velocity_y velocity_z'
 []
 
 [Mesh]
   type = GeneratedMesh
-  dim = 2
+  dim = 3
   nx = 8
   ny = 8
-#  nz = 8
+  nz = 8
   ymin = -1
   ymax = 0
 []
@@ -23,21 +23,23 @@
   [./velocity_y]
     initial_condition = 0
   [../]
-#  [./velocity_z]
-#    initial_condition = 0
-#  [../]
+  [./velocity_z]
+    initial_condition = 0
+  [../]
 []
 
 [AuxVariables]
+#  [./density]
+#  [../]
   [./disp_x]
     initial_condition = 0
   [../]
   [./disp_y]
     initial_condition = 0
   [../]
-#  [./disp_z]
-#    initial_condition = 0
-#  [../]
+  [./disp_z]
+    initial_condition = 0
+  [../]
   [./stress_yy]
     order = CONSTANT
     family = MONOMIAL
@@ -46,42 +48,30 @@
 []
 
 [Kernels]
-  [./time]
-    type = TimeDerivative
+  [./mass_time]
+    type = CoefficientMaterialDerivative
     variable = density
+    coefficient = 1
   [../]
-  [./diffusive]
+  [./mass_div_term]
     type = MassBalanceDivergence
     variable = density
-    velocities = 'velocity_x velocity_y' # velocity_z'
   [../]
-  [./time_x]
-    type = MomentumMaterialDerivativeTime
+  [./momentum_time_x]
+    type = CoefficientMaterialDerivative
     variable = velocity_x
+    coefficient = density
   [../]
-  [./time_y]
-    type = MomentumMaterialDerivativeTime
+  [./momentum_time_y]
+    type = CoefficientMaterialDerivative
     variable = velocity_y
+    coefficient = density
   [../]
-#  [./time_z]
-#    type = MomentumMaterialDerivativeTime
-#    variable = velocity_z
-#  [../]
-  [./diffusive_x]
-    type = MomentumMaterialDerivativeVelocity
-    variable = velocity_x
-    velocities = 'velocity_x velocity_y' # velocity_z'
+  [./momentum_time_z]
+    type = CoefficientMaterialDerivative
+    variable = velocity_z
+    coefficient = density
   [../]
-  [./diffusive_y]
-    type = MomentumMaterialDerivativeVelocity
-    variable = velocity_y
-    velocities = 'velocity_x velocity_y' # velocity_z'
-  [../]
-#  [./diffusive_z]
-#    type = MomentumMaterialDerivativeVelocity
-#    variable = velocity_z
-#    velocities = 'velocity_x velocity_y velocity_z'
-#  [../]
   [./momentum_stress_x]
     type = MomentumStress
     variable = velocity_x
@@ -92,11 +82,11 @@
     variable = velocity_y
     component = y
   [../]
-#  [./momentum_stress_z]
-#    type = MomentumStress
-#    variable = velocity_z
-#    component = z
-#  [../]
+  [./momentum_stress_z]
+    type = MomentumStress
+    variable = velocity_z
+    component = z
+  [../]
   [./gravity_x]
     type = Gravity
     variable = velocity_x
@@ -120,7 +110,7 @@
   [./density]
     type = FunctionIC
     variable = density
-    function = 'if(x>0.5,250,150)'
+    function = 300-x*z*-y*100
   [../]
 []
 
@@ -136,7 +126,7 @@
     type = VelocityDeformation
     variable = disp_x
     velocity = velocity_x
-    execute_on = 'initial timestep_end'
+    execute_on = 'initial linear'
   [../]
   [./disp_y]
     type = VelocityDeformation
@@ -144,12 +134,12 @@
     velocity = velocity_y
     execute_on = 'initial timestep_end'
   [../]
-#  [./disp_z]
-#    type = VelocityDeformation
-#    variable = disp_z
-#    velocity = velocity_z
-#    execute_on = 'initial timestep_end'
-#  [../]
+  [./disp_z]
+    type = VelocityDeformation
+    variable = disp_z
+    velocity = velocity_z
+    execute_on = 'initial timestep_end'
+  [../]
 []
 
 [BCs]
@@ -165,12 +155,12 @@
     value = 0
     boundary = bottom
   [../]
-#  [./bottom_z]
-#    type = DirichletBC
-#    variable = velocity_z
-#    value = 0
-#    boundary = front
-#  [../]
+  [./bottom_z]
+    type = DirichletBC
+    variable = velocity_z
+    value = 0
+    boundary = front
+  [../]
 []
 
 [Materials]
@@ -182,8 +172,6 @@
   [../]
   [./stress]
     type = ComputeIsotropicViscousStress
-#    velocities = 'velocity_x velocity_y velocity_z'
-    velocities = 'velocity_x velocity_y'
   [../]
 []
 
@@ -204,8 +192,8 @@
 
 [Executioner]
   type = Transient
-  num_steps = 10
-  dt = 7200 # 2 hours
+  end_time = 86400
+  dt = 7200 # 30 minutes
   solve_type = 'NEWTON'
 #  line_search = none
 #  l_max_its = 30
