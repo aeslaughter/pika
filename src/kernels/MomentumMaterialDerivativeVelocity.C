@@ -29,7 +29,7 @@ MomentumMaterialDerivativeVelocity::computeQpResidual()
 {
   for (unsigned int i = 0; i < _mesh_dim; ++i)
     _velocity(i) = _deformation_velocities[i]->sln()[_qp];
-  return -_density[_qp] * _grad_test[_qp][_i] * _u[_qp] * _velocity;
+  return _density[_qp] * _grad_test[_qp][_i] * _u[_qp] * _velocity;
 }
 
 Real
@@ -37,4 +37,4 @@ MomentumMaterialDerivativeVelocity::computeQpJacobian()
 {
   for (unsigned int i = 0; i < _mesh_dim; ++i)
     _velocity(i) = _deformation_velocities[i]->sln()[_qp];
-  return -_density[_qp] * _grad_test[_qp][_i] * _phi[_qp][_j] * _velocity;}
+  return _density[_qp] * _grad_test[_qp][_i] * _phi[_qp][_j] * _velocity;}

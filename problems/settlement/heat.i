@@ -20,18 +20,28 @@
   [../]
   [./longwave_in]
   [../]
+  [./density]
+  [../]
+[]
+
+[ICs]
+  [./density]
+    type = FunctionIC
+    variable = density
+    function = 150-(x/100*z/100*(y-1)/2)*200
+  [../]
 []
 
 [Functions]
   [./shortwave]
     type = ParsedFunction
-    value = sin(2*pi*t/(h*3600))*(SW/w*sin(pi*x/w)*z)
-    vals = '950 100 12'
-    vars = 'SW w h'
+    value = 'if(-cos(2*pi*t/(24*60*60))<0, 0, -cos(2*pi*t/(24*60*60))*(SW*(z/w)*sin(pi*x/w)+300))'
+    vals = '950 100'
+    vars = 'SW w'
   [../]
   [./longwave]
     type = ParsedFunction
-    value = LW/w*sin(pi*z/w)*(w-x)+175
+    value = sin(2*pi*t/(24*60*60))*LW/w*sin(pi*z/w)*(w-x)+180
     vals = '50 100'
     vars = 'LW w'
   [../]
@@ -105,7 +115,7 @@
   [./snow]
     type = IbexSnowMaterial
     temperature = temperature
-    density = 300
+    density = density
   [../]
 []
 
@@ -116,32 +126,28 @@
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
   scheme = crank-nicolson
-  end_time = 43200
-  dtmax = 300
-  [./TimeStepper]
-    type = IterationAdaptiveDT
-    dt = 30
-  [../]
+  end_time = 86400
+  dt = 300
 []
 
-[Adaptivity]
-  max_h_level = 2
-  marker = marker
-  [./Markers]
-    [./marker]
-      type = ErrorFractionMarker
-      indicator = error
-      refine = 0.9
-      coarsen = 0.1
-    [../]
-  [../]
-  [./Indicators]
-    [./error]
-      type = GradientJumpIndicator
-      variable = temperature
-    [../]
-  [../]
-[]
+#[Adaptivity]
+#  max_h_level = 2
+#  marker = marker
+#  [./Markers]
+#    [./marker]
+#      type = ErrorFractionMarker
+#      indicator = error
+#      refine = 0.9
+#      coarsen = 0.1
+#    [../]
+#  [../]
+#  [./Indicators]
+#    [./error]
+#      type = GradientJumpIndicator
+#      variable = temperature
+#    [../]
+#  [../]
+#[]
 
 [Outputs]
   exodus = true
