@@ -110,7 +110,7 @@
   [./density]
     type = FunctionIC
     variable = density
-    function = 300-x*z*-y*100
+    function = 'if(x<0.5,if(z<0.5,200,300),if(y<-0.5,150,250))' #200#300-x*z*-y*100
   [../]
 []
 
@@ -126,7 +126,7 @@
     type = VelocityDeformation
     variable = disp_x
     velocity = velocity_x
-    execute_on = 'initial linear'
+    execute_on = 'initial timestep_end'
   [../]
   [./disp_y]
     type = VelocityDeformation
@@ -167,8 +167,10 @@
   [./snow]
     type = IbexSnowMaterial
     density = density
-    temperature = 263.15
+    temperature = 272.15
     use_displaced_mesh = true
+    temperature_reference_coefficient = 15
+    density_reference_coefficient = 15
   [../]
   [./stress]
     type = ComputeIsotropicViscousStress
@@ -192,8 +194,8 @@
 
 [Executioner]
   type = Transient
-  end_time = 86400
-  dt = 7200 # 30 minutes
+  end_time = 259200 # 3 days
+  dt = 10800 # 3 hours
   solve_type = 'NEWTON'
 #  line_search = none
 #  l_max_its = 30

@@ -14,7 +14,7 @@
 template<>
 InputParameters validParams<IbexSnowMaterial>()
 {
-  MooseEnum model("Teufelsbasur2011=0 Kojima1974=1 Gubler1994=3", "Gubler1994");
+  MooseEnum model("Teufelsbasur2011=0 Kojima1974=1 Gubler1994=3", "Teufelsbasur2011");
 
 
   InputParameters params = validParams<Material>();
@@ -29,7 +29,7 @@ InputParameters validParams<IbexSnowMaterial>()
 
   params.addRangeCheckedParam<Real>("poissons_ratio_max", 0.49, "poissons_ratio_max<0.5 & poissons_ratio_max>-1", "The maximum allowable poissons ratio to compute.");
   params.addRangeCheckedParam<Real>("density_reference", 300, "density_reference>0 & density_reference<900", "The reference density for computing poissons ratio.");
-  params.addParam<Real>("temperature_reference_coefficient", 1., "The linear temperature coefficient ($r_{T}$) for computing poissons ratio.");
+  params.addParam<Real>("temperature_reference_coefficient", 15., "The linear temperature coefficient ($r_{T}$) for computing poissons ratio.");
   params.addParam<Real>("density_reference_coefficient", 15., "The linear density coefficient ($r_{\\rho}$) for computing poissons ratio.");
 
   return params;
@@ -87,6 +87,7 @@ IbexSnowMaterial::computeQpProperties()
     break;
   case 3: // Gubler1994
     _eta_s = 1.85 * 10E-6 * std::exp(0.02 * _density[_qp] + 8100/_temperature[_qp]);
+    break;
   }
 
   Real v_p_T = poissonsRatioBar(_density[_qp], _temperature[_qp]);

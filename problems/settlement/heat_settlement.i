@@ -7,9 +7,9 @@
 [Mesh]
   type = GeneratedMesh
   dim = 3
-  nx = 5
-  ny = 4
-  nz = 5
+  nx = 10
+  ny = 8
+  nz = 10
   xmax = 100
   zmax = 100
   ymax = 0
@@ -257,7 +257,7 @@
     type = DirichletBC
     variable = velocity_x
     value = 0
-    boundary = left
+    boundary = 'left right'
   [../]
   [./bottom_y]
     type = DirichletBC
@@ -269,7 +269,7 @@
     type = DirichletBC
     variable = velocity_z
     value = 0
-    boundary = front
+    boundary = 'front back'
   [../]
 []
 
@@ -281,7 +281,6 @@
   [../]
   [./stress]
     type = ComputeIsotropicViscousStress
-    #poissons_ratio = 0.49
   [../]
 []
 
@@ -294,39 +293,14 @@
 
 [Executioner]
   type = Transient
-  end_time = 86400
+  end_time = 259200 # 72 hours
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -ksp_gmres_restart'
   petsc_options_value = 'lu       10000'
-  dt = 60 # 10 minutes
-  dtmax = 600
-  [./TimeStepper]
-    type = IterationAdaptiveDT
-    time_dt = '0.5 10 60'
-    dt = 10
-  [../]
+  dt = 30
 []
 
-
-#[Adaptivity]
-#  max_h_level = 2
-#  marker = marker
-#  [./Markers]
-#    [./marker]
-#      type = ErrorFractionMarker
-#      indicator = error
-#      refine = 0.9
-#      coarsen = 0.1
-#    [../]
-#  [../]
-#  [./Indicators]
-#    [./error]
-#      type = GradientJumpIndicator
-#      variable = temperature
-#    [../]
-#  [../]
-#[]
-
 [Outputs]
+  checkpoint = true
   exodus = true
 []
