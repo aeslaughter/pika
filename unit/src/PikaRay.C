@@ -56,46 +56,46 @@ Plane::Plane(const libMesh::Point & p, const libMesh::Point & n) : libMesh::Plan
 
 
 libMesh::Real min_real = std::numeric_limits<libMesh::Real>::min();
-libMesh::Real max_real = std::numeric_limits<libMesh::Real>::max();
-
-libMesh::Point LINE_PARALLEL(min_real, min_real, min_real);
-libMesh::Point LINE_NO_INTERSECTION(max_real, max_real, max_real);
+libMesh::Point INVALID_POINT(min_real, min_real, min_real);
 
 
 /**
+ * o = Ray origin
+ * d = Ray direction 
+ * x0 = Point on plane
+ * n = Plane normal 
  *
- *
- *
+ * v_i = o_i + d_i*t 
  * 
  */
 libMesh::Point get_intersect(const Ray & ray, const Plane & plane)
 {
-  //
-  libMesh::Real l_dot_n = ray.getDirection() * plane.normal();
+  // Denominator 
+  libMesh::Real n_dot_d = plane.normal() * ray.getDirection();
+  
 
   // Case when line and plane are parallel
-  if (l_dot_n == 0.)
-    return LINE_PARALLEL;
-
-  libMesh::Real p0_minus_l0_dot_n = (ray.getOrigin() - plane.get_planar_point()) * plane.normal();
+  if (n_dot_d == 0.)
+    return INVALID_POINT;
+  
+  // Numerator
+  libMesh::Real n_dot_x0_minus_o = plane.normal() * (plane.get_planar_point() - ray.getOrigin());
 
   // No intersection 
-  if (p0_minus_l0_dot_n == 0.)
-    return LINE_NO_INTERSECTION;
+  if (n_dot_x0_minus_o == 0.)
+    return INVALID_POINT;
 
+  // Compute location
+  libMesh::Real t = n_dot_x0_minus_o / n_dot_d;
 
-  libMesh::Real d = p0_minus_l0_dot_n / l_dot_n;
-  return libMesh::Point(d * ray.getDirection() + ray.getOrigin());
-  
-  
+  // Location is in negative dirction of the ray
+  if (t < 0)
+    return INVALID_POINT;
+
+  return libMesh::Point(ray.getOrigin() + ray.getDirection() * t);
 }
-
-
   
 } // namespace Pika
-  
-                                       
-
 
                                        
 TEST(PikaRay, basic)
@@ -120,9 +120,30 @@ TEST(PikaRay, line_parallel)
   Pika::Plane plane(libMesh::Point(0,1,0), libMesh::Point(1,0,0));
   Pika::Ray ray(libMesh::Point(0,0,0), libMesh::Point(0,1,0));
   libMesh::Point c = get_intersect(ray, plane);
-  EXPECT_EQ(c, Pika::LINE_PARALLEL);
-  
+  EXPECT_EQ(c, Pika::INVALID_POINT); 
+}
 
-  
+TEST(PikaRay, no_plane)
+{
+  Pika::Plane plane(libMesh::Point(1,0.5,0.5), libMesh::Point(1,0,0));
+  Pika::Ray ray(libMesh::Point(1,0.25,0.25), libMesh::Point(0,1,0));
+  libMesh::Point c = get_intersect(ray, plane);
+  EXPECT_EQ(c, Pika::INVALID_POINT);
+}
+
+TEST(PikaRay, wrong_direction)
+{
+  Pika::Plane plane(libMesh::Point(1,0.5,0.5), libMesh::Point(1,0,0));
+  Pika::Ray ray(libMesh::Point(0,0.5,0.5), libMesh::Point(-1,0,0));
+  libMesh::Point c = get_intersect(ray, plane);
+  EXPECT_EQ(c, Pika::INVALID_POINT);
+}
+
+TEST(PikaRay, find_point)
+{
+  Pika::Plane plane(libMesh::Point(1,0.5,0.5), libMesh::Point(1,0,0));
+  Pika::Ray ray(libMesh::Point(0,0.5,0.), libMesh::Point(1,0,0.5));
+  libMesh::Point c = get_intersect(ray, plane);
+  EXPECT_EQ(c, libMesh::Point(1, 0.5, 0.5));
 
 }
