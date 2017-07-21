@@ -9,6 +9,9 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
+#ifndef PIKAUTILS_H
+#define PIKAUTILS_H
+
 // libMesh includes
 #include "libmesh/point.h"
 #include "libmesh/plane.h"
@@ -17,27 +20,48 @@
 namespace PikaUtils
 {
 
-class Ray
+/**
+ * Plane defined by a point and a normal.
+ *
+ * This adds a normal() method that does not require a point, simply to make the
+ * code using this class more intuitive.
+ */
+class Plane: public libMesh::Plane
 {
 public:
-  Ray(const libMesh::Point & origin, const libMesh::Point & direction);
 
-  const libMesh::Point & getOrigin() const { return _origin; }
-  const libMesh::Point & getDirection() const { return _direction; }
-  
-protected:
-  const libMesh::Point _origin;
-  
-  const libMesh::Point _direction;
-  
+  /**
+   * Construct a plane given a point and normal direction.
+   *
+   * @param p Point on the plane.
+   * @param n Outward normal from the plane.
+   */ 
+  Plane(const libMesh::Point & p, const libMesh::Point & n);
+
+  /**
+   * Return the outward normal from the plane.
+   */ 
+  libMesh::Point normal() const;
+
+private:
+
+  /// Dummy Point for calling need for calling the base class normal method.
+  libMesh::Point _zero;
 };
 
-Ray::Ray(const libMesh::Point & origin, const libMesh::Point & direction) :
-    _origin(origin),
-    _direction(direction.unit())
-{
-}
+
+
+/**
+ * Function for returning the intersction point of a vector on a plane.
+ * @param origin The ray origin.
+ * @param direction The ray direction vector.
+ * @param plane The plan of interest.
+ *
+ * If the ray doesn't intersect the plane, then a INVALID_POINT is returned.
+ */
+libMesh::Point get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, const Plane & plane);
 
 
 } // PikaUtils
- 
+
+#endif 
