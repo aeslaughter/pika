@@ -19,7 +19,8 @@
 // Modules
 #include "PhaseFieldApp.h"
 #include "HeatConductionApp.h"
-#include "SolidMechanicsApp.h"
+#include "RayTracingApp.h"
+//#include "SolidMechanicsApp.h"
 
 // UserObjects
 #include "PropertyUserObject.h"
@@ -70,6 +71,10 @@
 //BCS
 #include "PikaChemicalPotentialBC.h"
 
+// Ray Tracing
+#include "OpticRayKernel.h"
+#include "OpticRayStudy.h"
+
 template<>
 InputParameters validParams<PikaApp>()
 {
@@ -86,13 +91,13 @@ PikaApp::PikaApp(InputParameters parameters) :
   Moose::registerObjects(_factory);
   PhaseFieldApp::registerObjects(_factory);
   HeatConductionApp::registerObjects(_factory);
-  SolidMechanicsApp::registerObjects(_factory);
+  RayTracingApp::registerObjects(_factory);
   PikaApp::registerObjects(_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   PhaseFieldApp::associateSyntax(_syntax, _action_factory);
   HeatConductionApp::associateSyntax(_syntax, _action_factory);
-  SolidMechanicsApp::associateSyntax(_syntax, _action_factory);
+  RayTracingApp::associateSyntax(_syntax, _action_factory);
   PikaApp::associateSyntax(_syntax, _action_factory);
 }
 
@@ -151,6 +156,10 @@ PikaApp::registerObjects(Factory & factory)
   // BoundaryConditions
   registerBoundaryCondition(IbexSurfaceFluxBC);
   registerBoundaryCondition(PikaChemicalPotentialBC);
+
+  // Ray tracing
+  registerObject(OpticRayKernel);
+  registerObject(OpticRayStudy);
 }
 
 void
