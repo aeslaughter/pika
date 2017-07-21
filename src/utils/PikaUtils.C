@@ -19,15 +19,20 @@
 namespace PikaUtils
 {
 
+NormalPlane::NormalPlane(const libMesh::Point & p, const libMesh::Point & n) :
+    libMesh::Plane(p, n)
+{
+}
+
 libMesh::Point
-Plane::normal() const
+NormalPlane::normal() const
 {
   return libMesh::Plane::unit_normal(_zero);
 }
 
 
 libMesh::Point
-get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, const Plane & plane)
+get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, const NormalPlane & plane)
 {
   // Denominator 
   libMesh::Real n_dot_d = plane.normal() * direction;

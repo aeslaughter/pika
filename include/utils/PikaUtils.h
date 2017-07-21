@@ -26,7 +26,7 @@ namespace PikaUtils
  * This adds a normal() method that does not require a point, simply to make the
  * code using this class more intuitive.
  */
-class Plane: public libMesh::Plane
+class NormalPlane: public libMesh::Plane
 {
 public:
 
@@ -36,7 +36,7 @@ public:
    * @param p Point on the plane.
    * @param n Outward normal from the plane.
    */ 
-  Plane(const libMesh::Point & p, const libMesh::Point & n);
+  NormalPlane(const libMesh::Point & p, const libMesh::Point & n);
 
   /**
    * Return the outward normal from the plane.
@@ -49,8 +49,6 @@ private:
   libMesh::Point _zero;
 };
 
-
-
 /**
  * Function for returning the intersction point of a vector on a plane.
  * @param origin The ray origin.
@@ -59,7 +57,7 @@ private:
  *
  * If the ray doesn't intersect the plane, then a INVALID_POINT is returned.
  */
-libMesh::Point get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, const Plane & plane);
+libMesh::Point get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, const NormalPlane & plane);
 
 
 } // PikaUtils

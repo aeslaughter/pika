@@ -30,6 +30,14 @@ public:
                          const Point & start ,
                          const Point & end,
                          bool ends_in_elem) override;
+
+protected:
+
+  /// Refractive index variable
+  //MooseVariable & _refractive_var;
+
+  const VariableValue & _value;
+  
 };
 
 #endif

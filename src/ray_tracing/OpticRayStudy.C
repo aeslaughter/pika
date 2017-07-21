@@ -25,15 +25,15 @@ InputParameters
 validParams<OpticRayStudy>()
 {
   InputParameters params = validParams<RayTracingStudy>();
-  params.addParam<std::vector<Point>>("starting_points", "The points to initiate rays.");
-  params.addParam<std::vector<Point>>("string_directions", "The direction the rays shall emit.");
+  params.addParam<std::vector<Point>>("start_points", "The points to initiate rays.");
+  params.addParam<std::vector<Point>>("start_directions", "The direction the rays shall emit.");
   return params;
 }
 
 OpticRayStudy::OpticRayStudy(const InputParameters & parameters)
   : RayTracingStudy(parameters),
     _start_points(getParam<std::vector<Point>>("start_points")),
-    _start_directions(getParam<std::vector<Point>>("start_direction"))
+    _start_directions(getParam<std::vector<Point>>("start_directions"))
 {
   if (_start_points.size() != _start_directions.size())
     mooseError("start_points length must match start_directions length!");
@@ -63,7 +63,7 @@ OpticRayStudy::generateRays()
   libMesh::BoundingBox bbox = MeshTools::create_bounding_box(_fe_problem.mesh().getMesh());
 
   // Define planes (left, front, bottom, right, back, top)
-  std::vector<PikaUtils::Plane> planes;
+  std::vector<PikaUtils::NormalPlane> planes;
   planes.emplace_back(bbox.min(), Point(1,0,0));
   planes.emplace_back(bbox.min(), Point(0,1,0));
   planes.emplace_back(bbox.min(), Point(0,0,1));
