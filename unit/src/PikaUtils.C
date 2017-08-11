@@ -9,36 +9,19 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef OPTICRAYSTUDY_H
-#define OPTICRAYSTUDY_H
+// libMesh includes
+#include "libmesh/point.h"
 
-#include "RayTracingStudy.h"
+// MOOSE includes
+#include "gtest/gtest.h"
 
+// Pika includes
 #include "PikaUtils.h"
 
-class OpticRayStudy;
-
-template <>
-InputParameters validParams<OpticRayStudy>();
-
-class OpticRayStudy : public RayTracingStudy
+TEST(PikaUtils, snell)
 {
-public:
-  OpticRayStudy(const InputParameters & parameters);
-  void initialSetup() override;
-  void addOpticRay(const Point & origin, const Point & direction);
+  libMesh::Point in(2,0,2);
+  libMesh::Point normal(0,0,-2);
+  EXPECT_EQ(libMesh::Point(0.471,0,0.882), PikaUtils::snell(in, normal, 1, 1.5));
 
-  Point getIntersect(const Point & origin, const Point & direction) const;
-
-protected:
-  virtual void generateRays() override;
-
-  std::vector<PikaUtils::NormalPlane> _planes;
-  std::vector<Point> _start_points;
-  std::vector<Point> _start_directions;
-  const libMesh::BoundingBox & _bounding_box;
-
-  unsigned int _id;
-};
-
-#endif
+}

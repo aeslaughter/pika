@@ -54,8 +54,8 @@ OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & 
     std::cout << "THETA0 = " << theta0 << std::endl;
 
 
-//    Real theta = std::asin(std::sin(std::pi/2.)*_refractive_index[0]/_refractive_index[1]));
-//    std::cout << "THETA = " << theta  << std::endl;
+    Real theta1 = std::asin(std::sin(theta0)*_refractive_index[0]/_refractive_index[1]);
+    std::cout << "THETA1 = " << theta1  << std::endl;
 //    Point end = _study.getIntersect(mid)
 
     std::cout << "ID: " << elem->id() << " " << _refractive_index[0] << " " << _refractive_index[1] << _refractive_index[2] << std::endl;

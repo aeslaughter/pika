@@ -30,22 +30,21 @@ NormalPlane::normal() const
   return libMesh::Plane::unit_normal(_zero);
 }
 
-
 libMesh::Point
 get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, const NormalPlane & plane)
 {
-  // Denominator 
+  // Denominator
   libMesh::Real n_dot_d = plane.normal() * direction;
-  
+
 
   // Case when line and plane are parallel
   if (n_dot_d == 0.)
     return PikaTypes::INVALID_POINT;
-  
+
   // Numerator
   libMesh::Real n_dot_x0_minus_o = plane.normal() * (plane.get_planar_point() - origin);
 
-  // No intersection 
+  // No intersection
   if (n_dot_x0_minus_o == 0.)
     return PikaTypes::INVALID_POINT;
 
@@ -57,6 +56,14 @@ get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, c
     return PikaTypes::INVALID_POINT;
 
   return libMesh::Point(origin + direction * t);
+}
+
+libMesh::Point
+snell(const libMesh::Point & incoming, const libMesh::Point & normal, const libMesh::Real & n1, const libMesh::Real & n2)
+{
+  libMesh::Point s1 = incoming.unit();
+  libMesh::Point N = normal.unit();
+  return (n1/n2)*N.cross(-N.cross(s1))-N*std::sqrt(1-(n1/n2*n1/n2)*N.cross(s1)*N.cross(s1));
 }
 
 } // PikaUtils
