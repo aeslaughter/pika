@@ -11,32 +11,45 @@
 []
 
 [AuxVariables]
+  [./phase]
+  [../]
   [./refract]
   [../]
 []
 
 [ICs]
-  [./phase]
+  active = 'refract_ic'
+  [./phase_ic]
     type = FunctionIC
-    function = phase_ic
+    function = phase_func
+    variable = phase
+  [../]
+  [./refract_ic]
+    type = FunctionIC
+    function = refract_func
     variable = refract
   [../]
 []
 
 [Functions]
-  [./phase_ic]
+  active = 'refract_func'
+  [./phase_func]
+    type = ParsedFunction
+    value = 'if(x<2.5,0,1)'
+  [../]
+  [./refract_func]
     type = ParsedFunction
     value = 'if(x<2.5,0.3,0.2)'
   [../]
 []
 
 [UserObjects]
-  [./ecr]
+  [./study]
     type = OpticRayStudy
     num_rays = 1
-    ray_distance = 1
-    start_points = '0, 0.5, 0.5'
-    start_directions = '1 0 0'
+    ray_distance = 5
+    start_points = '0, 0.5, 0'
+    start_directions = '1 0.05 0'
   [../]
 []
 
@@ -44,7 +57,7 @@
   type = RayProblem
   kernel_coverage_check = false
   num_groups = 1
-  study = ecr
+  study = study
   solve = false
 []
 
@@ -60,6 +73,7 @@
   [./optics]
     type = OpticRayKernel
     refractive_index = refract
+  #  phase = phase
   [../]
 []
 

@@ -35,12 +35,12 @@ public:
    *
    * @param p Point on the plane.
    * @param n Outward normal from the plane.
-   */ 
+   */
   NormalPlane(const libMesh::Point & p, const libMesh::Point & n);
 
   /**
    * Return the outward normal from the plane.
-   */ 
+   */
   libMesh::Point normal() const;
 
 private:
@@ -50,7 +50,7 @@ private:
 };
 
 /**
- * Function for returning the intersction point of a vector on a plane.
+ * Function for returning the interaction point of a vector on a plane.
  * @param origin The ray origin.
  * @param direction The ray direction vector.
  * @param plane The plan of interest.
@@ -62,4 +62,4 @@ libMesh::Point get_intersect(const libMesh::Point & origin, const libMesh::Point
 
 } // PikaUtils
 
-#endif 
+#endif

@@ -9,7 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-// Pika types 
+// Pika types
 #include "PikaTypes.h"
 #include "PikaUtils.h"
 #include "OpticRayStudy.h"
@@ -19,6 +19,7 @@
 
 // MOOSE Includes
 #include "MooseMesh.h"
+#include "RayProblem.h"
 
 template <>
 InputParameters
@@ -33,7 +34,8 @@ validParams<OpticRayStudy>()
 OpticRayStudy::OpticRayStudy(const InputParameters & parameters)
   : RayTracingStudy(parameters),
     _start_points(getParam<std::vector<Point>>("start_points")),
-    _start_directions(getParam<std::vector<Point>>("start_directions"))
+    _start_directions(getParam<std::vector<Point>>("start_directions")),
+    _bounding_box(_ray_problem.boundingBox())
 {
   if (_start_points.size() != _start_directions.size())
     mooseError("start_points length must match start_directions length!");
@@ -47,44 +49,57 @@ OpticRayStudy::addOpticRay(const Point & origin, const Point & direction)
 }
 
 
-/*
 void
 OpticRayStudy::initialSetup()
 {
-}    
-*/
+  // Define planes (left, front, bottom, right, back, top)
+  std::vector<PikaUtils::NormalPlane> planes;
+  _planes.emplace_back(_bounding_box.min(), Point(1,0,0));
+  _planes.emplace_back(_bounding_box.min(), Point(0,1,0));
+  _planes.emplace_back(_bounding_box.min(), Point(0,0,1));
+  _planes.emplace_back(_bounding_box.max(), Point(-1,0,0));
+  _planes.emplace_back(_bounding_box.max(), Point(0,-1,0));
+  _planes.emplace_back(_bounding_box.max(), Point(0,0,-1));
+  _id = 0;
+}
 
 void
 OpticRayStudy::generateRays()
 {
   std::vector<std::shared_ptr<Ray>> rays;
-  
-  // Bounding Box for entire mesh
-  libMesh::BoundingBox bbox = MeshTools::create_bounding_box(_fe_problem.mesh().getMesh());
 
-  // Define planes (left, front, bottom, right, back, top)
-  std::vector<PikaUtils::NormalPlane> planes;
-  planes.emplace_back(bbox.min(), Point(1,0,0));
-  planes.emplace_back(bbox.min(), Point(0,1,0));
-  planes.emplace_back(bbox.min(), Point(0,0,1));
-  planes.emplace_back(bbox.max(), Point(-1,0,0));
-  planes.emplace_back(bbox.max(), Point(0,-1,0));
-  planes.emplace_back(bbox.max(), Point(0,0,-1));
-
-  for (const auto & plane : planes)
+  for (std::size_t i = 0; i < _start_points.size(); ++i)
   {
-    for (std::size_t i = 0; i < _start_points.size(); ++i)
+    libMesh::Point end = getIntersect(_start_points[i], _start_directions[i]);
+    if (end != PikaTypes::INVALID_POINT)
     {
-      libMesh::Point end = PikaUtils::get_intersect(_start_points[i], _start_directions[i], plane);
-      if (end != PikaTypes::INVALID_POINT)
-      {
-        auto ray = std::make_shared<Ray>(_start_points[i], end, _num_groups);
-        rays.emplace_back(ray);
-      }
+      auto ray = std::make_shared<Ray>(_start_points[i], end, _num_groups);
+      ray->setID(_id);
+    //  ray->setEndsWithinMesh(); // this may not be true for unstructured
+      ray->setStartingElem(_fe_problem.mesh().elemPtr(0)); // TODO: loop over elements on boundary
+
+      //ray->start().print();
+      //ray->end().print();
+
+      rays.emplace_back(ray);
+      _id++;
     }
   }
+
   chunkyTraceAndBuffer(rays);
 
   _start_points.clear();
   _start_directions.clear();
+}
+
+Point
+OpticRayStudy::getIntersect(const Point & origin, const Point & direction) const
+{
+  for (const auto & plane : _planes)
+  {
+    libMesh::Point end = PikaUtils::get_intersect(origin, direction, plane);
+    if (end != PikaTypes::INVALID_POINT && _bounding_box.contains_point(end))
+      return end;
+  }
+  return PikaTypes::INVALID_POINT;
 }

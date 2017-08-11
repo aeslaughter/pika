@@ -16,6 +16,7 @@
 #include "RayKernel.h"
 
 class OpticRayKernel;
+class OpticRayStudy;
 
 template<>
 InputParameters validParams<OpticRayKernel>();
@@ -33,11 +34,14 @@ public:
 
 protected:
 
-  /// Refractive index variable
-  //MooseVariable & _refractive_var;
+  const VariableValue & _refractive_index;
 
-  const VariableValue & _value;
-  
+  //const VariableValue & _phase;
+//  const VariableGradient & _grad_phase;
+
+  const OpticRayStudy & _study;
+
+
 };
 
 #endif
