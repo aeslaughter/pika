@@ -17,6 +17,7 @@
 
 class OpticRayKernel;
 class OpticRayStudy;
+class OpticRayTracker;
 
 template<>
 InputParameters validParams<OpticRayKernel>();
@@ -36,10 +37,12 @@ protected:
 
   const VariableValue & _refractive_index;
 
-  //const VariableValue & _phase;
-//  const VariableGradient & _grad_phase;
+  const VariableValue & _phase;
+  const VariableGradient & _grad_phase;
 
   const OpticRayStudy & _study;
+
+  OpticRayTracker * _tracker;
 
 
 };

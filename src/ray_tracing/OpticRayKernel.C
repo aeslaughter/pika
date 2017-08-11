@@ -12,6 +12,7 @@
 // Pika includes
 #include "OpticRayKernel.h"
 #include "OpticRayStudy.h"
+#include "OpticRayTracker.h"
 
 // MOOSE includes
 #include "RayProblem.h"
@@ -23,40 +24,52 @@ validParams<OpticRayKernel>()
 {
   InputParameters params = validParams<RayKernel>();
   params.addCoupledVar("refractive_index", "The field variable containing the refractive index.");
-//  params.addCoupledVar("phase", "The field variable containing the phase.");
-
+  params.addCoupledVar("phase", "The field variable containing the phase.");
+  params.addParam<UserObjectName>("tracker", "OpticRayTracker object for output (optional).");
   return params;
 }
 
 OpticRayKernel::OpticRayKernel(const InputParameters & parameters) :
     RayKernel(parameters),
     _refractive_index(coupledValue("refractive_index")),
-  //  _phase(coupledValue("phase")),
-  //  _grad_phase(coupledGradient("phase")),
-    _study(_ray_problem.rayTracingStudy<OpticRayStudy>())
+    _phase(coupledValue("phase")),
+    _grad_phase(coupledGradient("phase")),
+    _study(_ray_problem.rayTracingStudy<OpticRayStudy>()),
+    _tracker(nullptr)
 {
+  if (isParamValid("tracker"))
+  {
+    const ExecuteMooseObjectWarehouse<UserObject> & objects = _ray_problem.getUserObjects();
+    const UserObjectName & name = getParam<UserObjectName>("tracker");
+    _tracker = std::static_pointer_cast<OpticRayTracker>(objects.getActiveObject(name));
+  }
 }
 
 void
 OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & end, bool ends_in_elem)
 {
-
+  //_ray_problem.setActiveElementalMooseVariables({getVar("refractive_index", 0)}, _tid);
   Point mid = start + (end - start);
   _ray_problem.reinitElemPhys(elem, {start, mid, end}, _tid);
 
-  if (_refractive_index[0] != _refractive_index[1])
+  if (_phase[0] != _phase[2])
   {
     Point origin = end - start;
-    RealVectorValue normal(-2,0,0);// = _grad_phase[1] / _grad_phase[1].norm();
-    Point direction = PikaUtils::snell(origin, normal, _refractive_index[0], _refractive_index[1]);
-    Point end = _study.getIntersect(origin, direction);
-    _ray->setEnd(end);
-//    std::cout << "ID: " << elem->id() << " " << _refractive_index[0] << " " << _refractive_index[1] << _refractive_index[2] << std::endl;
+    Point direction = PikaUtils::snell(origin, _grad_phase[1], _refractive_index[0], _refractive_index[2]);
+    Point new_end = _study.getIntersect(origin, direction);
+    _ray->setEnd(new_end);
+
+    if (_tracker)
+      _tracker->addSegment(start, mid, _ray->id());
   }
 
-  std::cout << "ID: " << elem->id();
-  end.print();
-  std::cout << std::endl;
+  if (_tracker)
+    _tracker->addSegment(start, end, _ray->id());
+
+
+//  std::cout << "ID: " << elem->id();
+//  end.print();
+//  std::cout << std::endl;
 
 }
 

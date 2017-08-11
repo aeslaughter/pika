@@ -18,7 +18,7 @@
 []
 
 [ICs]
-  active = 'refract_ic'
+  #active = 'refract_ic'
   [./phase_ic]
     type = FunctionIC
     function = phase_func
@@ -32,7 +32,7 @@
 []
 
 [Functions]
-  active = 'refract_func'
+  #active = 'refract_func'
   [./phase_func]
     type = ParsedFunction
     value = 'if(x<2.5,0,1)'
@@ -50,6 +50,9 @@
     ray_distance = 5
     start_points = '0, 0.5, 0'
     start_directions = '1 0.05 0'
+  [../]
+  [./tracker]
+    type = OpticRayTracker
   [../]
 []
 
@@ -73,7 +76,7 @@
   [./optics]
     type = OpticRayKernel
     refractive_index = refract
-  #  phase = phase
+    phase = phase
   [../]
 []
 
