@@ -46,20 +46,17 @@ OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & 
 
   if (_refractive_index[0] != _refractive_index[1])
   {
-
-    RealVectorValue normal(1,0,0);// = _grad_phase[1] / _grad_phase[1].norm();
-//    normal.print();
-    Point diff = end - start;
-    Real theta0 = std::acos(normal*diff / (normal.norm()*diff.norm()));
-    std::cout << "THETA0 = " << theta0 << std::endl;
-
-
-    Real theta1 = std::asin(std::sin(theta0)*_refractive_index[0]/_refractive_index[1]);
-    std::cout << "THETA1 = " << theta1  << std::endl;
-//    Point end = _study.getIntersect(mid)
-
-    std::cout << "ID: " << elem->id() << " " << _refractive_index[0] << " " << _refractive_index[1] << _refractive_index[2] << std::endl;
+    Point origin = end - start;
+    RealVectorValue normal(-2,0,0);// = _grad_phase[1] / _grad_phase[1].norm();
+    Point direction = PikaUtils::snell(origin, normal, _refractive_index[0], _refractive_index[1]);
+    Point end = _study.getIntersect(origin, direction);
+    _ray->setEnd(end);
+//    std::cout << "ID: " << elem->id() << " " << _refractive_index[0] << " " << _refractive_index[1] << _refractive_index[2] << std::endl;
   }
+
+  std::cout << "ID: " << elem->id();
+  end.print();
+  std::cout << std::endl;
 
 }
 

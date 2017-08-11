@@ -9,38 +9,33 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef OPTIC_RAY_H
-#define OPTIC_RAY_H
+#ifndef OpticRayTracker_H
+#define OpticRayTracker_H
 
-// RayTracing includes
-#include "RayKernel.h"
+#include "GeneralUserObject.h"
 
-class OpticRayKernel;
-class OpticRayStudy;
+#include "PikaUtils.h"
 
-template<>
-InputParameters validParams<OpticRayKernel>();
+class OpticRayTracker;
 
+template <>
+InputParameters validParams<OpticRayTracker>();
 
-class OpticRayKernel: public RayKernel
+class OpticRayTracker : public GeneralUserObject
 {
 public:
-  OpticRayKernel(const InputParameters & parameters);
+  OpticRayTracker(const InputParameters & parameters);
+  virtual void initialize() override final {}
+  virtual void finalize() override final {}
+  virtual void execute() override final {}
+  virtual void initialSetup() override;
+  virtual void timestepSetup() override;
 
-  virtual void onSegment(const Elem * elem,
-                         const Point & start,
-                         const Point & end,
-                         bool ends_in_elem) override;
+  void addSegment(const Point & start, const Point & end, unsigned int id);
 
 protected:
 
-  const VariableValue & _refractive_index;
-
-  //const VariableValue & _phase;
-//  const VariableGradient & _grad_phase;
-
-  const OpticRayStudy & _study;
-
+  std::map<unsigned int, std::vector<std::pair<Point, Point>>> _segments;
 
 };
 

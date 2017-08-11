@@ -74,6 +74,7 @@
 // Ray Tracing
 #include "OpticRayKernel.h"
 #include "OpticRayStudy.h"
+#include "OpticRayTracker.h"
 
 template<>
 InputParameters validParams<PikaApp>()
@@ -160,6 +161,7 @@ PikaApp::registerObjects(Factory & factory)
   // Ray tracing
   registerObject(OpticRayKernel);
   registerObject(OpticRayStudy);
+  registerObject(OpticRayTracker);
 }
 
 void

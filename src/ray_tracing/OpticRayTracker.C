@@ -9,39 +9,47 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef OPTIC_RAY_H
-#define OPTIC_RAY_H
+// Pika types
+#include "PikaTypes.h"
+#include "PikaUtils.h"
+#include "OpticRayTracker.h"
 
-// RayTracing includes
-#include "RayKernel.h"
+// libMesh includes
+#include "libmesh/mesh_tools.h"
 
-class OpticRayKernel;
-class OpticRayStudy;
+// MOOSE Includes
+#include "MooseMesh.h"
+#include "RayProblem.h"
 
-template<>
-InputParameters validParams<OpticRayKernel>();
-
-
-class OpticRayKernel: public RayKernel
+template <>
+InputParameters
+validParams<OpticRayTracker>()
 {
-public:
-  OpticRayKernel(const InputParameters & parameters);
+  InputParameters params = validParams<GeneralUserObject>();
+  return params;
+}
 
-  virtual void onSegment(const Elem * elem,
-                         const Point & start,
-                         const Point & end,
-                         bool ends_in_elem) override;
-
-protected:
-
-  const VariableValue & _refractive_index;
-
-  //const VariableValue & _phase;
-//  const VariableGradient & _grad_phase;
-
-  const OpticRayStudy & _study;
+OpticRayTracker::OpticRayTracker(const InputParameters & parameters)
+  : GeneralUserObject(parameters)
+{
+}
 
 
-};
+void
+OpticRayTracker::initialSetup()
+{
+}
 
-#endif
+void
+OpticRayTracker::timestepSetup()
+{
+}
+
+
+void
+OpticRayTracker::addSegment(const Point & start, const Point & end, unsigned int id)
+{
+  //Threads::spin_mutex::scoped_lock lock(Threads::spin_mtx);
+
+  _segments[id].emplace_back(std::make_pair(start, end));
+}
