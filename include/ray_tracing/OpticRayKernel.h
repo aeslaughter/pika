@@ -42,7 +42,7 @@ protected:
 
   const OpticRayStudy & _study;
 
-  std::shared_ptr<OpticRayTracker> _tracker;
+  OpticRayTracker * _tracker;
 
 
 };

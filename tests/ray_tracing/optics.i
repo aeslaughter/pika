@@ -70,6 +70,11 @@
 
 [Outputs]
   exodus = true
+  [./rays]
+    type = OpticRayOutput
+    tracker = tracker
+    execute_on = 'TIMESTEP_END'
+  [../]
 []
 
 [RayKernels]
@@ -77,6 +82,7 @@
     type = OpticRayKernel
     refractive_index = refract
     phase = phase
+    tracker = tracker
   [../]
 []
 

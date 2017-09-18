@@ -33,6 +33,9 @@ public:
 
   void addSegment(const Point & start, const Point & end, unsigned int id);
 
+  const std::map<unsigned int, std::vector<std::pair<Point, Point>>> & getSegments() const;
+  std::size_t numSegments() const { return _segments.size(); }
+
 protected:
 
   // TODO: Make this parallel/threaded

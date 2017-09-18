@@ -39,9 +39,10 @@ OpticRayKernel::OpticRayKernel(const InputParameters & parameters) :
 {
   if (isParamValid("tracker"))
   {
+    std::cout << "TRACKER!!!!!!!!!!!!!" << std::endl;
     const ExecuteMooseObjectWarehouse<UserObject> & objects = _ray_problem.getUserObjects();
     const UserObjectName & name = getParam<UserObjectName>("tracker");
-    _tracker = std::static_pointer_cast<OpticRayTracker>(objects.getActiveObject(name));
+    _tracker = static_cast<OpticRayTracker *>(objects.getActiveObject(name).get());
   }
 }
 
@@ -67,9 +68,9 @@ OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & 
     _tracker->addSegment(start, end, _ray->id());
 
 
-//  std::cout << "ID: " << elem->id();
-//  end.print();
-//  std::cout << std::endl;
+  //std::cout << "ID: " << elem->id();
+  //end.print();
+  //std::cout << std::endl;
 
 }
 
