@@ -9,35 +9,24 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef OpticRayTracker_H
-#define OpticRayTracker_H
-
-#include "GeneralUserObject.h"
-
-#include "PikaUtils.h"
-
-class OpticRayTracker;
+#include "OpticRayOutput.h"
 
 template <>
-InputParameters validParams<OpticRayTracker>();
-
-class OpticRayTracker : public GeneralUserObject
+InputParameters
+validParams<OpticRayOutput>()
 {
-public:
-  OpticRayTracker(const InputParameters & parameters);
-  virtual void initialize() override final {}
-  virtual void finalize() override final {}
-  virtual void execute() override final {}
-  virtual void initialSetup() override;
-  virtual void timestepSetup() override;
+  InputParameters params = validParams<Output>();
+  return params;
+}
 
-  void addSegment(const Point & start, const Point & end, unsigned int id);
+OpticRayOutput::OpticRayOutput(const InputParameters & params) :
+Output(params)
+{
 
-protected:
+}
 
-  // TODO: Make this parallel/threaded
-  std::map<unsigned int, std::vector<std::pair<Point, Point>>> _segments;
+void
+OpticRayOutput::output(const ExecFlagType & type)
+{
 
-};
-
-#endif
+}

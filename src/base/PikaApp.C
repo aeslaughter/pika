@@ -75,6 +75,7 @@
 #include "OpticRayKernel.h"
 #include "OpticRayStudy.h"
 #include "OpticRayTracker.h"
+#include "OpticRayOutput.h"
 
 template<>
 InputParameters validParams<PikaApp>()
@@ -162,6 +163,7 @@ PikaApp::registerObjects(Factory & factory)
   registerObject(OpticRayKernel);
   registerObject(OpticRayStudy);
   registerObject(OpticRayTracker);
+  registerObject(OpticRayOutput);
 }
 
 void
