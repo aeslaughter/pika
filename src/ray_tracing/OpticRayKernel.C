@@ -47,24 +47,51 @@ OpticRayKernel::OpticRayKernel(const InputParameters & parameters) :
 }
 
 void
-OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & end, bool ends_in_elem)
+OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & end, bool /*ends_in_elem*/)
 {
+  if (start == _ray->start())
+  {
+    _tracker->addSegment(start, end, _ray->id());
+    return;
+  }
+
+
   //_ray_problem.setActiveElementalMooseVariables({getVar("refractive_index", 0)}, _tid);
-  Point mid = start + (end - start);
+  Point mid = start + (end - start)/2.; // TODO: interp on phase
   _ray_problem.reinitElemPhys(elem, {start, mid, end}, _tid);
+
+
+
 
   if (_phase[0] != _phase[2])
   {
     Point origin = end - start;
-    Point direction = PikaUtils::snell(origin, _grad_phase[1], _refractive_index[0], _refractive_index[2]);
-    Point new_end = _study.getIntersect(origin, direction);
-    _ray->setEnd(new_end);
+    Point direction = PikaUtils::snell(origin, _grad_phase[1], _refractive_index[0], _refractive_index[1]);
+//    Point new_end = _study.getIntersect(origin, direction);
+
+
+    std::cout << "START: "; start.print(); _ray->start().print(); std::cout << std::endl;
+    std::cout << "  MID: "; mid.print(); std::cout << std::endl;
+    std::cout << "  END: "; end.print(); std::cout << std::endl;
+    std::cout << "  NOR: "; _grad_phase[1].print(); std::cout << std::endl;
+    std::cout << "  ORG: "; origin.print(); std::cout << std::endl;
+    std::cout << "  DIR: "; direction.print(); std::cout << std::endl;
+
+    _ray->setShouldContinue(false);
+    _ray->setEndsWithinMesh();
+    _ray->setEnd(mid);
 
     if (_tracker)
       _tracker->addSegment(start, mid, _ray->id());
+
+    direction(0) = direction(0)*-1;
+//    direction(1) = direction(1)*-1;
+
+    _study.addOpticRay(mid, direction, elem->id(), _ray->id());
+  //  _study.addOpticRay(mid, Point(1,-0.05,0), elem->id(), _ray->id());
   }
 
-  if (_tracker)
+  else if (_tracker)
     _tracker->addSegment(start, end, _ray->id());
 
 

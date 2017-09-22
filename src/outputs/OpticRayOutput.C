@@ -37,6 +37,8 @@ _tracker(getUserObject<OpticRayTracker>("tracker"))
 void
 OpticRayOutput::output(const ExecFlagType & type)
 {
+  //TODO: Error if not segments
+
   std::cout << "COUNT: " << _tracker.numSegments() << std::endl;
 
   const std::map<unsigned int, std::vector<std::pair<Point, Point>>> & segments = _tracker.getSegments();

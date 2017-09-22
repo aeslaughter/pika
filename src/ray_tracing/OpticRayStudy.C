@@ -33,19 +33,39 @@ validParams<OpticRayStudy>()
 
 OpticRayStudy::OpticRayStudy(const InputParameters & parameters)
   : RayTracingStudy(parameters),
-    _start_points(getParam<std::vector<Point>>("start_points")),
-    _start_directions(getParam<std::vector<Point>>("start_directions")),
     _bounding_box(_ray_problem.boundingBox())
 {
-  if (_start_points.size() != _start_directions.size())
-    mooseError("start_points length must match start_directions length!");
+  //if (_start_points.size() != _start_directions.size())
+  //  mooseError("start_points length must match start_directions length!");
+
 }
 
 void
-OpticRayStudy::addOpticRay(const Point & origin, const Point & direction)
+OpticRayStudy::addOpticRay(const Point & origin, const Point & direction,
+                           const dof_id_type elem_id, const unsigned int ray_id)
 {
+
+  std::cout << "BEFORE: OpticRayStudy::addOpticRay " << hasOpticRay() << std::endl;
+
+  libMesh::Point end = getIntersect(origin, direction);
+  if (end != PikaTypes::INVALID_POINT)
+  {
+    std::shared_ptr<Ray> ray = std::make_shared<Ray>(origin, end, _num_groups);
+    ray->setID(ray_id);
+    ray->setStartingElem(_fe_problem.mesh().elemPtr(elem_id));
+    _optic_rays.push_back(ray);
+    std::cout << "IN HERE" << std::endl;
+  }
+  std::cout << "AFTER: OpticRayStudy::addOpticRay " << hasOpticRay() << std::endl;
+
+  // TODO: error here for invalid end point
+
+  /*
+  std::cout << "OpticRayStudy::addOpticRay " << hasOpticRay() << std::endl;
   _start_points.push_back(origin);
   _start_directions.push_back(direction);
+  std::cout << "OpticRayStudy::addOpticRay " << hasOpticRay() << std::endl;
+  */
 }
 
 
@@ -61,35 +81,24 @@ OpticRayStudy::initialSetup()
   _planes.emplace_back(_bounding_box.max(), Point(0,-1,0));
   _planes.emplace_back(_bounding_box.max(), Point(0,0,-1));
   _id = 0;
+
+  // TODO: Loop over boundary are create rays that emit from centroid of elements
+  const Point & origin = getParam<std::vector<Point>>("start_points")[0];
+  const Point & direction = getParam<std::vector<Point>>("start_directions")[0];
+  addOpticRay(origin, direction, 0, 0);
+
 }
+
 
 void
 OpticRayStudy::generateRays()
 {
-  std::vector<std::shared_ptr<Ray>> rays;
+  std::cout << "OpticRayStudy::generateRays() " << _optic_rays.size() << std::endl;
 
-  for (std::size_t i = 0; i < _start_points.size(); ++i)
-  {
-    libMesh::Point end = getIntersect(_start_points[i], _start_directions[i]);
-    if (end != PikaTypes::INVALID_POINT)
-    {
-      auto ray = std::make_shared<Ray>(_start_points[i], end, _num_groups);
-      ray->setID(_id);
-    //  ray->setEndsWithinMesh(); // this may not be true for unstructured
-      ray->setStartingElem(_fe_problem.mesh().elemPtr(0)); // TODO: loop over elements on boundary
-
-      //ray->start().print();
-      //ray->end().print();
-
-      rays.emplace_back(ray);
-      _id++;
-    }
-  }
-
+  std::vector<std::shared_ptr<Ray>> rays = _optic_rays;
+  _optic_rays.clear();
   chunkyTraceAndBuffer(rays);
 
-  _start_points.clear();
-  _start_directions.clear();
 }
 
 Point
@@ -102,4 +111,10 @@ OpticRayStudy::getIntersect(const Point & origin, const Point & direction) const
       return end;
   }
   return PikaTypes::INVALID_POINT;
+}
+
+bool
+OpticRayStudy::hasOpticRay()
+{
+  return !_optic_rays.empty();
 }

@@ -39,7 +39,7 @@
   [../]
   [./refract_func]
     type = ParsedFunction
-    value = 'if(x<2.5,1.0,1.3)'
+    value = 'if(x<2.5,1.000293,5.31)'
   [../]
 []
 
@@ -57,7 +57,7 @@
 []
 
 [Problem]
-  type = RayProblem
+  type = OpticRayProblem
   kernel_coverage_check = false
   num_groups = 1
   study = study

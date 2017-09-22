@@ -40,7 +40,7 @@ protected:
   const VariableValue & _phase;
   const VariableGradient & _grad_phase;
 
-  const OpticRayStudy & _study;
+  OpticRayStudy & _study;
 
   OpticRayTracker * _tracker;
 

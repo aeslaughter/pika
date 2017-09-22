@@ -24,9 +24,13 @@ InputParameters validParams<OpticRayStudy>();
 class OpticRayStudy : public RayTracingStudy
 {
 public:
+
   OpticRayStudy(const InputParameters & parameters);
   void initialSetup() override;
-  void addOpticRay(const Point & origin, const Point & direction);
+
+  bool hasOpticRay();
+  void addOpticRay(const Point & origin, const Point & direction,
+                  const dof_id_type elem_id, const unsigned int ray_id);
 
   Point getIntersect(const Point & origin, const Point & direction) const;
 
@@ -34,11 +38,14 @@ protected:
   virtual void generateRays() override;
 
   std::vector<PikaUtils::NormalPlane> _planes;
-  std::vector<Point> _start_points;
-  std::vector<Point> _start_directions;
   const libMesh::BoundingBox & _bounding_box;
 
+  std::vector<std::shared_ptr<Ray>> _optic_rays;
+
   unsigned int _id;
+
+
+
 };
 
 #endif
