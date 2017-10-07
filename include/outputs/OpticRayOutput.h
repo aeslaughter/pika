@@ -10,7 +10,7 @@
 /**********************************************************************************/
 
 
-#include "Output.h"
+#include "FileOutput.h"
 #include "UserObjectInterface.h"
 
 #include "libmesh/replicated_mesh.h"
@@ -28,6 +28,7 @@ class OpticRayOutput : public Output, public UserObjectInterface
 public:
   OpticRayOutput(const InputParameters & params);
   virtual void output(const ExecFlagType & type);
+  std::string filename();
 
 protected:
   std::unique_ptr<ReplicatedMesh> _output_mesh;

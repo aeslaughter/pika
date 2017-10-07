@@ -20,6 +20,8 @@ validParams<OpticRayOutput>()
 {
   InputParameters params = validParams<Output>();
   params.addRequiredParam<UserObjectName>("tracker", "OpticRayTracker object for output (optional).");
+  params.addParam<std::string>("file_base",
+                             "The desired solution output name without an extension");
   return params;
 }
 
@@ -67,7 +69,13 @@ OpticRayOutput::output(const ExecFlagType & type)
   _output_equation_systems->init();
 
 //  std::unique_ptr<ExodusII_IO> exodus_io_ptr = libmesh_make_unique<ExodusII_IO>(*_output_mesh);
-  _exodus_io_ptr->write_timestep("test.e", *_output_equation_systems, timeStep(), time());
+  _exodus_io_ptr->write_timestep(filename(), *_output_equation_systems, timeStep(), time());
 
 
+}
+
+std::string
+OpticRayOutput::filename()
+{
+  return "ray_out.e";
 }

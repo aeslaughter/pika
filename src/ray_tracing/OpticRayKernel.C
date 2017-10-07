@@ -66,7 +66,7 @@ OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & 
   if (_phase[0] != _phase[2])
   {
     Point origin = end - start;
-    Point direction = PikaUtils::snell(origin, _grad_phase[1], _refractive_index[0], _refractive_index[1]);
+    Point direction = PikaUtils::snell(origin, _grad_phase[1], _refractive_index[1], _refractive_index[0]);
 //    Point new_end = _study.getIntersect(origin, direction);
 
 
@@ -83,12 +83,18 @@ OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & 
 
     if (_tracker)
       _tracker->addSegment(start, mid, _ray->id());
+/*
+    Real c = -_grad_phase[1].unit() * origin.unit();
+    if (c < 0)
+      c = _grad_phase[1].unit() * origin.unit();
 
-    direction(0) = direction(0)*-1;
+    std::cout << "cos(theta_0) = c = " << c << std::endl;
+*/
+//    direction(0) = direction(0)*-1;
 //    direction(1) = direction(1)*-1;
 
-    _study.addOpticRay(mid, direction, elem->id(), _ray->id());
-  //  _study.addOpticRay(mid, Point(1,-0.05,0), elem->id(), _ray->id());
+   _study.addOpticRay(mid, direction, elem->id(), _ray->id());
+//    _study.addOpticRay(mid, Point(1,-0.05,0), elem->id(), _ray->id());
   }
 
   else if (_tracker)

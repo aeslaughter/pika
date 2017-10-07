@@ -50,6 +50,7 @@
     ray_distance = 5
     start_points = '0, 0.5, 0'
     start_directions = '1 0.05 0'
+    tolerate_failure=true
   [../]
   [./tracker]
     type = OpticRayTracker

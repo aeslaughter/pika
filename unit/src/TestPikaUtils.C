@@ -21,16 +21,9 @@
 TEST(PikaUtils, snell)
 {
   {
-    libMesh::Point in(2,0,2);
-    libMesh::Point normal(0,0,-2);
-    libMesh::Point s2 = PikaUtils::snell(in, normal, 1, 1.5);
-    EXPECT_TRUE(s2.relative_fuzzy_equals(libMesh::Point(0.471404520791,0,0.881917103688)));
-  }
-
-  {
-    libMesh::Point in(4,1,1);
-    libMesh::Point normal(0,-2,-1);
-    libMesh::Point s2 = PikaUtils::snell(in, normal, 1, 1.5);
-    EXPECT_TRUE(s2.relative_fuzzy_equals(libMesh::Point(0.628539361055,0.661393354975,0.409264097619)));
+    libMesh::Point in(std::sqrt(2.)/2., std::sqrt(2.)/2.,2);
+    libMesh::Point normal(0,1,0);
+    libMesh::Point s2 = PikaUtils::snell(in, normal, 1, 0.9);
+    EXPECT_TRUE(s2.relative_fuzzy_equals(libMesh::Point(0.6363696, -0.771632, 0.)));
   }
 }

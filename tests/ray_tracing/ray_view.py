@@ -10,7 +10,7 @@ camera.SetViewUp(0.0000, 1.0000, 0.0000)
 camera.SetPosition(2.5544, 0.4976, 5.8028)
 camera.SetFocalPoint(2.5544, 0.4976, 0.0000)
 
-ray_reader = chigger.exodus.ExodusReader(u'test.e')
+ray_reader = chigger.exodus.ExodusReader(u'ray_out.e')
 ray_result = chigger.exodus.ExodusResult(ray_reader)
 ray_result.setOptions(edge_color=[0, 0, 0], camera=camera)
 

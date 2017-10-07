@@ -58,12 +58,17 @@ get_intersect(const libMesh::Point & origin, const libMesh::Point & direction, c
   return libMesh::Point(origin + direction * t);
 }
 
+/**
+ * https://en.wikipedia.org/wiki/Snell%27s_law
+ */
 libMesh::Point
-snell(const libMesh::Point & incoming, const libMesh::Point & normal, const libMesh::Real & n1, const libMesh::Real & n2)
+snell(const libMesh::Point & incoming, const libMesh::Point & normal, const libMesh::Real & n_1, const libMesh::Real & n_2)
 {
-  libMesh::Point s1 = incoming.unit();
-  libMesh::Point N = normal.unit();
-  return (n1/n2)*N.cross(-N.cross(s1))-N*std::sqrt(1-(n1/n2*n1/n2)*N.cross(s1)*N.cross(s1));
+  libMesh::Point l = incoming.unit();
+  libMesh::Point n = normal.unit();
+  libMesh::Real c = std::abs(-n * l);
+  libMesh::Real r = n_1 / n_2;
+  return r*l + (r*c - std::sqrt(1 - r*r * (1-c*c)))*n;
 
   /*
   const libMesh::Point n = normal.unit();
