@@ -1,8 +1,10 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 5
+  nx = 6
+  ny = 6
   xmax = 5
+  ymax = 5
 []
 
 [Variables]
@@ -35,11 +37,11 @@
   #active = 'refract_func'
   [./phase_func]
     type = ParsedFunction
-    value = 'if(x<2.5,0,1)'
+    value = 'if(y<2.5,0,1)'
   [../]
   [./refract_func]
     type = ParsedFunction
-    value = 'if(x<2.5,1.000293,5.31)'
+    value = 'if(y<2.5,1,0.9)'
   [../]
 []
 
@@ -47,9 +49,9 @@
   [./study]
     type = OpticRayStudy
     num_rays = 1
-    ray_distance = 5
-    start_points = '0, 0.5, 0'
-    start_directions = '1 0.05 0'
+    ray_distance = 50
+    start_points = '0 0 0'
+    start_directions = '1 1 0'
     tolerate_failure=true
   [../]
   [./tracker]

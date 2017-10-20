@@ -51,7 +51,7 @@ OpticRayTracker::addSegment(const Point & start, const Point & end, unsigned int
 {
   //Threads::spin_mutex::scoped_lock lock(Threads::spin_mtx);
 
-  std::cout << "OpticRayTracker::addSegment - "; start.print();
+  std::cout << "OpticRayTracker::addSegment - "; start.print(); end.print();
   std::cout << std::endl;
 
   _segments[id].emplace_back(std::make_pair(start, end));

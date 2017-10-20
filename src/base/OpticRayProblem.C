@@ -24,6 +24,6 @@ OpticRayProblem::solve()
     FEProblem::solve();
 
   if (_solve_ray)
-    while (optic_study.hasOpticRay())
+    //while (optic_study.hasOpticRay())
       _ray_system->solve();
 }

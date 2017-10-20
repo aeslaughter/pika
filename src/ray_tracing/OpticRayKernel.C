@@ -39,7 +39,6 @@ OpticRayKernel::OpticRayKernel(const InputParameters & parameters) :
 {
   if (isParamValid("tracker"))
   {
-    std::cout << "TRACKER!!!!!!!!!!!!!" << std::endl;
     const ExecuteMooseObjectWarehouse<UserObject> & objects = _ray_problem.getUserObjects();
     const UserObjectName & name = getParam<UserObjectName>("tracker");
     _tracker = static_cast<OpticRayTracker *>(objects.getActiveObject(name).get());
@@ -47,27 +46,36 @@ OpticRayKernel::OpticRayKernel(const InputParameters & parameters) :
 }
 
 void
-OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & end, bool /*ends_in_elem*/)
+OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & end, bool ends_in_elem)
 {
+  std::cout << "OpticRayKernel::onSegment()\n";
+  std::cout << "  Elem: " << elem->id();
+  std::cout << " Start: "; start.print();
+  std::cout << " End: "; end.print();
+  std::cout << " ends_in_elem = " << ends_in_elem;
+  std::cout << std::endl;
+  return;
+
+
+  Real threshold = 0.5;
+
+  /*
   if (start == _ray->start())
   {
     _tracker->addSegment(start, end, _ray->id());
     return;
   }
+  */
 
-
-  //_ray_problem.setActiveElementalMooseVariables({getVar("refractive_index", 0)}, _tid);
   Point mid = start + (end - start)/2.; // TODO: interp on phase
   _ray_problem.reinitElemPhys(elem, {start, mid, end}, _tid);
 
 
-
-
-  if (_phase[0] != _phase[2])
+  if ((_phase[0] < threshold && _phase[2] > threshold) ||
+      (_phase[0] > threshold && _phase[2] < threshold))
   {
     Point origin = end - start;
     Point direction = PikaUtils::snell(origin, _grad_phase[1], _refractive_index[1], _refractive_index[0]);
-//    Point new_end = _study.getIntersect(origin, direction);
 
 
     std::cout << "START: "; start.print(); _ray->start().print(); std::cout << std::endl;
@@ -83,27 +91,14 @@ OpticRayKernel::onSegment(const Elem * elem, const Point & start, const Point & 
 
     if (_tracker)
       _tracker->addSegment(start, mid, _ray->id());
-/*
-    Real c = -_grad_phase[1].unit() * origin.unit();
-    if (c < 0)
-      c = _grad_phase[1].unit() * origin.unit();
 
-    std::cout << "cos(theta_0) = c = " << c << std::endl;
-*/
-//    direction(0) = direction(0)*-1;
-//    direction(1) = direction(1)*-1;
 
-   _study.addOpticRay(mid, direction, elem->id(), _ray->id());
-//    _study.addOpticRay(mid, Point(1,-0.05,0), elem->id(), _ray->id());
+    _study.addOpticRay(mid, direction, elem->id(), _ray->id());
   }
 
-  else if (_tracker)
-    _tracker->addSegment(start, end, _ray->id());
+  //else if (_tracker)
+  //  _tracker->addSegment(start, end, _ray->id());
 
-
-  //std::cout << "ID: " << elem->id();
-  //end.print();
-  //std::cout << std::endl;
 
 }
 
