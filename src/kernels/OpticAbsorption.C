@@ -9,28 +9,27 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#include "OpticAbsorption.h"
 
+registerADMooseObject("PikaApp", OpticAbsorption);
 
-#include "InitialCondition.h"
+defineADValidParams(
+  OpticAbsorption,
+  ADKernel,
+  params.addParam<MaterialPropertyName>("absorption_coefficient", "absorption_coefficient",
+                                        "The absorption coefficient ($\\mu_a$) name [1/m].");
+  );
 
-class KaempferAnalyticPhaseIC;
-
-template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
-
-class KaempferAnalyticPhaseIC : public InitialCondition
+template <ComputeStage compute_stage>
+OpticAbsorption<compute_stage>::OpticAbsorption(const InputParameters & parameters) :
+    ADKernel<compute_stage>(parameters),
+    _absorption_coef(adGetADMaterialProperty<Real>("absorption_coefficient"))
 {
-public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
+}
 
-  virtual Real value(const Point & p);
-
-protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
-};
-
-#endif // KAEMPFERANALYTICPHASEIC_H
+template <ComputeStage compute_stage>
+ADResidual
+OpticAbsorption<compute_stage>::computeQpResidual()
+{
+  return _absorption_coef[_qp] * _test[_i][_qp] * _u[_qp];
+}

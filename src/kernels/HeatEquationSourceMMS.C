@@ -11,7 +11,7 @@
 
 #include "HeatEquationSourceMMS.h"
 
-registerMooseObject("PikaApp", HeatEquationSourceMMS);
+registerMooseObject("PikaTestApp", HeatEquationSourceMMS);
 
 template<>
 InputParameters validParams<HeatEquationSourceMMS>()

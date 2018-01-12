@@ -9,28 +9,31 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#ifndef OPTICDIFFUSESOURCEBC_H
+#define OPTICDIFFUSESOURCEBC_H
 
+// MOOSE includes
+#include "ADIntegratedBC.h"
 
-#include "InitialCondition.h"
+template <ComputeStage compute_stage>
+class OpticDiffuseSourceBC;
 
-class KaempferAnalyticPhaseIC;
+declareADValidParams(OpticDiffuseSourceBC);
 
-template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
-
-class KaempferAnalyticPhaseIC : public InitialCondition
+template <ComputeStage compute_stage>
+class OpticDiffuseSourceBC : public ADIntegratedBC<compute_stage>
 {
 public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
-
-  virtual Real value(const Point & p);
+  OpticDiffuseSourceBC(const InputParameters & parameters);
 
 protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
+  virtual ADResidual computeQpResidual() override;
+
+private:
+
+  const ADMaterialProperty(Real) & _diffusion_coef;
+
+  usingIntegratedBCMembers;
 };
 
-#endif // KAEMPFERANALYTICPHASEIC_H
+#endif

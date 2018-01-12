@@ -9,28 +9,31 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#ifndef OPTICABSORPTION_H
+#define OPTICABSORPTION_H
 
+// MOOSE includes
+#include "ADKernel.h"
 
-#include "InitialCondition.h"
+template <ComputeStage compute_stage>
+class OpticAbsorption;
 
-class KaempferAnalyticPhaseIC;
+declareADValidParams(OpticAbsorption);
 
-template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
-
-class KaempferAnalyticPhaseIC : public InitialCondition
+template <ComputeStage compute_stage>
+class OpticAbsorption : public ADKernel<compute_stage>
 {
 public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
-
-  virtual Real value(const Point & p);
+  OpticAbsorption(const InputParameters & parameters);
 
 protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
+  virtual ADResidual computeQpResidual() override;
+
+private:
+
+  const ADMaterialProperty(Real) & _absorption_coef;
+
+  usingKernelMembers;
 };
 
-#endif // KAEMPFERANALYTICPHASEIC_H
+#endif

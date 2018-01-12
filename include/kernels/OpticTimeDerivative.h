@@ -9,28 +9,31 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#ifndef OPTICTIMEDERIVATIVE_H
+#define OPTICTIMEDERIVATIVE_H
 
+// MOOSE includes
+#include "TimeDerivative.h"
 
-#include "InitialCondition.h"
-
-class KaempferAnalyticPhaseIC;
+// Forward declerations
+class OpticTimeDerivative;
 
 template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
+InputParameters validParams<OpticTimeDerivative>();
 
-class KaempferAnalyticPhaseIC : public InitialCondition
+class OpticTimeDerivative :
+  public TimeDerivative
 {
 public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
-
-  virtual Real value(const Point & p);
+  OpticTimeDerivative(const InputParameters & parameters);
 
 protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
+  Real computeQpResidual();
+  Real computeQpJacobian();
+
+private:
+
+  const MaterialProperty<Real> & _light_speed;
 };
 
-#endif // KAEMPFERANALYTICPHASEIC_H
+#endif

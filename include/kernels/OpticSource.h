@@ -9,28 +9,37 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#ifndef OPTICSOURCE_H
+#define OPTICSOURCE_H
 
+// MOOSE includes
+#include "ADKernel.h"
 
-#include "InitialCondition.h"
+template <ComputeStage compute_stage>
+class OpticSource;
 
-class KaempferAnalyticPhaseIC;
+declareADValidParams(OpticSource);
 
-template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
-
-class KaempferAnalyticPhaseIC : public InitialCondition
+template <ComputeStage compute_stage>
+class OpticSource : public ADKernel<compute_stage>
 {
 public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
-
-  virtual Real value(const Point & p);
+  OpticSource(const InputParameters & parameters);
 
 protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
+  virtual ADResidual computeQpResidual() override;
+
+private:
+
+  Function & _function;
+
+  using ADKernel<compute_stage>::getFunction;//(const std::string &);
+  using ADKernel<compute_stage>::_qp;
+  using ADKernel<compute_stage>::_i;
+  using ADKernel<compute_stage>::_q_point;
+  using ADKernel<compute_stage>::_t;
+  using ADKernel<compute_stage>::_test;
+
 };
 
-#endif // KAEMPFERANALYTICPHASEIC_H
+#endif

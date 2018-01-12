@@ -17,6 +17,8 @@ registerMooseObject("PikaApp", DoubleWellPotentialMMS);
 // registered there instead.
 registerMooseObject("PikaApp", DoubleWellPotential);
 
+registerMooseObject("PikaTestApp", DoubleWellPotentialMMS);
+
 template<>
 InputParameters validParams<DoubleWellPotentialMMS>()
 {

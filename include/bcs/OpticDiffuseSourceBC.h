@@ -9,28 +9,28 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#include "OpticDiffuseSourceBC.h"
+
+registerADMooseObject("PikaApp", OpticDiffuseSourceBC);
 
 
-#include "InitialCondition.h"
+defineADValidParams(
+  OpticDiffuseSourceBC,
+  ADIntegratedBC,
+  //params.addParam<MaterialPropertyName>("diffusion_coefficient", "optic_diffusion_coefficient",
+  //                                      "The diffusion coefficient for optical diffusion.");
+  );
 
-class KaempferAnalyticPhaseIC;
-
-template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
-
-class KaempferAnalyticPhaseIC : public InitialCondition
+template <ComputeStage compute_stage>
+OpticDiffuseSourceBC<compute_stage>::OpticDiffuseSourceBC(const InputParameters & parameters) :
+    ADIntegratedBC<compute_stage>(parameters)//,
+//    _diffusion_coef(adGetADMaterialProperty<Real>("diffusion_coefficient"))
 {
-public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
+}
 
-  virtual Real value(const Point & p);
-
-protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
-};
-
-#endif // KAEMPFERANALYTICPHASEIC_H
+template <ComputeStage compute_stage>
+ADResidual
+OpticDiffuseSourceBC<compute_stage>::computeQpResidual()
+{
+  return 0.0;// _diffusion_coef[_qp] * ADDiffuseSourceBC<compute_stage>::computeQpResidual();
+}

@@ -9,28 +9,27 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#include "OpticSource.h"
+#include "Function.h"
 
+registerADMooseObject("PikaApp", OpticSource);
 
-#include "InitialCondition.h"
+defineADValidParams(
+  OpticSource,
+  ADKernel,
+  params.addParam<FunctionName>("function", "0", "A function that describes the body force");
+  );
 
-class KaempferAnalyticPhaseIC;
-
-template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
-
-class KaempferAnalyticPhaseIC : public InitialCondition
+template <ComputeStage compute_stage>
+OpticSource<compute_stage>::OpticSource(const InputParameters & parameters) :
+    ADKernel<compute_stage>(parameters),
+    _function(getFunction("function"))
 {
-public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
+}
 
-  virtual Real value(const Point & p);
-
-protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
-};
-
-#endif // KAEMPFERANALYTICPHASEIC_H
+template <ComputeStage compute_stage>
+ADResidual
+OpticSource<compute_stage>::computeQpResidual()
+{
+  return - _function.value(_t, _q_point[_qp]) * _test[_i][_qp];
+}

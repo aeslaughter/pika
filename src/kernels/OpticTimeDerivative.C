@@ -9,28 +9,32 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#include "OpticTimeDerivative.h"
 
-
-#include "InitialCondition.h"
-
-class KaempferAnalyticPhaseIC;
+registerMooseObject("PikaApp", OpticTimeDerivative);
 
 template<>
-InputParameters validParams<KaempferAnalyticPhaseIC>();
-
-class KaempferAnalyticPhaseIC : public InitialCondition
+InputParameters validParams<OpticTimeDerivative>()
 {
-public:
-  KaempferAnalyticPhaseIC(const InputParameters & parameters);
+  InputParameters params = validParams<TimeDerivative>();
+  params.addParam<MaterialPropertyName>("light_speed", "light_speed", "The speed of light [m/s].");
+  return params;
+}
 
-  virtual Real value(const Point & p);
+OpticTimeDerivative::OpticTimeDerivative(const InputParameters & parameters) :
+    TimeDerivative(parameters),
+    _light_speed(getMaterialProperty<Real>("light_speed"))
+{
+}
 
-protected:
-  Real _x1, _x2, _x3, _x4;
-  Real _phi_new;
-  Real _phi_old;
-};
+Real
+OpticTimeDerivative::computeQpResidual()
+{
+  return 1. / _light_speed[_qp] * TimeDerivative::computeQpResidual();
+}
 
-#endif // KAEMPFERANALYTICPHASEIC_H
+Real
+OpticTimeDerivative::computeQpJacobian()
+{
+  return 1. / _light_speed[_qp] * TimeDerivative::computeQpJacobian();
+}
