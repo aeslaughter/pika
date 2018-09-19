@@ -1,7 +1,8 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  ymax = 10
+  ymax = 0
+  ymin = -10
   nx = 10
   ny = 100
 []
@@ -31,7 +32,7 @@
   inactive = 'top'
   [./top]
     type = ConstantIC
-    value = 10000
+    value = 1
     boundary = top
     variable = u
   [../]
@@ -48,7 +49,7 @@
   [./bottom_flux]
     type = PhotonBC
     variable = u
-    boundary = 'bottom'
+    boundary = 'left right bottom'
   [../]
   [./bottom]
     type = DirichletBC
@@ -63,7 +64,7 @@
     type = LineValueSampler
     num_points = 100
     start_point = '0.5 0 0'
-    end_point = '0.5 10 0'
+    end_point = '0.5 -10 0'
     variable = u
     sort_by = 'y'
    [../]
