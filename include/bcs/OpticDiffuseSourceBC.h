@@ -17,14 +17,14 @@ registerADMooseObject("PikaApp", OpticDiffuseSourceBC);
 defineADValidParams(
   OpticDiffuseSourceBC,
   ADIntegratedBC,
-  //params.addParam<MaterialPropertyName>("diffusion_coefficient", "optic_diffusion_coefficient",
-  //                                      "The diffusion coefficient for optical diffusion.");
+  params.addParam<MaterialPropertyName>("average_frensel_transmittance", "transmittance",
+                                        "The average Frensel transmittance ($F_{dt}$).");
   );
 
 template <ComputeStage compute_stage>
 OpticDiffuseSourceBC<compute_stage>::OpticDiffuseSourceBC(const InputParameters & parameters) :
-    ADIntegratedBC<compute_stage>(parameters)//,
-//    _diffusion_coef(adGetADMaterialProperty<Real>("diffusion_coefficient"))
+    ADIntegratedBC<compute_stage>(parameters),
+    _transmittance(adGetADMaterialProperty<Real>("transmittance"))
 {
 }
 
@@ -32,5 +32,8 @@ template <ComputeStage compute_stage>
 ADResidual
 OpticDiffuseSourceBC<compute_stage>::computeQpResidual()
 {
-  return 0.0;// _diffusion_coef[_qp] * ADDiffuseSourceBC<compute_stage>::computeQpResidual();
+  ADReal F_dt = _transmittance[_qp];
+  ADReal F_dr = 1.0 - F_dt;
+  ADReal A = (1.0 + F_dr) / (1.0 - F_dr);
+  return (1.0 / (2.0 * A) * _u[_qp] - 2.0 / (A * F_dt) * _incoming_flux[_qp]) * _test[_i][_qp];
 }

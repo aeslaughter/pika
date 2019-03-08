@@ -31,7 +31,7 @@ protected:
 
 private:
 
-  const ADMaterialProperty(Real) & _diffusion_coef;
+  const ADMaterialProperty(Real) & _transmittance;
 
   usingIntegratedBCMembers;
 };
