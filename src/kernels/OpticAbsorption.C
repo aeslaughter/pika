@@ -16,8 +16,8 @@ registerADMooseObject("PikaApp", OpticAbsorption);
 defineADValidParams(
   OpticAbsorption,
   ADKernel,
-  params.addParam<MaterialPropertyName>("absorption_coefficient", "absorption_coefficient",
-                                        "The absorption coefficient ($\\mu_a$) name [1/m].");
+  params.addParam<MaterialPropertyName>("absorption_coefficient", "optic_absorption_coefficient",
+                                        "The absorption coefficient ($\\sigma_a$) name [1/m].");
   );
 
 template <ComputeStage compute_stage>

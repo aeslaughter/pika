@@ -9,31 +9,33 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#include "OpticDiffuseSourceBC.h"
+#ifndef OPTICDIFFUSESOURCEBC_H
+#define OPTICDIFFUSESOURCEBC_H
 
-registerADMooseObject("PikaApp", OpticDiffuseSourceBC);
-
-
-defineADValidParams(
-  OpticDiffuseSourceBC,
-  ADIntegratedBC,
-  params.addParam<MaterialPropertyName>("average_frensel_transmittance", "transmittance",
-                                        "The average Frensel transmittance ($F_{dt}$).");
-  );
+// MOOSE includes
+#include "ADIntegratedBC.h"
 
 template <ComputeStage compute_stage>
-OpticDiffuseSourceBC<compute_stage>::OpticDiffuseSourceBC(const InputParameters & parameters) :
-    ADIntegratedBC<compute_stage>(parameters),
-    _transmittance(adGetADMaterialProperty<Real>("transmittance"))
-{
-}
+class OpticDiffuseSourceBC;
+
+declareADValidParams(OpticDiffuseSourceBC);
 
 template <ComputeStage compute_stage>
-ADResidual
-OpticDiffuseSourceBC<compute_stage>::computeQpResidual()
+class OpticDiffuseSourceBC : public ADIntegratedBC<compute_stage>
 {
-  ADReal F_dt = _transmittance[_qp];
-  ADReal F_dr = 1.0 - F_dt;
-  ADReal A = (1.0 + F_dr) / (1.0 - F_dr);
-  return (1.0 / (2.0 * A) * _u[_qp] - 2.0 / (A * F_dt) * _incoming_flux[_qp]) * _test[_i][_qp];
-}
+public:
+  OpticDiffuseSourceBC(const InputParameters & parameters);
+
+protected:
+  virtual ADResidual computeQpResidual() override;
+
+private:
+
+  const ADMaterialProperty(Real) & _transmittance;
+
+  const ADVariableValue & _incoming_flux;
+
+  usingIntegratedBCMembers;
+};
+
+#endif

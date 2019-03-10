@@ -19,6 +19,16 @@ public:
   OpticMaterial(const InputParameters & parameters);
 
   virtual void computeQpProperties() override;
+
+protected:
+
+  ADMaterialProperty(Real) & _diffusion_coef;
+
+  ADMaterialProperty(Real) & _absorption_coef;
+
+  ADMaterialProperty(Real) & _fresnel_transmittance;
+
+  usingMaterialMembers;
 };
 
-#endif // OPTICMATERIAL_H
+#endif
