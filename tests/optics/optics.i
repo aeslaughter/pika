@@ -26,18 +26,27 @@
 
 
 [BCs]
+  #active = 'arbree arbree_other'
+  active = 'neumann'
+  [arbree]
+    type = OpticDiffuseSourceBC
+    variable = radiant_fluence
+    boundary = top
+    incoming_flux = 100
+  []
+  [arbree_other]
+    type = OpticDiffuseSourceBC
+    variable = radiant_fluence
+    boundary = 'left right bottom'
+    incoming_flux = 0
+  []
+
   [neumann]
     type = ADNeumannBC
     variable = radiant_fluence
     boundary = top
     value = 100
   []
-  #[bottom]
-  #  type = DirichletBC
-  #  variable = radiant_fluence
-  #  boundary = bottom
-  #  value = 0
-  #[]
 []
 
 [Postprocessors]
@@ -52,6 +61,17 @@
     boundary = bottom
     variable = radiant_fluence
     diffusivity = optic_diffusion_coefficient
+  []
+[]
+
+[VectorPostprocessors]
+  [line]
+    type = LineValueSampler
+    start_point = '0.5 1 0'
+    end_point = '0.5 0 0'
+    num_points = 100
+    variable = radiant_fluence
+    sort_by = y
   []
 []
 

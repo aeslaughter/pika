@@ -34,7 +34,7 @@ protected:
 
   ADMaterialProperty(Real) & _anisotropy_prop;
 
-  // ADMaterialProperty(Real) & _fresnel_transmittance;
+  ADMaterialProperty(Real) & _fresnel_transmittance;
 
   usingMaterialMembers;
 };

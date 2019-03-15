@@ -18,7 +18,7 @@ defineADValidParams(
   OpticDiffuseSourceBC,
   ADIntegratedBC,
   params.addCoupledVar("incoming_flux", "The total incoming irradiance ($W/m^2$).");
-  params.addParam<MaterialPropertyName>("average_fresnel_transmittance", "fresnel_transmittance",
+  params.addParam<MaterialPropertyName>("fresnel_transmittance", "optic_fresnel_transmittance",
                                         "The average Fressel transmittance ($F_{dt}$).");
   );
 

@@ -21,9 +21,8 @@ OpticMaterial<compute_stage>::OpticMaterial(const InputParameters & parameters) 
     _diffusion_prop(adDeclareADProperty<Real>("optic_diffusion_coefficient")),
     _absorption_prop(adDeclareADProperty<Real>("optic_absorption_coefficient")),
     _scattering_prop(adDeclareADProperty<Real>("optic_scattering_coefficient")),
-    _anisotropy_prop(adDeclareADProperty<Real>("optic_anisotropy"))
-
-    // _fresnel_transmittance(adDeclareADProperty<Real>("fresnel_transmittance"))
+    _anisotropy_prop(adDeclareADProperty<Real>("optic_anisotropy")),
+    _fresnel_transmittance(adDeclareADProperty<Real>("optic_fresnel_transmittance"))
 {
 }
 
@@ -38,36 +37,24 @@ OpticMaterial<compute_stage>::computeQpProperties()
   ADReal reduced_scattering = (1.0 - _anisotropy_prop[_qp]) * _scattering_prop[_qp];
   _diffusion_prop[_qp] = 1.0 / (3.0*(_absorption_prop[_qp] - reduced_scattering));
 
+  //Real albedo = 0.94;
+  //Real density = 300;
 
-  //_diffusion_coef[_qp];
-
-
-
-
-  /*
-  Real albedo = 0.94;
-  Real density = 300;
-
-  Real mu = 1.0;
+  //Real mu = 1.0;
   Real r_ice = 1.31;
   Real r_air = 1.003;
 
-  Real x = density/934.0;
+  //Real x = density/934.0;
 
-  Real r_snow = r_ice * x + r_air * (1-x);
-  Real eta = r_snow / r_air;
+  //Real r_snow = r_ice * x + r_air * (1-x);
+  Real eta = r_ice / r_air;
 
-  Real fr = std::pow(r_air - r_snow, 2) / std::pow(r_air + r_snow, 2);
+  //Real fr = std::pow(r_air - r_ice, 2) / std::pow(r_air + r_ice, 2);
   Real f_dr = -1.440 / (eta * eta) + 0.710/eta + 0.668 + 0.0636*eta;
 
   //std::cout << "fr = " << fr << "; f_dr = " << f_dr << std::endl;
 
-  _absorption_coef[_qp] = 110.0;
-  ADReal scattering_coef = _absorption_coef[_qp] * albedo / (1 - albedo);
   _fresnel_transmittance[_qp] = 1 - f_dr;
-
-  _diffusion_coef[_qp] = 1.0 / (3 * ((1 - mu) * scattering_coef + _absorption_coef[_qp]));
-  */
 
 }
 
