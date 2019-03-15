@@ -27,7 +27,9 @@
 
 [BCs]
   #active = 'arbree arbree_other'
-  active = 'neumann'
+  #active = 'arbree'
+  #active = 'neumann'
+  active = 'dirichlet'
   [arbree]
     type = OpticDiffuseSourceBC
     variable = radiant_fluence
@@ -39,6 +41,13 @@
     variable = radiant_fluence
     boundary = 'left right bottom'
     incoming_flux = 0
+  []
+
+  [dirichlet]
+    type = DirichletBC
+    variable = radiant_fluence
+    boundary = top
+    value = 100
   []
 
   [neumann]
@@ -78,8 +87,8 @@
 [Materials]
   [optics]
     type = OpticMaterial
-    optic_scattering = 190
-    optic_absorption = 0.5
+    optic_scattering = 0.05
+    optic_absorption = 190
     optic_anisotropy = 1
   []
 []
