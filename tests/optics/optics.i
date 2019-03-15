@@ -1,11 +1,8 @@
 [Mesh]
   type = GeneratedMesh
-  dim = 2
+  dim = 1
   nx = 10
-  ny = 10
-  #ymax = 1
-  #xmax = 1
-  uniform_refine = 3
+  uniform_refine = 4
 []
 
 [Variables]
@@ -16,10 +13,12 @@
   [diffusion]
     type = OpticDiffusion
     variable = radiant_fluence
+    diffusion_coefficient = 1
   []
   [absorption]
     type = OpticAbsorption
     variable = radiant_fluence
+    absorption_coefficient = 1
   []
 []
 
@@ -46,7 +45,7 @@
   [dirichlet]
     type = DirichletBC
     variable = radiant_fluence
-    boundary = top
+    boundary = left
     value = 100
   []
 
@@ -59,15 +58,16 @@
 []
 
 [Postprocessors]
+  active = ''
   [top_flux]
     type = SideFluxAverage
-    boundary = top
+    boundary = left
     variable = radiant_fluence
     diffusivity = optic_diffusion_coefficient
   []
   [bottom_flux]
     type = SideFluxAverage
-    boundary = bottom
+    boundary = right
     variable = radiant_fluence
     diffusivity = optic_diffusion_coefficient
   []
@@ -76,19 +76,20 @@
 [VectorPostprocessors]
   [line]
     type = LineValueSampler
-    start_point = '0.5 1 0'
-    end_point = '0.5 0 0'
+    start_point = '1 0 0'
+    end_point = '0 0 0'
     num_points = 100
     variable = radiant_fluence
-    sort_by = y
+    sort_by = x
   []
 []
 
 [Materials]
+  active = ''
   [optics]
     type = OpticMaterial
-    optic_scattering = 0.05
-    optic_absorption = 190
+    optic_scattering = 94
+    optic_absorption = 40
     optic_anisotropy = 1
   []
 []
