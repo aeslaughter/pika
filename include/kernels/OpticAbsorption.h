@@ -13,7 +13,7 @@
 #define OPTICABSORPTION_H
 
 // MOOSE includes
-#include "ADKernel.h"
+#include "ADKernelValue.h"
 
 template <ComputeStage compute_stage>
 class OpticAbsorption;
@@ -21,13 +21,13 @@ class OpticAbsorption;
 declareADValidParams(OpticAbsorption);
 
 template <ComputeStage compute_stage>
-class OpticAbsorption : public ADKernel<compute_stage>
+class OpticAbsorption : public ADKernelValue<compute_stage>
 {
 public:
   OpticAbsorption(const InputParameters & parameters);
 
 protected:
-  virtual ADResidual computeQpResidual() override;
+  virtual ADResidual precomputeQpResidual() override;
 
 private:
 

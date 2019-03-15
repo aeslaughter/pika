@@ -22,11 +22,19 @@ public:
 
 protected:
 
-  ADMaterialProperty(Real) & _diffusion_coef;
+  const ADVariableValue & _absorption_variable;
+  const ADVariableValue & _scattering_variable;
+  const ADVariableValue & _anisotropy_variable;
 
-  ADMaterialProperty(Real) & _absorption_coef;
+  ADMaterialProperty(Real) & _diffusion_prop;
 
-  ADMaterialProperty(Real) & _fresnel_transmittance;
+  ADMaterialProperty(Real) & _absorption_prop;
+
+  ADMaterialProperty(Real) & _scattering_prop;
+
+  ADMaterialProperty(Real) & _anisotropy_prop;
+
+  // ADMaterialProperty(Real) & _fresnel_transmittance;
 
   usingMaterialMembers;
 };

@@ -27,11 +27,16 @@ public:
   OpticDiffusion(const InputParameters & parameters);
 
 protected:
-  virtual ADResidual computeQpResidual() override;
+  virtual ADVectorResidual precomputeQpResidual() override;
 
 private:
 
   const ADMaterialProperty(Real) & _diffusion_coef;
+  //const ADMaterialProperty(Real) & _absorption_coef;
+  //const ADMaterialProperty(Real) & _scattering_coef;
+  //const ADMaterialProperty(Real) & _anisotropy;
+
+
 
   usingKernelMembers;
 };

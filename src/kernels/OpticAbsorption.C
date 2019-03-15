@@ -15,21 +15,21 @@ registerADMooseObject("PikaApp", OpticAbsorption);
 
 defineADValidParams(
   OpticAbsorption,
-  ADKernel,
+  ADKernelValue,
   params.addParam<MaterialPropertyName>("absorption_coefficient", "optic_absorption_coefficient",
                                         "The absorption coefficient ($\\sigma_a$) name [1/m].");
   );
 
 template <ComputeStage compute_stage>
 OpticAbsorption<compute_stage>::OpticAbsorption(const InputParameters & parameters) :
-    ADKernel<compute_stage>(parameters),
+    ADKernelValue<compute_stage>(parameters),
     _absorption_coef(adGetADMaterialProperty<Real>("absorption_coefficient"))
-{
+{\
 }
 
 template <ComputeStage compute_stage>
 ADResidual
-OpticAbsorption<compute_stage>::computeQpResidual()
+OpticAbsorption<compute_stage>::precomputeQpResidual()
 {
-  return _absorption_coef[_qp] * _test[_i][_qp] * _u[_qp];
+  return _absorption_coef[_qp]  * _u[_qp];
 }

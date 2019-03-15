@@ -34,7 +34,7 @@ template <ComputeStage compute_stage>
 ADResidual
 OpticDiffuseSourceBC<compute_stage>::computeQpResidual()
 {
-  ADReal gamma_s = _incoming_flux[_qp] * _dt;
+  ADReal gamma_s = _incoming_flux[_qp];// * _dt;
   ADReal F_dt = _transmittance[_qp];
   ADReal F_dr = 1.0 - F_dt;
   ADReal A = (1.0 + F_dr) / (1.0 - F_dr);
