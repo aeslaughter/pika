@@ -13,22 +13,18 @@
   [diffusion]
     type = OpticDiffusion
     variable = radiant_fluence
-    diffusion_coefficient = 1
   []
   [absorption]
     type = OpticAbsorption
     variable = radiant_fluence
-    absorption_coefficient = 1
   []
 []
-
-
 
 [BCs]
   #active = 'arbree arbree_other'
   #active = 'arbree'
-  #active = 'neumann'
-  active = 'dirichlet'
+  #active = 'dirichlet'
+  active = 'dirichlet griffiths'
   [arbree]
     type = OpticDiffuseSourceBC
     variable = radiant_fluence
@@ -49,11 +45,10 @@
     value = 100
   []
 
-  [neumann]
-    type = ADNeumannBC
+  [griffiths]
+    type = OpticGriffithsBC
     variable = radiant_fluence
-    boundary = top
-    value = 100
+    boundary = right
   []
 []
 
@@ -85,7 +80,6 @@
 []
 
 [Materials]
-  active = ''
   [optics]
     type = OpticMaterial
     optic_scattering = 94

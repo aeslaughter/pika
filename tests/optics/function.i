@@ -40,7 +40,6 @@
 [BCs]
   #active = 'arbree arbree_other'
   #active = 'arbree'
-  #active = 'neumann'
   active = 'dirichlet'
   [arbree]
     type = OpticDiffuseSourceBC
@@ -57,13 +56,6 @@
 
   [dirichlet]
     type = DirichletBC
-    variable = radiant_fluence
-    boundary = top
-    value = 100
-  []
-
-  [neumann]
-    type = ADNeumannBC
     variable = radiant_fluence
     boundary = top
     value = 100

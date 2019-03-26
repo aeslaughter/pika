@@ -8,12 +8,14 @@ import mooseutils
 vpp = mooseutils.VectorPostprocessorReader('decay_out_line_*.csv')
 
 
-x = vpp('radiant_fluence')
+x = vpp('u')
 y = vpp('x')
+
+print y
 
 depth = 1
 kappa = 1
-z = np.linspace(0,10,100)
+z = np.linspace(0,2,100)
 q = np.exp(-z)
 
 
