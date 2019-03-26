@@ -1,0 +1,7 @@
+[Tests]
+  [snow_optics]
+    type = Exodiff
+    input = snow_optics.i
+    exodiff = snow_optics_out.e
+  []
+g[]
