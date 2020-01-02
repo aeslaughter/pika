@@ -5,11 +5,6 @@
 #include "ADIntegratedBC.h"
 
 template <ComputeStage compute_stage>
-class OpticGriffithsBC;
-
-declareADValidParams(OpticGriffithsBC);
-
-template <ComputeStage compute_stage>
 class OpticGriffithsBC : public ADIntegratedBC<compute_stage>
 {
 public:

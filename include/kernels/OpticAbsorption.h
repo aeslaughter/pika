@@ -16,11 +16,6 @@
 #include "ADKernelValue.h"
 
 template <ComputeStage compute_stage>
-class OpticAbsorption;
-
-declareADValidParams(OpticAbsorption);
-
-template <ComputeStage compute_stage>
 class OpticAbsorption : public ADKernelValue<compute_stage>
 {
 public:

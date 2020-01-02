@@ -16,11 +16,6 @@
 #include "ADKernel.h"
 
 template <ComputeStage compute_stage>
-class OpticSource;
-
-declareADValidParams(OpticSource);
-
-template <ComputeStage compute_stage>
 class OpticSource : public ADKernel<compute_stage>
 {
 public:

@@ -1,4 +1,8 @@
 depth = 0.25
+kappa = 40
+alpha = 0.94
+q_in = 100
+g = 0
 
 [Mesh]
   type = GeneratedMesh
@@ -16,37 +20,21 @@ depth = 0.25
   [diffusion]
     type = OpticDiffusion
     variable = u
-    diffusion_coefficient = 0.014433756729740631
+    #diffusion_coefficient = 0.014433756729740631
   []
   [absorption]
     type = OpticAbsorption
     variable = u
-    absorption_coefficient = 23.09401076758505
+    #absorption_coefficient = 23.09401076758505
   []
 []
 
 [BCs]
-  active = 'dirichlet'
-  #active = 'dirichlet dirichlet2'
-  #active = 'dirichlet griffiths'
-  [dirichlet]
+  [source]
     type = DirichletBC
     variable = u
     boundary = left
-    value = 1
-  []
-  [dirichlet2]
-    type = DirichletBC
-    variable = u
-    boundary = right
-    value = 0.135335
-  []
-
-  [griffiths]
-    type = OpticGriffithsBC
-    variable = u
-    boundary = right
-    diffusion_coefficient = 0.014433756729740631
+    value = ${q_in}
   []
 []
 
@@ -54,12 +42,9 @@ depth = 0.25
   [h]
     type = AverageElementSize
   []
-  [dofs]
-    type = NumDOFs
-  []
   [error]
     type = NodalL2Error
-    function = exp(-40*x)
+    function = '${q_in}*exp(-${kappa}*x)'
     variable = u
   []
 []
@@ -75,6 +60,14 @@ depth = 0.25
   []
 []
 
+[Materials]
+  [snow]
+    type = SnowOpticMaterial
+    effective_attenuation_coefficient = ${kappa}
+    single_scattering_albedo = ${alpha}
+    scattering_anisotropy = ${g}
+  []
+[]
 
 [Executioner]
   type = Steady

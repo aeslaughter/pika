@@ -19,7 +19,8 @@ N = 20
 depth = 0.25
 u_eff = 40
 alpha = 0.94
-g = 1
+q_in = 100
+g = 0
 
 
 
@@ -36,7 +37,7 @@ y = vpp['x']
 
 
 z = np.linspace(0,depth,N)
-q = np.exp(-u_eff*z)
+q = q_in*np.exp(-u_eff*z)
 
 
 fig = plt.figure()

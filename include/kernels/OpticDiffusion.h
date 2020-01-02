@@ -16,11 +16,6 @@
 #include "ADDiffusion.h"
 
 template <ComputeStage compute_stage>
-class OpticDiffusion;
-
-declareADValidParams(OpticDiffusion);
-
-template <ComputeStage compute_stage>
 class OpticDiffusion : public ADDiffusion<compute_stage>
 {
 public:

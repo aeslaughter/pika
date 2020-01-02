@@ -7,8 +7,6 @@
 template <ComputeStage>
 class SnowOpticMaterial;
 
-declareADValidParams(SnowOpticMaterial);
-
 /**
  * Computes optical properties from Amstrong and Brun, p. 56, Ex. 2.25
  */
@@ -24,21 +22,15 @@ public:
 
 protected:
 
-  const MooseEnum & _band;
+  const ADMaterialProperty(Real) & _alpha;
 
-  const ADVariableValue & _density;
+  const ADMaterialProperty(Real) & _kappa;
 
-  const ADVariableValue & _optical_diameter;
+  const ADMaterialProperty(Real) & _anisotropy;
 
-  const ADVariableValue & _anisotropy_variable;
+  ADMaterialProperty(Real) & _diffusion_coefficient;
 
-  ADMaterialProperty(Real) & _diffusion_prop;
-
-  ADMaterialProperty(Real) & _absorption_prop;
-
-  ADMaterialProperty(Real) & _scattering_prop;
-
-  ADMaterialProperty(Real) & _anisotropy_prop;
+  ADMaterialProperty(Real) & _absorption_coefficient;
 
   usingMaterialMembers;
 };
