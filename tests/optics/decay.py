@@ -3,12 +3,10 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import mooseutils
+import mms
 
 data = mooseutils.PostprocessorReader('decay_out.csv')
 
-print data
-
-#fig = mooseutils.ConvergencePlot(np.sqrt(data['dofs']), data['error'], xlabel='sqrt(ndofs)', ylabel='L2 Error')
-#fig = mooseutils.ConvergencePlot(data['h'], data['error'], xlabel='Element Length', ylabel='L2 Error')
-#fig.save('convergence.png')
-fig.show()
+fig, ax = plt.subplots(figsize=(10,6), tight_layout=True)
+ax.plot(data['h'], data['error'])
+fig.savefig('decay.pdf')
