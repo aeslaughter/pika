@@ -3,13 +3,6 @@
 
 #include "ADMaterial.h"
 
-// forward declarations
-template <ComputeStage>
-class SnowOpticMaterial;
-
-/**
- * Computes optical properties from Amstrong and Brun, p. 56, Ex. 2.25
- */
 template <ComputeStage compute_stage>
 class SnowOpticMaterial : public ADMaterial<compute_stage>
 {

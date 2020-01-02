@@ -9,31 +9,30 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#include "OpticSource.h"
-#include "Function.h"
+#ifndef SNOWMATERIAL_H
+#define SNOWMATERIAL_H
 
-registerADMooseObject("PikaApp", OpticSource);
-
-template <ComputeStage compute_stage>
-InputParameters
-OpticSource<compute_stage>::validParams()
-{
-  InputParameters params = ADKernel<compute_stage>::validParams();
-  params.addParam<FunctionName>("function", "0", "A function that describes the body force");
-
-return params;
-}
+// MOOSE includes
+#include "ADMaterial.h"
 
 template <ComputeStage compute_stage>
-OpticSource<compute_stage>::OpticSource(const InputParameters & parameters) :
-    ADKernel<compute_stage>(parameters),
-    _function(getFunction("function"))
+class SnowMaterial : public ADMaterial<compute_stage>
 {
-}
+public:
+  static InputParameters validParams();
 
-template <ComputeStage compute_stage>
-ADReal
-OpticSource<compute_stage>::computeQpResidual()
-{
-  return - _function.value(_t, _q_point[_qp]) * _test[_i][_qp];
-}
+  SnowMaterial(const InputParameters & parameters);
+
+  virtual void computeQpProperties() override;
+
+protected:
+
+  const ADVariableValue & _temperature;
+  const ADMaterialProperty(Real) & _density;
+  ADMaterialProperty(Real) & _thermal_conductivity;
+  ADMaterialProperty(Real) & _specific_heat;
+
+  usingMaterialMembers;
+};
+
+#endif

@@ -9,31 +9,34 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#include "OpticSource.h"
-#include "Function.h"
+#include "SnowMaterial.h"
 
-registerADMooseObject("PikaApp", OpticSource);
+registerADMooseObject("PikaApp", SnowMaterial);
 
 template <ComputeStage compute_stage>
 InputParameters
-OpticSource<compute_stage>::validParams()
+SnowMaterial<compute_stage>::validParams()
 {
-  InputParameters params = ADKernel<compute_stage>::validParams();
-  params.addParam<FunctionName>("function", "0", "A function that describes the body force");
-
-return params;
+  InputParameters params = ADMaterial<compute_stage>::validParams();
+  params.addRequiredCoupledVar("temperature", "The snow temperature variable to couple");
+  params.addParam<MaterialPropertyName>("density", "density", "Density of snow [kg/m^3]");
+  return params;
 }
 
 template <ComputeStage compute_stage>
-OpticSource<compute_stage>::OpticSource(const InputParameters & parameters) :
-    ADKernel<compute_stage>(parameters),
-    _function(getFunction("function"))
+SnowMaterial<compute_stage>::SnowMaterial(const InputParameters & parameters) :
+    ADMaterial<compute_stage>(parameters),
+    _temperature(adCoupledValue("temperature")),
+    _density(getADMaterialProperty<Real>("density")),
+    _thermal_conductivity(declareADProperty<Real>("thermal_conductivity")),
+    _specific_heat(declareADProperty<Real>("specific_heat"))
 {
 }
 
 template <ComputeStage compute_stage>
-ADReal
-OpticSource<compute_stage>::computeQpResidual()
+void
+SnowMaterial<compute_stage>::computeQpProperties()
 {
-  return - _function.value(_t, _q_point[_qp]) * _test[_i][_qp];
+  _thermal_conductivity[_qp] = 0.021 + 2.5 * std::pow(_density[_qp] / 1000, 2);
+  _specific_heat[_qp] = 1000 * (2.115 + 0.00779 * (273.15 - _temperature[_qp]));
 }
