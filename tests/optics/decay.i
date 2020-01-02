@@ -20,12 +20,10 @@ g = 0
   [diffusion]
     type = OpticDiffusion
     variable = u
-    #diffusion_coefficient = 0.014433756729740631
   []
   [absorption]
     type = OpticAbsorption
     variable = u
-    #absorption_coefficient = 23.09401076758505
   []
 []
 
@@ -76,8 +74,5 @@ g = 0
 []
 
 [Outputs]
-  [out]
-    type = CSV
-    execute_on = 'timestep_end'
-  []
+  csv = true
 []

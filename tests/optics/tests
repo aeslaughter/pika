@@ -1,0 +1,7 @@
+[Tests]
+  [1d]
+    type = CSVDiff
+    input = decay.i
+    csvdiff = decay_out_line_0001.csv
+  []
+[]
