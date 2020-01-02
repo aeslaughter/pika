@@ -13,9 +13,6 @@
 
 registerADMooseObject("PikaApp", OpticDiffusion);
 
-
-defineADLegacyParams(OpticDiffusion);
-
 template <ComputeStage compute_stage>
 InputParameters
 OpticDiffusion<compute_stage>::validParams()

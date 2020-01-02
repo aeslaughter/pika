@@ -13,8 +13,6 @@
 
 registerADMooseObject("PikaApp", OpticAbsorption);
 
-defineADLegacyParams(OpticAbsorption);
-
 template <ComputeStage compute_stage>
 InputParameters
 OpticAbsorption<compute_stage>::validParams()

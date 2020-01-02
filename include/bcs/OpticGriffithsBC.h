@@ -13,6 +13,8 @@ template <ComputeStage compute_stage>
 class OpticGriffithsBC : public ADIntegratedBC<compute_stage>
 {
 public:
+  static InputParameters validParams();
+
   OpticGriffithsBC(const InputParameters & parameters);
 
 protected:

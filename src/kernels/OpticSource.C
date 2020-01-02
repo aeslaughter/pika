@@ -14,11 +14,15 @@
 
 registerADMooseObject("PikaApp", OpticSource);
 
-defineADValidParams(
-  OpticSource,
-  ADKernel,
+template <ComputeStage compute_stage>
+InputParameters
+OpticSource<compute_stage>::validParams()
+{
+    InputParameters params = ADKernel<compute_stage>::validParams();
   params.addParam<FunctionName>("function", "0", "A function that describes the body force");
-  );
+
+return params;
+}
 
 template <ComputeStage compute_stage>
 OpticSource<compute_stage>::OpticSource(const InputParameters & parameters) :

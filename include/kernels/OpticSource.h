@@ -24,6 +24,8 @@ template <ComputeStage compute_stage>
 class OpticSource : public ADKernel<compute_stage>
 {
 public:
+  static InputParameters validParams();
+
   OpticSource(const InputParameters & parameters);
 
 protected:

@@ -3,13 +3,16 @@
 
 registerADMooseObject("PikaApp", SnowOpticMaterial);
 
-
-defineADValidParams(
-  SnowOpticMaterial,
-  ADMaterial,
+template <ComputeStage compute_stage>
+InputParameters
+SnowOpticMaterial<compute_stage>::validParams()
+{
+    InputParameters params = ADMaterial<compute_stage>::validParams();
   params.addCoupledVar("density", "The density of the snow ($kg/m^3$).");
   params.addCoupledVar("optical_diameter", "The optical grain size ($m$).");
-  params.addCoupledVar("optic_anisotropy", 1, "Optical anisotropy coefficient.");
+  params.addCoupledVar("optic_anisotropy", 1, "Optical anisotropy coefficient."
+return params;
+}
 
   MooseEnum bands("VIS NIR SWIR");
   params.addParam<MooseEnum>("band", bands, "The wavelength band to consider as defined by Armstrong and Brun (2008): VIS (0.3--0.8 $\\textrm{\\mu m}$), NIR (0.8--1.5 $\\textrm{\\mu m}$), or SWIR (1.5--2.8 $\\textrm{\\mu m}$).");

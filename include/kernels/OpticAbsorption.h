@@ -24,6 +24,8 @@ template <ComputeStage compute_stage>
 class OpticAbsorption : public ADKernelValue<compute_stage>
 {
 public:
+  static InputParameters validParams();
+
   OpticAbsorption(const InputParameters & parameters);
 
 protected:

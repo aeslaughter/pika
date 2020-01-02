@@ -16,6 +16,8 @@ template <ComputeStage compute_stage>
 class SnowOpticMaterial : public ADMaterial<compute_stage>
 {
 public:
+  static InputParameters validParams();
+
   SnowOpticMaterial(const InputParameters & parameters);
 
   virtual void computeQpProperties() override;

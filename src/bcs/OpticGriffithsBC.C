@@ -13,13 +13,16 @@
 
 registerADMooseObject("PikaApp", OpticGriffithsBC);
 
-
-defineADValidParams(
-  OpticGriffithsBC,
-  ADIntegratedBC,
+template <ComputeStage compute_stage>
+InputParameters
+OpticGriffithsBC<compute_stage>::validParams()
+{
+    InputParameters params = ADIntegratedBC<compute_stage>::validParams();
   params.addParam<MaterialPropertyName>("diffusion_coefficient", "optic_diffusion_coefficient",
-                                        "TODO");
-  );
+                                        "The diffusion coefficient (D) name for the radiative transfer equation with a diffusion approximation.");
+
+return params;
+}
 
 template <ComputeStage compute_stage>
 OpticGriffithsBC<compute_stage>::OpticGriffithsBC(const InputParameters & parameters) :

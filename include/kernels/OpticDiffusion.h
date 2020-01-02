@@ -24,6 +24,8 @@ template <ComputeStage compute_stage>
 class OpticDiffusion : public ADDiffusion<compute_stage>
 {
 public:
+  static InputParameters validParams();
+
   OpticDiffusion(const InputParameters & parameters);
 
 protected:
