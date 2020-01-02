@@ -18,11 +18,11 @@ OpticMaterial<compute_stage>::OpticMaterial(const InputParameters & parameters) 
     _absorption_variable(adCoupledValue("optic_absorption")),
     _scattering_variable(adCoupledValue("optic_scattering")),
     _anisotropy_variable(adCoupledValue("optic_anisotropy")),
-    _diffusion_prop(adDeclareADProperty<Real>("optic_diffusion_coefficient")),
-    _absorption_prop(adDeclareADProperty<Real>("optic_absorption_coefficient")),
-    _scattering_prop(adDeclareADProperty<Real>("optic_scattering_coefficient")),
-    _anisotropy_prop(adDeclareADProperty<Real>("optic_anisotropy")),
-    _fresnel_transmittance(adDeclareADProperty<Real>("optic_fresnel_transmittance"))
+    _diffusion_prop(declareADProperty<Real>("optic_diffusion_coefficient")),
+    _absorption_prop(declareADProperty<Real>("optic_absorption_coefficient")),
+    _scattering_prop(declareADProperty<Real>("optic_scattering_coefficient")),
+    _anisotropy_prop(declareADProperty<Real>("optic_anisotropy")),
+    _fresnel_transmittance(declareADProperty<Real>("optic_fresnel_transmittance"))
 {
 }
 

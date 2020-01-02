@@ -25,13 +25,13 @@ defineADValidParams(
 template <ComputeStage compute_stage>
 OpticDiffuseSourceBC<compute_stage>::OpticDiffuseSourceBC(const InputParameters & parameters) :
     ADIntegratedBC<compute_stage>(parameters),
-    _transmittance(adGetADMaterialProperty<Real>("fresnel_transmittance")),
+    _transmittance(getADMaterialProperty<Real>("fresnel_transmittance")),
     _incoming_flux(adCoupledValue("incoming_flux"))
 {
 }
 
 template <ComputeStage compute_stage>
-ADResidual
+ADReal
 OpticDiffuseSourceBC<compute_stage>::computeQpResidual()
 {
   ADReal gamma_s = _incoming_flux[_qp];// * _dt;

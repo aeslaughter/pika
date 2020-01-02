@@ -23,12 +23,12 @@ defineADValidParams(
 template <ComputeStage compute_stage>
 OpticAbsorption<compute_stage>::OpticAbsorption(const InputParameters & parameters) :
     ADKernelValue<compute_stage>(parameters),
-    _absorption_coef(adGetADMaterialProperty<Real>("absorption_coefficient"))
+    _absorption_coef(getADMaterialProperty<Real>("absorption_coefficient"))
 {\
 }
 
 template <ComputeStage compute_stage>
-ADResidual
+ADReal
 OpticAbsorption<compute_stage>::precomputeQpResidual()
 {
   return _absorption_coef[_qp]  * _u[_qp];

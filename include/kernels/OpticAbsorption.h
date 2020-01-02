@@ -27,7 +27,7 @@ public:
   OpticAbsorption(const InputParameters & parameters);
 
 protected:
-  virtual ADResidual precomputeQpResidual() override;
+  virtual ADReal precomputeQpResidual() override;
 
 private:
 

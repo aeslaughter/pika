@@ -27,7 +27,7 @@ public:
   OpticDiffusion(const InputParameters & parameters);
 
 protected:
-  virtual ADVectorResidual precomputeQpResidual() override;
+  virtual ADRealVectorValue precomputeQpResidual() override;
 
 private:
 

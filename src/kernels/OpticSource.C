@@ -28,7 +28,7 @@ OpticSource<compute_stage>::OpticSource(const InputParameters & parameters) :
 }
 
 template <ComputeStage compute_stage>
-ADResidual
+ADReal
 OpticSource<compute_stage>::computeQpResidual()
 {
   return - _function.value(_t, _q_point[_qp]) * _test[_i][_qp];

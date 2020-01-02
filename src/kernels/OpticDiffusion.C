@@ -33,7 +33,7 @@ defineADValidParams(
 template <ComputeStage compute_stage>
 OpticDiffusion<compute_stage>::OpticDiffusion(const InputParameters & parameters) :
 ADDiffusion<compute_stage>(parameters),
-  _diffusion_coef(adGetADMaterialProperty<Real>("diffusion_coefficient"))
+  _diffusion_coef(getADMaterialProperty<Real>("diffusion_coefficient"))
 //  _absorption_coef(adGetADMaterialProperty<Real>("absorption_coefficient")),
 //  _scattering_coef(adGetADMaterialProperty<Real>("scattering_coefficient")),
 //  _anisotropy(adGetADMaterialProperty<Real>("anisotropy"))
@@ -41,7 +41,7 @@ ADDiffusion<compute_stage>(parameters),
 }
 
 template <ComputeStage compute_stage>
-ADVectorResidual
+ADRealVectorValue
 OpticDiffusion<compute_stage>::precomputeQpResidual()
 {
   //ADReal reduced_scattering = (1.0 - _anisotropy[_qp]) * _scattering_coef[_qp];

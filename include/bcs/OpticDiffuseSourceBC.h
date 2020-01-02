@@ -27,7 +27,7 @@ public:
   OpticDiffuseSourceBC(const InputParameters & parameters);
 
 protected:
-  virtual ADResidual computeQpResidual() override;
+  virtual ADReal computeQpResidual() override;
 
 private:
 

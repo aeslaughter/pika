@@ -1,8 +1,11 @@
+depth = 0.25
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
   nx = 8
-  xmax = 2
+  xmax = ${depth}
+  uniform_refine=4
 []
 
 [Variables]
@@ -13,22 +16,19 @@
   [diffusion]
     type = OpticDiffusion
     variable = u
-    diffusion_coefficient = 1
+    diffusion_coefficient = 0.014433756729740631
   []
   [absorption]
     type = OpticAbsorption
     variable = u
-    absorption_coefficient = 1
+    absorption_coefficient = 23.09401076758505
   []
 []
 
 [BCs]
-  #active = 'dirichlet'
-  active = 'dirichlet dirichlet2'
+  active = 'dirichlet'
+  #active = 'dirichlet dirichlet2'
   #active = 'dirichlet griffiths'
-  #active = 'dirichlet arbree_out'
-  #active = 'arbree_in arbree_out'
-  #active = 'arbree_in'
   [dirichlet]
     type = DirichletBC
     variable = u
@@ -46,26 +46,7 @@
     type = OpticGriffithsBC
     variable = u
     boundary = right
-    diffusion_coefficient = 1
-  []
-  [arbree_in]
-    type = OpticDiffuseSourceBC
-    variable = u
-    boundary = left
-    incoming_flux = 0.5
-  []
-  [arbree_out]
-    type = OpticDiffuseSourceBC
-    variable = u
-    boundary = right
-    incoming_flux = 0
-  []
-[]
-
-[Preconditioning]
-  [smp]
-    type = SMP
-    full = true
+    diffusion_coefficient = 0.014433756729740631
   []
 []
 
@@ -78,25 +59,15 @@
   []
   [error]
     type = NodalL2Error
-    function = exp(-x)
+    function = exp(-40*x)
     variable = u
-  []
-[]
-
-[Materials]
-  active = ''
-  [optics]
-    type = OpticMaterial
-    optic_scattering = .94
-    optic_absorption = .40
-    optic_anisotropy = 1
   []
 []
 
 [VectorPostprocessors]
   [line]
     type = LineValueSampler
-    start_point = '2 0 0'
+    start_point = '${depth} 0 0'
     end_point = '0 0 0'
     num_points = 100
     variable = u
@@ -106,17 +77,9 @@
 
 
 [Executioner]
-  type = Transient
+  type = Steady
   solve_type = NEWTON
-  num_steps = 5
-[]
-
-[Adaptivity]
-  marker = marker
-  [Markers/marker]
-      type = UniformMarker
-      mark = refine
-  []
+  automatic_scaling = true
 []
 
 [Outputs]

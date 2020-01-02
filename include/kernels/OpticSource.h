@@ -27,11 +27,11 @@ public:
   OpticSource(const InputParameters & parameters);
 
 protected:
-  virtual ADResidual computeQpResidual() override;
+  virtual ADReal computeQpResidual() override;
 
 private:
 
-  Function & _function;
+  const Function & _function;
 
   using ADKernel<compute_stage>::getFunction;//(const std::string &);
   using ADKernel<compute_stage>::_qp;

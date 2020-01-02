@@ -49,17 +49,21 @@
 [Materials]
   [mat]
     type = GenericFunctionMaterial
-    prop_values = '4.2                    19                     0.5'
-    prop_names =  'absorption_coefficient scattering_coefficient scattering_anisotropy'
+    prop_values = '4.2                          19                          0.5'
+    prop_names =  'optic_absorption_coefficient optic_diffusion_coefficient optic_scattering_anisotropy'
   []
 []
 
 [Executioner]
   type = Transient
+  solve_type = NEWTON
+  steady_state_detection = true
+  nl_abs_tol = 1e-12
   dt = 1e-10
   num_steps = 10
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
+  automatic_scaling = true
 []
 
 [Outputs]

@@ -24,12 +24,12 @@ defineADValidParams(
 template <ComputeStage compute_stage>
 OpticGriffithsBC<compute_stage>::OpticGriffithsBC(const InputParameters & parameters) :
     ADIntegratedBC<compute_stage>(parameters),
-    _diffusion_coef(adGetADMaterialProperty<Real>("diffusion_coefficient"))
+    _diffusion_coef(getADMaterialProperty<Real>("diffusion_coefficient"))
 {
 }
 
 template <ComputeStage compute_stage>
-ADResidual
+ADReal
 OpticGriffithsBC<compute_stage>::computeQpResidual()
 {
   return - _test[_i][_qp] * _diffusion_coef[_qp] * _grad_u[_qp] * _normals[_qp];
