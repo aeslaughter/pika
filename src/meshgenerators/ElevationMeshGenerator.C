@@ -114,6 +114,17 @@ ElevationMeshGenerator::generate()
   for (auto & node : as_range(dest_mesh->active_nodes_begin(), dest_mesh->active_nodes_end()))
     (*node)(2) += interpolate(*node, x ,y, z);
 
+
+  BoundaryInfo & binfo = dest_mesh->get_boundary_info();
+  binfo.sideset_name(0) = "south";
+  binfo.sideset_name(1) = "east";
+  binfo.sideset_name(2) = "north";
+  binfo.sideset_name(3) = "west";
+  binfo.sideset_name(4) = "ground";
+  binfo.sideset_name(5) = "surface";
+
+
+
   return dynamic_pointer_cast<MeshBase>(dest_mesh);
 }
 
