@@ -65,11 +65,29 @@ ElevationMeshGenerator::generate()
   const Real ymin = *std::min_element(y.begin(), y.end());
   const Real ymax = *std::max_element(y.begin(), y.end());
 
+
+
+
+
+
+
+
+
+
+
   const MooseEnum & elem_name = getParam<MooseEnum>("elem_type");
   const ElemType elem_type = Utility::string_to_enum<ElemType>(elem_name);
 
   const Real & depth = getParam<Real>("depth");
 
+  /*
+  const Real n = 5;
+  unsigned int nx = std::ceil((xmax - xmin)/n);
+  unsigned int ny = std::ceil((ymax - ymin)/n);
+  unsigned int nz = 10*std::ceil(depth/n);
+
+  std::cout << nx << " " << ny << " " << nz << std::endl;
+  */
 
   auto source_mesh = libmesh_make_unique<ReplicatedMesh>(comm());
   MeshTools::Generation::build_square(static_cast<UnstructuredMesh &>(*source_mesh),
@@ -93,30 +111,35 @@ ElevationMeshGenerator::generate()
                                          nullptr);
 
 
-  /*
-  std::unordered_map<std::pair<Real, Real>, Real> lookup;
-  for (std::size_t i = 0; i < x.size(); ++i)
-    lookup.emplace(std::make_pair(x[i], y[i]), z[i]);
-
-
-  std::vector<Real> x_unique = x;
-  std::sort(x_unique.begin(), x_unique.end());
-  x_unique.erase(std::unique(x_unique.begin(), x_unique.end()), x_unique.end());
-
-  std::vector<Real> y_unique = y;
-  std::sort(y_unique.begin(), y_unique.end());
-  y_unique.erase(std::unique(y_unique.begin(), y_unique.end()), y_unique.end());
-
-  std::cout << x_unique.size() << " " << y_unique.size() << std::endl;
-  */
-
-  //BicubicInterpolation bicubic(x, y, z);
-
-  //for (auto & node : as_range(dest_mesh->active_nodes_begin(), dest_mesh->active_nodes_end()))
-     //  (*node)(2) += bicubic.sample((*node)(0), (*node)(1));
+  for (auto & node : as_range(dest_mesh->active_nodes_begin(), dest_mesh->active_nodes_end()))
+    (*node)(2) += interpolate(*node, x ,y, z);
 
   return dynamic_pointer_cast<MeshBase>(dest_mesh);
 }
+
+Real
+ElevationMeshGenerator::interpolate(const Point & point,
+                                    const std::vector<Real> & x,
+                                    const std::vector<Real> & y,
+                                    const std::vector<Real> & z) const
+{
+  Real value;
+  Real distance = std::numeric_limits<Real>::max();
+  for (std::size_t i = 0; i < x.size(); ++i)
+  {
+    Real local = std::min(std::sqrt(std::pow(point(0) - x[i], 2) + std::pow(point(1) - y[i], 2)), distance);
+    if (local < distance)
+    {
+      value = z[i];
+      distance = local;
+    }
+  }
+  return value;
+
+
+}
+
+
 
 
 /* void */

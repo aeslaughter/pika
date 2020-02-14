@@ -23,5 +23,9 @@ protected:
 
   const FileName & _elevation_file;
 
+  Real interpolate(const Point & point,
+                   const std::vector<Real> & x,
+                   const std::vector<Real> & y,
+                   const std::vector<Real> & z) const;
 
 };
