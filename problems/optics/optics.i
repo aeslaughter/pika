@@ -1,40 +1,55 @@
 kappa0 = 10
 kappa1 = 60
+
 alpha0 = 0.94
-alpha1 = -0.2
+alpha1 = -0.23
+
+density0 = 174
+density1 = 120
+
 q_in = 50
 g = 0
 
 [Mesh]
   type = GeneratedMesh
+  #second_order = true
   dim = 3
   nx = 10
-  ny = 10
-  nz = 7
+  ny = 7
+  nz = 10
   xmax = 1
   zmax = 1
   ymin = -0.7
   ymax = 0
+  uniform_refine = 3
 []
 
 [Adaptivity]
-  initial_marker = top
-  max_h_level = 2
-  initial_steps = 2
+  marker = marker
+  max_h_level = 3
+  [Indicators]
+    [error]
+      type = GradientJumpIndicator
+      variable = T
+    []
+  []
   [Markers]
-    [top]
-      type = BoxMarker
-      bottom_left = '0 -0.2 0'
-      top_right = '1 0 1'
-      inside = refine
-      outside = coarsen
+    [marker]
+      type = ErrorFractionMarker
+      indicator = error
+      coarsen = 0.15
+      refine = 0.7
     []
   []
 []
 
 [Variables]
- [u][]
- [T][]
+ [u]
+   #order = SECOND
+ []
+ [T]
+   #order = SECOND
+ []
 []
 
 [ICs]
@@ -55,6 +70,12 @@ g = 0
     # Automatically uses "density" and "specfic_heat" material properties
     type = ADHeatConductionTimeDerivative
     variable = T
+  []
+
+  [T_irradiance]
+    type = IrradianceSource
+    variable = T
+    irradiance = u
   []
 
   [diffusion]
@@ -93,7 +114,7 @@ g = 0
 [Functions]
   [density]
     type = ParsedFunction
-    value = 174
+    value = if(y>=-0.1&y<=-0.05,${density0}+${density1}*sin(pi*x)*sin(pi*z),${density0})
   []
   [kappa]
     type = ParsedFunction
@@ -105,12 +126,23 @@ g = 0
   []
 []
 
+[VectorPostprocessors]
+  [center]
+    type = LineValueSampler
+    start_point = '0.5 0 0.5'
+    end_point = '0.5 -0.7 0.5'
+    num_points = 200
+    variable = T
+    sort_by = y
+  []
+[]
+
 [Materials]
   [snow]
     type = GenericFunctionMaterial
     prop_names =  'density effective_attenuation_coefficient single_scattering_albedo'
     prop_values = 'density kappa                             alpha'
-    outputs = out
+    #outputs = out
   []
   [snow_optics]
     type = SnowOpticMaterial
@@ -134,8 +166,6 @@ g = 0
 []
 
 [Outputs]
-  [out]
-    type = Exodus
-    elemental_as_nodal = true
-  []
+  csv = true
+  exodus = true
 []

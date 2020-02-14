@@ -9,31 +9,30 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#include "OpticSource.h"
+#include "IrradianceSource.h"
 #include "Function.h"
 
-registerADMooseObject("PikaApp", OpticSource);
+registerADMooseObject("PikaApp", IrradianceSource);
 
 template <ComputeStage compute_stage>
 InputParameters
-OpticSource<compute_stage>::validParams()
+IrradianceSource<compute_stage>::validParams()
 {
   InputParameters params = ADKernel<compute_stage>::validParams();
-  params.addParam<FunctionName>("function", "0", "A function that describes the body force");
-
-return params;
+  params.addRequiredCoupledVar("irradiance", "Variable that defines the irradiance ('radiant flux').");
+  return params;
 }
 
 template <ComputeStage compute_stage>
-OpticSource<compute_stage>::OpticSource(const InputParameters & parameters) :
+IrradianceSource<compute_stage>::IrradianceSource(const InputParameters & parameters) :
     ADKernel<compute_stage>(parameters),
-    _function(getFunction("function"))
+    _grad_irradiance(adCoupledGradient("irradiance"))
 {
 }
 
 template <ComputeStage compute_stage>
 ADReal
-OpticSource<compute_stage>::computeQpResidual()
+IrradianceSource<compute_stage>::computeQpResidual()
 {
-  return - _function.value(_t, _q_point[_qp]) * _test[_i][_qp];
+  return _test[_i][_qp] * (_grad_irradiance[_qp](0) + _grad_irradiance[_qp](1) + _grad_irradiance[_qp](2));
 }

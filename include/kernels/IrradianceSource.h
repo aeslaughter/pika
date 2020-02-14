@@ -9,34 +9,28 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef OPTICSOURCE_H
-#define OPTICSOURCE_H
+#ifndef IRRADIANCESOURCE_H
+#define IRRADIANCESOURCE_H
 
 // MOOSE includes
 #include "ADKernel.h"
 
 template <ComputeStage compute_stage>
-class OpticSource : public ADKernel<compute_stage>
+class IrradianceSource : public ADKernel<compute_stage>
 {
 public:
   static InputParameters validParams();
 
-  OpticSource(const InputParameters & parameters);
+  IrradianceSource(const InputParameters & parameters);
 
 protected:
   virtual ADReal computeQpResidual() override;
 
 private:
 
-  const Function & _function;
+  const ADVariableGradient & _grad_irradiance;
 
-  using ADKernel<compute_stage>::getFunction;//(const std::string &);
-  using ADKernel<compute_stage>::_qp;
-  using ADKernel<compute_stage>::_i;
-  using ADKernel<compute_stage>::_q_point;
-  using ADKernel<compute_stage>::_t;
-  using ADKernel<compute_stage>::_test;
-
+  usingKernelMembers;
 };
 
 #endif
