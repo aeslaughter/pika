@@ -150,43 +150,6 @@ ElevationMeshGenerator::interpolate(const Point & point,
 
 }
 
-
-
-
-/* void */
-/* ElevationMeshGenerator::buildMesh2D(const std::string & filename, */
-/*                                 std::unique_ptr<ReplicatedMesh> & mesh) */
-/* { */
-/*   int xpixels = 0, ypixels = 0; */
-
-/*   // Extract the number of pixels from the image using the file command */
-/*   GetPixelInfo(filename, xpixels, ypixels); */
-
-/*   // Set the maximum dimension to 1.0 while scaling the other */
-/*   // direction to maintain the aspect ratio. */
-/*   _xmax = xpixels; */
-/*   _ymax = ypixels; */
-
-/*   if (_scale_to_one) */
-/*   { */
-/*     Real max = std::max(_xmax, _ymax); */
-/*     _xmax /= max; */
-/*     _ymax /= max; */
-/*   } */
-
-/*   // Compute the number of cells in the x and y direction based on */
-/*   // the user's cells_per_pixel parameter.  Note: we use ints here */
-/*   // because the GeneratedMesh params object uses ints for these... */
-/*   _nx = static_cast<int>(_cells_per_pixel * xpixels); */
-/*   _ny = static_cast<int>(_cells_per_pixel * ypixels); */
-
-/*   // Actually build the Mesh */
-/*   MeshTools::Generation::build_square(dynamic_cast<UnstructuredMesh &>(*mesh), */
-/*                                       _nx, */
-/*                                       _ny, */
-/*                                       /\*xmin=*\/0., */
-/*                                       /\*xmax=*\/_xmax, */
-/*                                       /\*ymin=*\/0., */
-/*                                       /\*ymax=*\/_ymax, */
-/*                                       QUAD4); */
-/* } */
+// TODO: parallelize interpolate; add radius to interpolate as an option: 'nearest', 'radius'
+//       add option for sizing mesh automatically to a grid size (1m, etc.) this same size should begin
+//       used for the radius option in interpolate method
