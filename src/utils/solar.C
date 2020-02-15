@@ -5,7 +5,7 @@ namespace PikaUtils
 {
 
 double
-julian_day(const unsigned int & year, const unsigned int & month, const unsigned int & day)
+julian_day(unsigned int year,unsigned int month, unsigned int day)
 {
   if (month < 3)
   {
@@ -18,26 +18,28 @@ julian_day(const unsigned int & year, const unsigned int & month, const unsigned
 }
 
 double
-julian_ephemeris_day(const double & jd, const unsigned int & year)
+julian_day_ephemeris(const double & jd, unsigned int year)
 {
-  const double dt = 32 * std::pow(year - 1820/100, 2) - 20;
-  return jd + dt / 86400;
+  const double dt = 32. * std::pow(year - 1820./100., 2.) - 20.;
+  return jd + dt / 86400.;
 }
 
 double
 julian_century(const double & jd)
 {
-
-
+  return (jd - 2451545.) / 36525.;
 }
 
 double
-julian_ephemeris_century(const double & jde)
+julian_century_ephemeris(const double & jde)
 {
-
-
+  return (jde - 2451545.) / 36525.;
 }
 
+double julian_millennium_ephemeris(const double & jce)
+{
+  return jce / 10.;
+}
 
 
 

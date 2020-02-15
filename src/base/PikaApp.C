@@ -17,7 +17,6 @@
 #include "MooseSyntax.h"
 
 // Modules
-#include "PhaseFieldApp.h"
 #include "ModulesApp.h"
 
 template<>
@@ -31,7 +30,7 @@ InputParameters validParams<PikaApp>()
 }
 
 // When using the new Registry system, this line is required so that
-// dependent apps know about the BighornApp label.
+// dependent apps know about the PikaAppf label.
 registerKnownLabel("PikaApp");
 
 PikaApp::PikaApp(InputParameters parameters) :
