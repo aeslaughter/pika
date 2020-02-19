@@ -1,5 +1,5 @@
 //
-
+#include <array>
 
 namespace PikaUtils
 {
@@ -20,6 +20,9 @@ double julian_century_ephemeris(const double & jde);
 
 // 3.1.4: Eq. 8, Julian Ephemeris Millennium (JME)
 double julian_millennium_ephemeris(const double & jce);
+
+extern const std::array<std::array<double, 3>, 64> L0;
+
 
 
 } // namespace

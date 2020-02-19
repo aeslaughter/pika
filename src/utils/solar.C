@@ -1,4 +1,4 @@
-
+#include "solar.h"
 #include <cmath>
 
 namespace PikaUtils
@@ -41,6 +41,21 @@ double julian_millennium_ephemeris(const double & jce)
   return jce / 10.;
 }
 
+
+// Table 1 Values
+// clang-format off
+const std::array<std::array<double, 3>, 64> L0 =
+{
+  std::array<double, 3>({175347046, 0,            0}),        // 0
+  std::array<double, 3>({  3341656, 4.6692568, 6283.07585}),  // 1
+  std::array<double, 3>({    34894, 4.6261,    12566.1517}),  // 2
+  std::array<double, 3>({     3497, 2.7441,    5753.3849}),   // 3
+  std::array<double, 3>({     3418, 2.8289,       3.5231}),   // 4
+  std::array<double, 3>({     3136, 3.6277,   77713.7715}),   // 5
+  std::array<double, 3>({     2676, 4.4181,    7860.4194}),   // 6
+};
+
+// clang-format on
 
 
 } // namespace

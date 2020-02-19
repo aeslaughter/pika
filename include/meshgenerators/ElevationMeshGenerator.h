@@ -10,9 +10,13 @@
 #pragma once
 
 #include "GeneratedMeshGenerator.h"
+#include "PerfGraphInterface.h"
 #include "libmesh/replicated_mesh.h"
 
-class ElevationMeshGenerator : public GeneratedMeshGenerator
+
+  // https://opentopography.org
+
+class ElevationMeshGenerator : public GeneratedMeshGenerator, PerfGraphInterface
 {
 public:
   static InputParameters validParams();
@@ -23,9 +27,30 @@ protected:
 
   const FileName & _elevation_file;
 
-  Real interpolate(const Point & point,
-                   const std::vector<Real> & x,
-                   const std::vector<Real> & y,
-                   const std::vector<Real> & z) const;
+  static Real interpolate(const Point & point,
+                          const std::vector<Real> & x,
+                          const std::vector<Real> & y,
+                          const std::vector<Real> & z,
+                          const Real & distance,
+                          const unsigned int count);
+
+  static Real nearest(const Point & point,
+                      const std::vector<Real> & x,
+                      const std::vector<Real> & y,
+                      const std::vector<Real> & z,
+                      const unsigned int count);
+
+
+private:
+
+  ///@{
+  /// PrefGraph timers
+  const PerfID _perf_generate;
+  const PerfID _perf_read_data;
+  const PerfID _perf_build_square;
+  const PerfID _perf_interpolate;
+  const PerfID _perf_displace;
+  const PerfID _perf_extrude;
+  ///@}
 
 };
