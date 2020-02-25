@@ -9,7 +9,7 @@ namespace PikaUtils
 double julian_day(unsigned int year, unsigned int month, unsigned int day);
 
 // 3.1.2: Eq. 5, Julian Ephemeris Day (JDE)
-// https://en.wikipedia.org/wiki/%CE%94Ts
+// https://en.wikipedia.org/wiki/%CE%94T
 double julian_day_ephemeris(const double & jd, unsigned int year);
 
 // 3.1.3: Eq. 6, Julian Century (JC)

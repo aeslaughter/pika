@@ -13,9 +13,19 @@
 TEST(solar, julian_day)
 {
   EXPECT_EQ(PikaUtils::julian_day(1980, 6, 24), 2444414.5);
-  EXPECT_EQ(PikaUtils::julian_day(1980, 1, 1), 2444239.5);
-  EXPECT_EQ(PikaUtils::julian_day_ephemeris(1, 1980), 1426.4291166666667);
-  EXPECT_EQ(PikaUtils::julian_century(1), -67.11961670088981);
-  EXPECT_EQ(PikaUtils::julian_century_ephemeris(1), -67.11961670088981);
-  EXPECT_EQ(PikaUtils::julian_millennium_ephemeris(100), 10.);
+
+  double jd = PikaUtils::julian_day(1980, 1, 1);
+  EXPECT_EQ(jd, 2444239.5);
+
+  double jde = PikaUtils::julian_day_ephemeris(2444239.5, 1980);
+  EXPECT_EQ(jde, 2444239.500716666691);
+
+  double jc = PikaUtils::julian_century(jd);
+  EXPECT_EQ(jc, -0.20001368925393567255);
+
+  double jce = PikaUtils::julian_century_ephemeris(jde);
+  EXPECT_EQ(jce, -0.20001366963267103172);
+
+  double jme = PikaUtils::julian_millennium_ephemeris(jce);
+  EXPECT_EQ(jme, -0.020001366963267103172);
 }

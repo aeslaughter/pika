@@ -10,11 +10,18 @@ altitude_deg = solar.get_altitude(latitude_deg, longitude_deg, date)
 q = solar.radiation.get_radiation_direct(date, altitude_deg)
 """
 
-date = datetime.datetime(2007, 2, 18, 15, 13, 1, 130320, tzinfo=datetime.timezone.utc)
-
+print("TEST(solar, julian_day)")
 date = datetime.datetime(1980, 6, 24, tzinfo=datetime.timezone.utc)
-
 jd = stime.get_julian_solar_day(date)
-
-
 print(jd)
+date = datetime.datetime(1980, 1, 1, tzinfo=datetime.timezone.utc)
+jd = stime.get_julian_solar_day(date)
+print(jd)
+jde = stime.get_julian_ephemeris_day(date)
+print(jde)
+jc = stime.get_julian_century(jd)
+print(jc)
+jce = stime.get_julian_ephemeris_century(jde)
+print(jce)
+jme = stime.get_julian_ephemeris_millennium(jce)
+print(jme)

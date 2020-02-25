@@ -26,10 +26,22 @@ include $(FRAMEWORK_DIR)/moose.mk
 
 ################################## MODULES ####################################
 # set desired physics modules equal to 'yes' to enable them
-PHASE_FIELD := yes
-HEAT_CONDUCTION := yes
-SOLID_MECHANICS := yes
-include $(MOOSE_DIR)/modules/modules.mk
+CHEMICAL_REACTIONS        := no
+CONTACT                   := no
+FLUID_PROPERTIES          := no
+HEAT_CONDUCTION           := yes
+MISC                      := no
+NAVIER_STOKES             := no
+PHASE_FIELD               := no
+RDG                       := no
+RICHARDS                  := no
+SOLID_MECHANICS           := no
+STOCHASTIC_TOOLS          := no
+TENSOR_MECHANICS          := no
+XFEM                      := no
+POROUS_FLOW               := no
+LEVEL_SET                 := no
+include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
 
 # Extra stuff for GTEST
@@ -49,10 +61,10 @@ BUILD_EXEC         := yes
 DEP_APPS    ?= $(shell $(FRAMEWORK_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME))
 include $(FRAMEWORK_DIR)/app.mk
 
-# Find all the Pika unit test source files and include their dependencies.
-pika_unit_srcfiles := $(shell find $(CURRENT_DIR)/src -name "*.C")
-pika_unit_deps := $(patsubst %.C, %.$(obj-suffix).d, $(pika_unit_srcfiles))
--include $(pika_unit_deps)
+# Find all the Frog unit test source files and include their dependencies.
+frog_unit_srcfiles := $(shell find $(CURRENT_DIR)/src -name "*.C")
+frog_unit_deps := $(patsubst %.C, %.$(obj-suffix).d, $(frog_unit_srcfiles))
+-include $(frog_unit_deps)
 
 ###############################################################################
 # Additional special case targets should be added here

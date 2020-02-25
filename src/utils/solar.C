@@ -1,5 +1,7 @@
 #include "solar.h"
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 
 namespace PikaUtils
 {
@@ -20,7 +22,7 @@ julian_day(unsigned int year,unsigned int month, unsigned int day)
 double
 julian_day_ephemeris(const double & jd, unsigned int year)
 {
-  const double dt = 32. * std::pow(year - 1820./100., 2.) - 20.;
+  const double dt = 32. * std::pow((year - 1820.)/100., 2.) - 20.;
   return jd + dt / 86400.;
 }
 
