@@ -7,7 +7,7 @@ namespace PikaUtils
 {
 
 double
-julian_day(unsigned int year,unsigned int month, unsigned int day)
+julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour, unsigned int min, double sec)
 {
   if (month < 3)
   {
@@ -16,7 +16,14 @@ julian_day(unsigned int year,unsigned int month, unsigned int day)
   }
   double A = std::floor(year/100);
   double B = 2 - A + std::floor(A/4);
-  return std::floor(365.25*(year + 4716)) + std::floor(30.6001*(month+1)) + day + B - 1524.5;
+  double jd = std::floor(365.25*(year + 4716)) + std::floor(30.6001*(month+1)) + day + B - 1524.5;
+
+  assert(hour < 24);
+  assert(min < 60);
+  assert(sec < 60);
+
+  jd += hour/24. + min/1440. + sec/86400.;
+  return jd;
 }
 
 double
@@ -43,10 +50,18 @@ double julian_millennium_ephemeris(const double & jce)
   return jce / 10.;
 }
 
+double earth_heliocentric_longitude(const double & jme)
+{
+  double L0 = equation_ten<64>(Table1::L0, jme);
+
+  return (L0) / 10E8;
+
+}
+
 
 // Table 1 Values
 // clang-format off
-const std::array<std::array<double, 3>, 64> L0 =
+const std::array<std::array<double, 3>, 64> Table1::L0 =
 {
   std::array<double, 3>({175347046, 0,            0}),        // 0
   std::array<double, 3>({  3341656, 4.6692568, 6283.07585}),  // 1

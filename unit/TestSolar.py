@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import datetime
-from pysolar import solar, stime
+import math
+from pysolar import solar, stime, constants
 
 """
 latitude_deg = 42.206 # positive in the northern hemisphere
@@ -11,10 +12,7 @@ q = solar.radiation.get_radiation_direct(date, altitude_deg)
 """
 
 print("TEST(solar, julian_day)")
-date = datetime.datetime(1980, 6, 24, tzinfo=datetime.timezone.utc)
-jd = stime.get_julian_solar_day(date)
-print(jd)
-date = datetime.datetime(1980, 1, 1, tzinfo=datetime.timezone.utc)
+date = datetime.datetime(1980, 6, 24, 4, 24, 2, tzinfo=datetime.timezone.utc)
 jd = stime.get_julian_solar_day(date)
 print(jd)
 jde = stime.get_julian_ephemeris_day(date)
@@ -25,3 +23,8 @@ jce = stime.get_julian_ephemeris_century(jde)
 print(jce)
 jme = stime.get_julian_ephemeris_millennium(jce)
 print(jme)
+
+def equat
+
+L0 = sum([A * math.cos(B + C) for A, B, C in constants.heliocentric_longitude_coeffs[0]])
+print(L0)
