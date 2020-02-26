@@ -32,4 +32,6 @@ TEST(solar,  earth_heliocentric_longitude)
 {
   double L0 = PikaUtils::equation_ten<64>(PikaUtils::Table1::L0, 1);
   EXPECT_DOUBLE_EQ(L0, 174831416.50056037);
+  double L1 = PikaUtils::equation_ten<34>(PikaUtils::Table1::L1, 1);
+  EXPECT_DOUBLE_EQ(L1, 628331790351.9989);
 }

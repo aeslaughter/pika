@@ -37,6 +37,8 @@ double earth_heliocentric_longitude(const double & jme);
 namespace Table1
 {
 extern const std::array<std::array<double, 3>, 64> L0;
+extern const std::array<std::array<double, 3>, 34> L1;
+
 } // table 1
 
 } // namespace

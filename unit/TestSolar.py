@@ -24,7 +24,8 @@ print(jce)
 jme = stime.get_julian_ephemeris_millennium(jce)
 print(jme)
 
-def equat
 
-L0 = sum([A * math.cos(B + C) for A, B, C in constants.heliocentric_longitude_coeffs[0]])
+L0 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[0]])
 print(L0)
+L1 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[1]])
+print(L1)
