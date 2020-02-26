@@ -29,3 +29,5 @@ L0 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coef
 print(L0)
 L1 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[1]])
 print(L1)
+L2 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[2]])
+print(L2)

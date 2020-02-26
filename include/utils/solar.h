@@ -38,7 +38,7 @@ namespace Table1
 {
 extern const std::array<std::array<double, 3>, 64> L0;
 extern const std::array<std::array<double, 3>, 34> L1;
-
+extern const std::array<std::array<double, 3>, 20> L2;
 } // table 1
 
 } // namespace

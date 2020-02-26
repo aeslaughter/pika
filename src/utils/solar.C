@@ -167,6 +167,35 @@ const std::array<std::array<double, 3>, 34> Table1::L1 =
   std::array<double, 3>({           6, 4.67,     4690.48}),    // 33
 };
 
+const std::array<std::array<double, 3>, 20> Table1::L2 =
+{
+  std::array<double, 3>({52919, 0,          0}),      // 0
+  std::array<double, 3>({ 8720, 1.0721,  6283.0758}), // 1
+  std::array<double, 3>({  309, 0.867,  12566.152}),  // 2
+  std::array<double, 3>({   27,  0.05,      3.52}),   // 3
+  std::array<double, 3>({   16,  5.19,     26.3}),    // 4
+  std::array<double, 3>({   16,  3.68,    155.42}),   // 5
+  std::array<double, 3>({   10,  0.76,  18849.23}),   // 6
+  std::array<double, 3>({    9,  2.06,   77713.77}),  // 7
+  std::array<double, 3>({    7,  0.83,     775.52}),  // 8
+  std::array<double, 3>({    5,  4.66,    1577.34}),  // 9
+  std::array<double, 3>({    4,  1.03,       7.11}),  // 10
+  std::array<double, 3>({    4,  3.44,    5573.14}),  // 11
+  std::array<double, 3>({    3,  5.14,     796.3}),   // 12
+  std::array<double, 3>({    3,  6.05,    5507.55}),  // 13
+  std::array<double, 3>({    3,  1.19,     242.73}),  // 14
+  std::array<double, 3>({    3,  6.12,     529.69}),  // 15
+  std::array<double, 3>({    3,  0.31,     398.15}),  // 16
+  std::array<double, 3>({    3,  2.28,     553.57}),  // 17
+  std::array<double, 3>({    2,  4.38,    5223.69}),  // 18
+  std::array<double, 3>({    2,  3.75,       0.98}),  // 19
+};
+
+
+
+
+
+
 // clang-format on
 
 
