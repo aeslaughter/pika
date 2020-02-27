@@ -39,6 +39,10 @@ namespace Table1
 extern const std::array<std::array<double, 3>, 64> L0;
 extern const std::array<std::array<double, 3>, 34> L1;
 extern const std::array<std::array<double, 3>, 20> L2;
+extern const std::array<std::array<double, 3>, 7> L3;
+extern const std::array<std::array<double, 3>, 3> L4;
+extern const std::array<std::array<double, 3>, 1> L5;
+
 } // table 1
 
 } // namespace

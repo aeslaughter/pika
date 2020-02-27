@@ -31,3 +31,16 @@ L1 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coef
 print(L1)
 L2 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[2]])
 print(L2)
+L3 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[3]])
+print(L3)
+L4 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[4]])
+print(L4)
+L5 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_longitude_coeffs[5]])
+print(L5)
+
+
+L = solar.get_coeff(1, constants.heliocentric_longitude_coeffs) / 1e8
+print(L)
+
+hl = solar.get_heliocentric_longitude(1)
+print(hl)
