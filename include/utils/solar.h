@@ -31,6 +31,10 @@ double equation_ten(const std::array<std::array<double, 3>, N> & data, const dou
   return out;
 }
 
+// 3.2.6
+double rad_to_degrees(const double & rad);
+
+// 3.2.1 - 3.2.6: Eq. 9, 10, 11, 12
 double earth_heliocentric_longitude(const double & jme);
 
 

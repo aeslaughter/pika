@@ -50,6 +50,19 @@ double julian_millennium_ephemeris(const double & jce)
   return jce / 10.;
 }
 
+double rad_to_degrees(const double & rad)
+{
+  double deg = (rad * 180.)/M_PI;
+  double not_used;
+  double f = modf(deg/360., &not_used);
+  if (deg > 0)
+    deg = 360. * f;
+  else if (deg < 0)
+    deg = 360. - 360. * f;
+  return deg;
+}
+
+
 double earth_heliocentric_longitude(const double & jme)
 {
   double L0 = equation_ten<64>(Table1::L0, jme);
@@ -58,17 +71,8 @@ double earth_heliocentric_longitude(const double & jme)
   double L3 = equation_ten<7>(Table1::L3, jme);
   double L4 = equation_ten<3>(Table1::L4, jme);
   double L5 = equation_ten<1>(Table1::L5, jme);
-
   double L_rad = (L0 + L1 * jme + L2 * std::pow(jme, 2) + L3 * std::pow(jme, 3) + L4 * std::pow(jme, 4) + L5 * std::pow(jme, 5)) / 1e8;
-
-  double L = (L_rad * 180.)/M_PI;
-  double not_used;
-  double F = modf(L/360., &not_used);
-  if (L > 0)
-    L = 360. * F;
-  else if (L < 0)
-    L = 360. - 360. * F;
-  return L;
+  return rad_to_degrees(L_rad);
 }
 
 
