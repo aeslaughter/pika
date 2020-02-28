@@ -42,6 +42,9 @@ julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int 
 double
 delta_t(unsigned int year)
 {
+  // https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
+  // ΔT = -20 + 32 * t^2 seconds
+  // where:	t = (year-1820)/100
   return 32. * std::pow((year - 1820.)/100., 2.) - 20.;
 }
 
@@ -166,7 +169,7 @@ const std::array<std::array<double, 3>, 64> Table1::L0 =
 
 const std::array<std::array<double, 3>, 34> Table1::L1 =
 {
-  std::array<double, 3>({628331966747, 0,            0}),      // 0
+  std::array<double, 3>({628331966747, 0,           0}),       // 0
   std::array<double, 3>({      206059, 2.678235, 6283.07585}), // 1
   std::array<double, 3>({        4303, 2.6351,  12566.1517}),  // 2
   std::array<double, 3>({         425, 1.59,        3.523}),   // 3
@@ -179,7 +182,7 @@ const std::array<std::array<double, 3>, 34> Table1::L1 =
   std::array<double, 3>({          59, 2.89,     5223.69}),    // 10
   std::array<double, 3>({          56, 2.17,      155.42}),    // 11
   std::array<double, 3>({          45, 0.4,       796.3}),     // 12
-  std::array<double, 3>({          36, 0.47,      775.52 }),   // 13
+  std::array<double, 3>({          36, 0.47,      775.52}),    // 13
   std::array<double, 3>({          29, 2.65,        7.11}),    // 14
   std::array<double, 3>({          21, 5.34,        0.98}),    // 15
   std::array<double, 3>({          19, 1.85,     5486.78}),    // 16
@@ -193,7 +196,7 @@ const std::array<std::array<double, 3>, 34> Table1::L1 =
   std::array<double, 3>({          12, 5.27,     1194.45}),    // 24
   std::array<double, 3>({          12, 2.08,     4694}),       // 25
   std::array<double, 3>({          11, 0.77,      553.57}),    // 26
-  std::array<double, 3>({          10, 1.3,      3286.6}),     // 27
+  std::array<double, 3>({          10, 1.3,      6286.6}),     // 27
   std::array<double, 3>({          10, 4.24,     1349.87}),    // 28
   std::array<double, 3>({           9, 2.7,       242.73}),    // 29
   std::array<double, 3>({           9, 5.64,      951.72}),    // 30

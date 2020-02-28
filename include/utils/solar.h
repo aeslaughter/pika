@@ -9,7 +9,8 @@ namespace PikaUtils
 double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
                   unsigned int min, double sec, double timezone, double dut1);
 
-// https://en.wikipedia.org/wiki/%CE%94T
+// This is an optional estimate of dt for equation below
+// https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
 double delta_t(unsigned int year);
 
 // 3.1.2: Eq. 5, Julian Ephemeris Day (JDE)

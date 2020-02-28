@@ -10,20 +10,13 @@
 #include "gtest/gtest.h"
 #include "solar.h"
 
-// Implements tests presented in https://www.nrel.gov/docs/fy08osti/34302.pd
-
-TEST(solar, julian_day)
+// Implements tests presented in NREL/TP-560-34302
+// https://www.nrel.gov/docs/fy08osti/34302.pd
+//
+// The "gold" values were created using the SPA code from the above report
+// https://rredc.nrel.gov/solar/codesandalgorithms/spa/
+TEST(PikaUtils, solar)
 {
-  //  spa.year          = 2003;
-  //  spa.month         = 10;
-  //  spa.day           = 17;
-  //  spa.hour          = 12;
-  //  spa.minute        = 30;
-  //  spa.second        = 30;
-  //  spa.timezone      = -7.0;
-  //  spa.delta_ut1     = 0;
-  //  spa.delta_t       = 67;
-
   double jd = PikaUtils::julian_day(2003, 10, 17, 12, 30, 30, -7, 0);
   EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526165008545);
 
@@ -41,25 +34,22 @@ TEST(solar, julian_day)
 
   double jme = PikaUtils::julian_millennium_ephemeris(jce);
   EXPECT_DOUBLE_EQ(jme, 0.003792781992293358436091);
-}
 
-TEST(solar,  earth_heliocentric_longitude)
-{
-  double L0 = PikaUtils::equation_ten<64>(PikaUtils::Table1::L0, 1);
-  EXPECT_DOUBLE_EQ(L0, 174831416.50056037);
-  double L1 = PikaUtils::equation_ten<34>(PikaUtils::Table1::L1, 1);
-  EXPECT_DOUBLE_EQ(L1, 628331790351.9989);
-  double L2 = PikaUtils::equation_ten<20>(PikaUtils::Table1::L2, 1);
-  EXPECT_DOUBLE_EQ(L2, 58127.82598515583);
-  double L3 = PikaUtils::equation_ten<7>(PikaUtils::Table1::L3, 1);
-  EXPECT_DOUBLE_EQ(L3, 286.84079484062147);
-  double L4 = PikaUtils::equation_ten<3>(PikaUtils::Table1::L4, 1);
-  EXPECT_DOUBLE_EQ(L4, -119.96607179286497);
-  double L5 = PikaUtils::equation_ten<1>(PikaUtils::Table1::L5, 1);
-  EXPECT_DOUBLE_EQ(L5, -0.9999987317275395);
+  double L0 = PikaUtils::equation_ten<64>(PikaUtils::Table1::L0, jme);
+  EXPECT_DOUBLE_EQ(L0, 172067561.526585549116134643554688);
+  double L1 = PikaUtils::equation_ten<34>(PikaUtils::Table1::L1, jme);
+  EXPECT_DOUBLE_EQ(L1, 628332010650.051147460937500000000000);
+  double L2 = PikaUtils::equation_ten<20>(PikaUtils::Table1::L2, jme);
+  EXPECT_DOUBLE_EQ(L2, 61368.682493387161230202764273);
+  double L3 = PikaUtils::equation_ten<7>(PikaUtils::Table1::L3, jme);
+  EXPECT_DOUBLE_EQ(L3, -26.902818812449339702652651);
+  double L4 = PikaUtils::equation_ten<3>(PikaUtils::Table1::L4, jme);
+  EXPECT_DOUBLE_EQ(L4, -121.279536272762925364077091);
+  double L5 = PikaUtils::equation_ten<1>(PikaUtils::Table1::L5, jme);
+  EXPECT_DOUBLE_EQ(L5, -0.999998731727539502678326);
 
-  double HL = PikaUtils::earth_heliocentric_longitude(1);
-  EXPECT_NEAR(HL, 107.80163343198365, 1e-10);
+  double L = PikaUtils::earth_heliocentric_longitude(jme);
+  EXPECT_DOUBLE_EQ(L, 24.0182616916793989503275955);
 }
 
 TEST(solar,  earth_heliocentric_latitude)
