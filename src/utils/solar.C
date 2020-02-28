@@ -156,6 +156,34 @@ double ascending_longitude_moon(double jce)
   return 125.04452 - 1934.136261 * jce + 0.0020708 * std::pow(jce, 2) + std::pow(jce, 3)/450000.;
 }
 
+double nutation_longitude(double jce)
+{
+  using namespace Table2;
+  double delta_psi = 0;
+  const double X0 = mean_elongation_moon(jce);
+  const double X1 = mean_anomaly_sun(jce);
+  const double X2 = mean_anomaly_moon(jce);
+  const double X3 = argument_latitute_moon(jce);
+  const double X4 = ascending_longitude_moon(jce);
+  for (std::size_t i = 0; i < 64; ++i)
+    delta_psi += (PE[i][0] + PE[i][1] * jce) * sin(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
+  return delta_psi / 36000000.;
+}
+
+double nutation_obliquity(double jce)
+{
+  using namespace Table2;
+  double delta_psi = 0;
+  const double X0 = mean_elongation_moon(jce);
+  const double X1 = mean_anomaly_sun(jce);
+  const double X2 = mean_anomaly_moon(jce);
+  const double X3 = argument_latitute_moon(jce);
+  const double X4 = ascending_longitude_moon(jce);
+  for (std::size_t i = 0; i < 64; ++i)
+    delta_psi += (PE[i][1] + PE[i][2] * jce) * cos(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
+  return delta_psi / 36000000.;
+}
+
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =
 {
@@ -406,69 +434,69 @@ const std::array<std::array<double, 3>, 1> Table1::R4 =
 
 const std::array<std::array<double, 5>, 63> Table2::Y =
 {
-  std::array<double, 5>({0,0,0,0,1}),
-  std::array<double, 5>({-2,0,0,2,2}),
-  std::array<double, 5>({0,0,0,2,2}),
-  std::array<double, 5>({0,0,0,0,2}),
-  std::array<double, 5>({0,1,0,0,0}),
-  std::array<double, 5>({0,0,1,0,0}),
-  std::array<double, 5>({-2,1,0,2,2}),
-  std::array<double, 5>({0,0,0,2,1}),
-  std::array<double, 5>({0,0,1,2,2}),
-  std::array<double, 5>({-2,-1,0,2,2}),
-  std::array<double, 5>({-2,0,1,0,0}),
-  std::array<double, 5>({-2,0,0,2,1}),
-  std::array<double, 5>({0,0,-1,2,2}),
-  std::array<double, 5>({2,0,0,0,0}),
-  std::array<double, 5>({0,0,1,0,1}),
-  std::array<double, 5>({2,0,-1,2,2}),
-  std::array<double, 5>({0,0,-1,0,1}),
-  std::array<double, 5>({0,0,1,2,1}),
-  std::array<double, 5>({-2,0,2,0,0}),
-  std::array<double, 5>({0,0,-2,2,1}),
-  std::array<double, 5>({2,0,0,2,2}),
-  std::array<double, 5>({0,0,2,2,2}),
-  std::array<double, 5>({0,0,2,0,0}),
-  std::array<double, 5>({-2,0,1,2,2}),
-  std::array<double, 5>({0,0,0,2,0}),
-  std::array<double, 5>({-2,0,0,2,0}),
-  std::array<double, 5>({0,0,-1,2,1}),
-  std::array<double, 5>({0,2,0,0,0}),
-  std::array<double, 5>({2,0,-1,0,1}),
-  std::array<double, 5>({-2,2,0,2,2}),
-  std::array<double, 5>({0,1,0,0,1}),
-  std::array<double, 5>({-2,0,1,0,1}),
-  std::array<double, 5>({0,-1,0,0,1}),
-  std::array<double, 5>({0,0,2,-2,0}),
-  std::array<double, 5>({2,0,-1,2,1}),
-  std::array<double, 5>({2,0,1,2,2}),
-  std::array<double, 5>({0,1,0,2,2}),
-  std::array<double, 5>({-2,1,1,0,0}),
-  std::array<double, 5>({0,-1,0,2,2}),
-  std::array<double, 5>({2,0,0,2,1}),
-  std::array<double, 5>({2,0,1,0,0}),
-  std::array<double, 5>({-2,0,2,2,2}),
-  std::array<double, 5>({-2,0,1,2,1}),
-  std::array<double, 5>({2,0,-2,0,1}),
-  std::array<double, 5>({2,0,0,0,1}),
-  std::array<double, 5>({0,-1,1,0,0}),
-  std::array<double, 5>({-2,-1,0,2,1}),
-  std::array<double, 5>({-2,0,0,0,1}),
-  std::array<double, 5>({0,0,2,2,1}),
-  std::array<double, 5>({-2,0,2,0,1}),
-  std::array<double, 5>({-2,1,0,2,1}),
-  std::array<double, 5>({0,0,1,-2,0}),
-  std::array<double, 5>({-1,0,1,0,0}),
-  std::array<double, 5>({-2,1,0,0,0}),
-  std::array<double, 5>({1,0,0,0,0}),
-  std::array<double, 5>({0,0,1,2,0}),
-  std::array<double, 5>({0,0,-2,2,2}),
-  std::array<double, 5>({-1,-1,1,0,0}),
-  std::array<double, 5>({0,1,1,0,0}),
-  std::array<double, 5>({0,-1,1,2,2}),
-  std::array<double, 5>({2,-1,-1,2,2}),
-  std::array<double, 5>({0,0,3,2,2}),
-  std::array<double, 5>({2,-1,0,2,2})
+  std::array<double, 5>({0, 0, 0, 0, 1}),
+  std::array<double, 5>({-2, 0, 0, 2, 2}),
+  std::array<double, 5>({0, 0, 0, 2, 2}),
+  std::array<double, 5>({0, 0, 0, 0, 2}),
+  std::array<double, 5>({0, 1, 0, 0, 0}),
+  std::array<double, 5>({0, 0, 1, 0, 0}),
+  std::array<double, 5>({-2, 1, 0, 2, 2}),
+  std::array<double, 5>({0, 0, 0, 2, 1}),
+  std::array<double, 5>({0, 0, 1, 2, 2}),
+  std::array<double, 5>({-2, -1, 0, 2, 2}),
+  std::array<double, 5>({-2, 0, 1, 0, 0}),
+  std::array<double, 5>({-2, 0, 0, 2, 1}),
+  std::array<double, 5>({0, 0, -1, 2, 2}),
+  std::array<double, 5>({2, 0, 0, 0, 0}),
+  std::array<double, 5>({0, 0, 1, 0, 1}),
+  std::array<double, 5>({2, 0, -1, 2, 2}),
+  std::array<double, 5>({0, 0, -1, 0, 1}),
+  std::array<double, 5>({0, 0, 1, 2, 1}),
+  std::array<double, 5>({-2, 0, 2, 0, 0}),
+  std::array<double, 5>({0, 0, -2, 2, 1}),
+  std::array<double, 5>({2, 0, 0, 2, 2}),
+  std::array<double, 5>({0, 0, 2, 2, 2}),
+  std::array<double, 5>({0, 0, 2, 0, 0}),
+  std::array<double, 5>({-2, 0, 1, 2, 2}),
+  std::array<double, 5>({0, 0, 0, 2, 0}),
+  std::array<double, 5>({-2, 0, 0, 2, 0}),
+  std::array<double, 5>({0, 0, -1, 2, 1}),
+  std::array<double, 5>({0, 2, 0, 0, 0}),
+  std::array<double, 5>({2, 0, -1, 0, 1}),
+  std::array<double, 5>({-2, 2, 0, 2, 2}),
+  std::array<double, 5>({0, 1, 0, 0, 1}),
+  std::array<double, 5>({-2, 0, 1, 0, 1}),
+  std::array<double, 5>({0, -1, 0, 0, 1}),
+  std::array<double, 5>({0, 0, 2, -2, 0}),
+  std::array<double, 5>({2, 0, -1, 2, 1}),
+  std::array<double, 5>({2, 0, 1, 2, 2}),
+  std::array<double, 5>({0, 1, 0, 2, 2}),
+  std::array<double, 5>({-2, 1, 1, 0, 0}),
+  std::array<double, 5>({0, -1, 0, 2, 2}),
+  std::array<double, 5>({2, 0, 0, 2, 1}),
+  std::array<double, 5>({2, 0, 1, 0, 0}),
+  std::array<double, 5>({-2, 0, 2, 2, 2}),
+  std::array<double, 5>({-2, 0, 1, 2, 1}),
+  std::array<double, 5>({2, 0, -2, 0, 1}),
+  std::array<double, 5>({2, 0, 0, 0, 1}),
+  std::array<double, 5>({0, -1, 1, 0, 0}),
+  std::array<double, 5>({-2, -1, 0, 2, 1}),
+  std::array<double, 5>({-2, 0, 0, 0, 1}),
+  std::array<double, 5>({0, 0, 2, 2, 1}),
+  std::array<double, 5>({-2, 0, 2, 0, 1}),
+  std::array<double, 5>({-2, 1, 0, 2, 1}),
+  std::array<double, 5>({0, 0, 1, -2, 0}),
+  std::array<double, 5>({-1, 0, 1, 0, 0}),
+  std::array<double, 5>({-2, 1, 0, 0, 0}),
+  std::array<double, 5>({1, 0, 0, 0, 0}),
+  std::array<double, 5>({0, 0, 1, 2, 0}),
+  std::array<double, 5>({0, 0, -2, 2, 2}),
+  std::array<double, 5>({-1, -1, 1, 0, 0}),
+  std::array<double, 5>({0, 1, 1, 0, 0}),
+  std::array<double, 5>({0, -1, 1, 2, 2}),
+  std::array<double, 5>({2, -1, -1, 2, 2}),
+  std::array<double, 5>({0, 0, 3, 2, 2}),
+  std::array<double, 5>({2, -1, 0, 2, 2})
 };
 
 const std::array<std::array<double, 4>, 63> Table2::PE =
