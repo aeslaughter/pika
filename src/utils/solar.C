@@ -126,7 +126,7 @@ const std::array<std::array<double, 3>, 64> Table1::L0 =
   std::array<double, 3>({      243, 0.345,     5486.778}),    // 22
   std::array<double, 3>({      206, 4.806,     2544.314}),    // 23
   std::array<double, 3>({      205, 1.869,     5573.143}),    // 24
-  std::array<double, 3>({      202, 2.4458,    6069.777}),    // 25
+  std::array<double, 3>({      202, 2.458,    6069.777}),     // 25
   std::array<double, 3>({      156, 0.833,      213.299}),    // 26
   std::array<double, 3>({      132, 3.411,     2942.463}),    // 27
   std::array<double, 3>({      126, 1.083,       20.775}),    // 28
@@ -141,7 +141,7 @@ const std::array<std::array<double, 3>, 64> Table1::L0 =
   std::array<double, 3>({       85, 3.67,      71430.7}),     // 37
   std::array<double, 3>({       80, 1.81,      17260.15}),    // 38
   std::array<double, 3>({       79, 3.04,      12036.46}),    // 39
-  std::array<double, 3>({       71, 1.76,       5088.63}),    // 40
+  std::array<double, 3>({       75, 1.76,       5088.63}),    // 40
   std::array<double, 3>({       74, 3.5,        3154.69}),    // 41
   std::array<double, 3>({       74, 4.68,        801.82}),    // 42
   std::array<double, 3>({       70, 0.83,       9437.76}),    // 43
