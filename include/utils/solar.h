@@ -38,9 +38,17 @@ double equation_ten(const std::array<std::array<double, 3>, N> & data, double jm
 // 3.2.6
 double rad_to_degrees(double rad);
 
+// 3.2.7: Limits degree calculation to 360
+double limit_to_360(double deg);
+
 // 3.2.1 - 3.2.6: Eq. 9, 10, 11, 12
 double earth_heliocentric_longitude(double jme);
 
+// 3.2.7: Eq. 9, 10, 11, 12
+double earth_heliocentric_latitude(double jme);
+
+// 3.2.8: Eq. 9, 10, 11, 12
+double earth_radius_vector(double jme);
 
 namespace Table1
 {
@@ -52,7 +60,11 @@ extern const std::array<std::array<double, 3>, 3> L4;
 extern const std::array<std::array<double, 3>, 1> L5;
 extern const std::array<std::array<double, 3>, 5> B0;
 extern const std::array<std::array<double, 3>, 2> B1;
-
+extern const std::array<std::array<double, 3>, 40> R0;
+extern const std::array<std::array<double, 3>, 10> R1;
+extern const std::array<std::array<double, 3>, 6> R2;
+extern const std::array<std::array<double, 3>, 2> R3;
+extern const std::array<std::array<double, 3>, 1> R4;
 } // table 1
 
 } // namespace

@@ -73,7 +73,11 @@ double julian_millennium_ephemeris(double jce)
 
 double rad_to_degrees(double rad)
 {
-  double deg = (rad * 180.)/M_PI;
+  return (rad * 180.)/M_PI;
+}
+
+double limit_to_360(double deg)
+{
   double not_used;
   double f = modf(deg/360., &not_used);
   if (deg > 0)
@@ -82,7 +86,6 @@ double rad_to_degrees(double rad)
     deg = 360. - 360. * f;
   return deg;
 }
-
 
 double earth_heliocentric_longitude(double jme)
 {
@@ -93,9 +96,27 @@ double earth_heliocentric_longitude(double jme)
   double L4 = equation_ten<3>(Table1::L4, jme);
   double L5 = equation_ten<1>(Table1::L5, jme);
   double L_rad = (L0 + L1 * jme + L2 * std::pow(jme, 2) + L3 * std::pow(jme, 3) + L4 * std::pow(jme, 4) + L5 * std::pow(jme, 5)) / 1e8;
-  return rad_to_degrees(L_rad);
+  return limit_to_360(rad_to_degrees(L_rad));
 }
 
+double earth_heliocentric_latitude(double jme)
+{
+  double B0 = equation_ten<5>(Table1::B0, jme);
+  double B1 = equation_ten<2>(Table1::B1, jme);
+  double B_rad = (B0 + B1 * jme) / 1e8;
+  return rad_to_degrees(B_rad);
+}
+
+double earth_radius_vector(double jme)
+{
+  double R0 = equation_ten<40>(Table1::R0, jme);
+  double R1 = equation_ten<10>(Table1::R1, jme);
+  double R2 = equation_ten<6>(Table1::R2, jme);
+  double R3 = equation_ten<2>(Table1::R3, jme);
+  double R4 = equation_ten<1>(Table1::R4, jme);
+  double R = (R0 + R1 * jme + R2 * std::pow(jme, 2) + R3 * std::pow(jme, 3) + R4 * std::pow(jme, 4)) / 1e8;
+  return R;
+}
 
 // Table 1 Values
 // clang-format off
@@ -231,45 +252,120 @@ const std::array<std::array<double, 3>, 20> Table1::L2 =
 
 const std::array<std::array<double, 3>, 7> Table1::L3 =
 {
-  std::array<double, 3>({289, 5.844, 6283.076}),
-  std::array<double, 3>({ 35, 0,        0}),
-  std::array<double, 3>({ 17, 5.49, 12566.15}),
-  std::array<double, 3>({  3, 5.2,    155.42}),
-  std::array<double, 3>({  1, 4.72,     3.52}),
-  std::array<double, 3>({  1, 5.3,  18849.23}),
-  std::array<double, 3>({  1, 5.97,   242.73})
+  std::array<double, 3>({289, 5.844, 6283.076}), // 0
+  std::array<double, 3>({ 35, 0,        0}),     // 1
+  std::array<double, 3>({ 17, 5.49, 12566.15}),  // 2
+  std::array<double, 3>({  3, 5.2,    155.42}),  // 3
+  std::array<double, 3>({  1, 4.72,     3.52}),  // 4
+  std::array<double, 3>({  1, 5.3,  18849.23}),  // 5
+  std::array<double, 3>({  1, 5.97,   242.73})   // 6
 };
 
 const std::array<std::array<double, 3>, 3> Table1::L4 =
 {
-  std::array<double, 3>({114, 3.142,    0}),
-  std::array<double, 3>({  8, 4.13,  6283.08}),
-  std::array<double, 3>({  1, 3.84, 12566.15})
+  std::array<double, 3>({114, 3.142,    0}),    // 0
+  std::array<double, 3>({  8, 4.13,  6283.08}), // 1
+  std::array<double, 3>({  1, 3.84, 12566.15})  // 2
 };
 
 const std::array<std::array<double, 3>, 1> Table1::L5 =
 {
-  std::array<double, 3>({1, 3.14, 0})
+  std::array<double, 3>({1, 3.14, 0}) // 0
 };
 
 const std::array<std::array<double, 3>, 5> Table1::B0 =
 {
-  std::array<double, 3>({280, 3.199, 84334.662}),
-  std::array<double, 3>({102, 5.422,  5507.553}),
-  std::array<double, 3>({ 80, 3.88,   5223.69}),
-  std::array<double, 3>({ 44, 3.7,    2352.87}),
-  std::array<double, 3>({ 32, 4,      1577.34})
+  std::array<double, 3>({280, 3.199, 84334.662}), // 0
+  std::array<double, 3>({102, 5.422,  5507.553}), // 1
+  std::array<double, 3>({ 80, 3.88,   5223.69}),  // 2
+  std::array<double, 3>({ 44, 3.7,    2352.87}),  // 3
+  std::array<double, 3>({ 32, 4,      1577.34})   // 4
 };
 
 const std::array<std::array<double, 3>, 2> Table1::B1 =
 {
-  std::array<double, 3>({9, 3.9,  5507.55}),
-  std::array<double, 3>({6, 1.73, 5223.69})
+  std::array<double, 3>({9, 3.9,  5507.55}), // 0
+  std::array<double, 3>({6, 1.73, 5223.69})  // 1
 };
 
+const std::array<std::array<double, 3>, 40> Table1::R0 =
+{
+  std::array<double, 3>({100013989, 0,            0}),       // 0
+  std::array<double, 3>({  1670700, 3.0984635, 6283.07585}), // 1
+  std::array<double, 3>({    13956, 3.05525,  12566.1517}),  // 2
+  std::array<double, 3>({     3084, 5.1985,   77713.7715}),  // 3
+  std::array<double, 3>({     1628, 1.1739,    5753.3849}),  // 4
+  std::array<double, 3>({     1576, 2.8469,    7860.4194}),  // 5
+  std::array<double, 3>({      925, 5.453,    11506.77}),    // 6
+  std::array<double, 3>({      542, 4.564,     3930.21}),    // 7
+  std::array<double, 3>({      472, 3.661,     5884.927}),   // 8
+  std::array<double, 3>({      346, 0.964,     5507.553}),   // 9
+  std::array<double, 3>({      329, 5.9,       5223.694}),   // 10
+  std::array<double, 3>({      307, 0.299,     5573.143}),   // 11
+  std::array<double, 3>({      243, 4.273,     11790.629}),  // 12
+  std::array<double, 3>({      212, 5.847,      1577.344}),  // 13
+  std::array<double, 3>({      186, 5.022,     10977.079}),  // 14
+  std::array<double, 3>({      175, 3.012,     18849.228}),  // 15
+  std::array<double, 3>({      110, 5.055,      5486.778}),  // 16
+  std::array<double, 3>({       98, 0.89,       6069.78}),   // 17
+  std::array<double, 3>({       86, 5.69,      15720.84}),   // 18
+  std::array<double, 3>({       86, 1.27,     161000.69}),   // 19
+  std::array<double, 3>({       65, 0.27,      17260.15}),   // 20
+  std::array<double, 3>({       63, 0.92,        529.69}),   // 21
+  std::array<double, 3>({       57, 2.01,      83996.85}),   // 22
+  std::array<double, 3>({       56, 5.24,      71430.7}),    // 23
+  std::array<double, 3>({       49, 3.25,       2544.31}),   // 24
+  std::array<double, 3>({       47, 2.58,        775.52}),   // 25
+  std::array<double, 3>({       45, 5.54,       9437.76}),   // 26
+  std::array<double, 3>({       43, 6.01,       6275.96}),   // 27
+  std::array<double, 3>({       39, 5.36,       4694}),      // 28
+  std::array<double, 3>({       38, 2.39,       8827.39}),   // 29
+  std::array<double, 3>({       37, 0.83,      19651.05}),   // 30
+  std::array<double, 3>({       37, 4.9,       12139.55}),   // 31
+  std::array<double, 3>({       36, 1.67,      12036.46}),   // 32
+  std::array<double, 3>({       35, 1.84,       2942.46}),   // 33
+  std::array<double, 3>({       33, 0.24,       7084.9}),    // 34
+  std::array<double, 3>({       32, 0.18,       5088.63}),   // 35
+  std::array<double, 3>({       32, 1.78,        398.15}),   // 36
+  std::array<double, 3>({       28, 1.21,       6286.6}),    // 37
+  std::array<double, 3>({       28, 1.9,        6279.55}),   // 38
+  std::array<double, 3>({       26, 4.59,      10447.39})    // 39
+};
 
+const std::array<std::array<double, 3>, 10> Table1::R1 =
+{
+  std::array<double, 3>({103019, 1.10749, 6283.07585}), // 0
+  std::array<double, 3>({  1721, 1.0644, 12566.1517}),  // 1
+  std::array<double, 3>({   702, 3.142,      0}),       // 2
+  std::array<double, 3>({    32, 1.02,    18849.23}),   // 3
+  std::array<double, 3>({    31, 2.84,     5507.55}),   // 4
+  std::array<double, 3>({    25, 1.32,     5223.69}),   // 5
+  std::array<double, 3>({    18, 1.42,     1577.34}),   // 6
+  std::array<double, 3>({    10, 5.91,    10977.08}),   // 7
+  std::array<double, 3>({     9, 1.42,     6275.96}),   // 8
+  std::array<double, 3>({     9, 0.27,     5486.78})    // 9
+};
 
+const std::array<std::array<double, 3>, 6> Table1::R2 =
+{
+  std::array<double, 3>({4359, 5.7846, 6283.0758}), // 0
+  std::array<double, 3>({ 124, 5.579, 12566.152}),  // 1
+  std::array<double, 3>({  12, 3.14,      0}),      // 2
+  std::array<double, 3>({   9, 3.63,  77713.77}),   // 3
+  std::array<double, 3>({   6, 1.87,   5573.14}),   // 4
+  std::array<double, 3>({   3, 5.47,  18849.23})    // 5
+};
 
+const std::array<std::array<double, 3>, 2> Table1::R3 =
+{
+  std::array<double, 3>({145, 4.273, 6283.076}), // 0
+  std::array<double, 3>({  7, 3.92, 12566.15})   // 1
+};
+
+const std::array<std::array<double, 3>, 1> Table1::R4 =
+{
+  std::array<double, 3>({4,2.56,6283.08}) // 0
+};
 // clang-format on
 
 

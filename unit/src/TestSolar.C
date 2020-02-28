@@ -18,13 +18,13 @@
 TEST(PikaUtils, solar)
 {
   double jd = PikaUtils::julian_day(2003, 10, 17, 12, 30, 30, -7, 0);
-  EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526);
+  EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526165);
 
   double dt = PikaUtils::delta_t(2003);
   EXPECT_DOUBLE_EQ(dt, 87.164800000000014);
 
   double jde = PikaUtils::julian_day_ephemeris(jd, 67.);
-  EXPECT_DOUBLE_EQ(jde, 2452930.313622685149312019348145);
+  EXPECT_DOUBLE_EQ(jde, 2452930.313622685149312019);
 
   double jc = PikaUtils::julian_century(jd);
   EXPECT_DOUBLE_EQ(jc, 0.037927798691915169670974);
@@ -50,15 +50,27 @@ TEST(PikaUtils, solar)
 
   double L = PikaUtils::earth_heliocentric_longitude(jme);
   EXPECT_DOUBLE_EQ(L, 24.0182616916793989503275955);
-}
 
-TEST(solar,  earth_heliocentric_latitude)
-{
-  double B0 = PikaUtils::equation_ten<5>(PikaUtils::Table1::B0, 1);
-  EXPECT_DOUBLE_EQ(B0, 83.6936473433185);
-  double B1 = PikaUtils::equation_ten<2>(PikaUtils::Table1::B1, 1);
-  EXPECT_DOUBLE_EQ(B1, 0.6273493435113817);
+  double B0 = PikaUtils::equation_ten<5>(PikaUtils::Table1::B0, jme);
+  EXPECT_DOUBLE_EQ(B0, -176.502688041069120573);
+  double B1 = PikaUtils::equation_ten<2>(PikaUtils::Table1::B1, jme);
+  EXPECT_DOUBLE_EQ(B1, 3.067581813142713720);
 
-  //double HL = PikaUtils::earth_heliocentric_longitude(1);
-  //EXPECT_NEAR(HL, 107.80163343198365, 1e-10);
+  double B = PikaUtils::earth_heliocentric_latitude(jme);
+  EXPECT_DOUBLE_EQ(B, -0.00010112192480034234);
+
+  double R0 = PikaUtils::equation_ten<40>(PikaUtils::Table1::R0, jme);
+  EXPECT_DOUBLE_EQ(R0, 99653849.037795737385749817);
+  double R1 = PikaUtils::equation_ten<10>(PikaUtils::Table1::R1, jme);
+  EXPECT_DOUBLE_EQ(R1, 100378.567146467292332090);
+  double R2 = PikaUtils::equation_ten<6>(PikaUtils::Table1::R2, jme);
+  EXPECT_DOUBLE_EQ(R2, -1140.953507084899229085);
+  double R3 = PikaUtils::equation_ten<2>(PikaUtils::Table1::R3, jme);
+  EXPECT_DOUBLE_EQ(R3, -141.115419187090054720);
+  double R4 = PikaUtils::equation_ten<1>(PikaUtils::Table1::R4, jme);
+  EXPECT_DOUBLE_EQ(R4, 1.232360591526896032);
+
+  double R = PikaUtils::earth_radius_vector(jme);
+  EXPECT_DOUBLE_EQ(R, 0.996542297353970818);
+
 }
