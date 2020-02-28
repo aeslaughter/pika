@@ -7,50 +7,68 @@ namespace PikaUtils
 {
 
 double
-julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour, unsigned int min, double sec)
+julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
+           unsigned int min, double sec, double timezone, double dut1)
 {
+  // Apply DUT1, which is the difference between Coordinated Universal Time (UTC) and
+  // Principal Universal Time (UT1)
+  sec += dut1;
+
+  // Remove the timezone, which is given by the hours from UTC
+  hour -= timezone;
+
+  // Compute decimal day
+  double dec_day = day + hour/24. + min/1440. + sec/86400.;
+
+  // Adjust year and month (see Eq. 4)
   if (month < 3)
   {
     year -= 1;
     month += 12;
   }
-  double A = std::floor(year/100);
-  double B = 2 - A + std::floor(A/4);
-  double jd = std::floor(365.25*(year + 4716)) + std::floor(30.6001*(month+1)) + day + B - 1524.5;
 
-  assert(hour < 24);
-  assert(min < 60);
-  assert(sec < 60);
+  // Compute the Julian Day using Eq. 4
+  double jd = std::floor(365.25*(year + 4716.)) + std::floor(30.6001*(month+1)) + dec_day - 1524.5;
 
-  jd += hour/24. + min/1440. + sec/86400.;
+  // Adjust for the 1582 Gregorian calander change
+  if (jd > 2299160.)
+  {
+    double A = std::floor(year/100.);
+    jd += (2 - A + std::floor(A/4.));
+  }
   return jd;
 }
 
 double
-julian_day_ephemeris(const double & jd, unsigned int year)
+delta_t(unsigned int year)
 {
-  const double dt = 32. * std::pow((year - 1820.)/100., 2.) - 20.;
+  return 32. * std::pow((year - 1820.)/100., 2.) - 20.;
+}
+
+double
+julian_day_ephemeris(double jd, double dt)
+{
   return jd + dt / 86400.;
 }
 
 double
-julian_century(const double & jd)
+julian_century(double jd)
 {
   return (jd - 2451545.) / 36525.;
 }
 
 double
-julian_century_ephemeris(const double & jde)
+julian_century_ephemeris(double jde)
 {
   return (jde - 2451545.) / 36525.;
 }
 
-double julian_millennium_ephemeris(const double & jce)
+double julian_millennium_ephemeris(double jce)
 {
   return jce / 10.;
 }
 
-double rad_to_degrees(const double & rad)
+double rad_to_degrees(double rad)
 {
   double deg = (rad * 180.)/M_PI;
   double not_used;
@@ -63,7 +81,7 @@ double rad_to_degrees(const double & rad)
 }
 
 
-double earth_heliocentric_longitude(const double & jme)
+double earth_heliocentric_longitude(double jme)
 {
   double L0 = equation_ten<64>(Table1::L0, jme);
   double L1 = equation_ten<34>(Table1::L1, jme);

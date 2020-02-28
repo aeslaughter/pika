@@ -10,22 +10,37 @@
 #include "gtest/gtest.h"
 #include "solar.h"
 
+// Implements tests presented in https://www.nrel.gov/docs/fy08osti/34302.pd
+
 TEST(solar, julian_day)
 {
-  double jd = PikaUtils::julian_day(1980, 6, 24, 4, 24, 2);
-  EXPECT_NEAR(jd, 2444414.683359552, 1e-4);
+  //  spa.year          = 2003;
+  //  spa.month         = 10;
+  //  spa.day           = 17;
+  //  spa.hour          = 12;
+  //  spa.minute        = 30;
+  //  spa.second        = 30;
+  //  spa.timezone      = -7.0;
+  //  spa.delta_ut1     = 0;
+  //  spa.delta_t       = 67;
 
-  double jde = PikaUtils::julian_day_ephemeris(jd, 1980);
-  EXPECT_NEAR(jde, 2444414.683948889, 2e-4);
+  double jd = PikaUtils::julian_day(2003, 10, 17, 12, 30, 30, -7, 0);
+  EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526165008545);
+
+  double dt = PikaUtils::delta_t(2003);
+  EXPECT_DOUBLE_EQ(dt, 87.164800000000014);
+
+  double jde = PikaUtils::julian_day_ephemeris(jd, 67.);
+  EXPECT_DOUBLE_EQ(jde, 2452930.313622685149312019348145);
 
   double jc = PikaUtils::julian_century(jd);
-  EXPECT_NEAR(jc, -0.19521743026551197, 1e-4);
+  EXPECT_DOUBLE_EQ(jc, 0.037927798691915169670974);
 
   double jce = PikaUtils::julian_century_ephemeris(jde);
-  EXPECT_NEAR(jce, -0.19521741413035157, 1e-4);
+  EXPECT_DOUBLE_EQ(jce, 0.037927819922933585228275);
 
   double jme = PikaUtils::julian_millennium_ephemeris(jce);
-  EXPECT_NEAR(jme, -0.019521741413035157, 1e-4);
+  EXPECT_DOUBLE_EQ(jme, 0.003792781992293358436091);
 }
 
 TEST(solar,  earth_heliocentric_longitude)
