@@ -50,6 +50,28 @@ double earth_heliocentric_latitude(double jme);
 // 3.2.8: Eq. 9, 10, 11, 12
 double earth_radius_vector(double jme);
 
+// 3.3.1, 3.3.2: Eq. 13
+double geocentric_longitude(double L);
+
+// 3.3.3, Eq. 14
+double geocentric_latitude(double B);
+
+// 3.4.1, Eq. 15
+double mean_elongation_moon(double jce);
+
+// 3.4.2, Eq. 16
+double mean_elongation_sun(double jce);
+
+// 3.4.3, Eq. 17
+double mean_anomaly_moon(double jce);
+
+// 3.4.4, Eq. 18
+double argument_latitute_moon(double jce);
+
+// 3.4.5, Eq. 19
+double ascending_longitude_moon(double jce);
+
+
 namespace Table1
 {
 extern const std::array<std::array<double, 3>, 64> L0;

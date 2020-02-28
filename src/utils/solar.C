@@ -118,7 +118,47 @@ double earth_radius_vector(double jme)
   return R;
 }
 
-// Table 1 Values
+double geocentric_longitude(double L)
+{
+  double theta = L + 180.;
+  if (theta > 360.)
+    theta -= 360.;
+  return theta;
+}
+
+double geocentric_latitude(double B)
+{
+  return -B;
+}
+
+double mean_elongation_moon(double jce)
+{
+  return 297.85036 + 445267.11148 * jce - 0.0019142 * std::pow(jce, 2) + std::pow(jce, 3)/189474.;
+}
+
+double mean_elongation_sun(double jce)
+{
+  return 357.52772 + 35999.050340 * jce - 0.0001603 * std::pow(jce, 2) - std::pow(jce, 3)/300000.;
+}
+
+double mean_anomaly_moon(double jce)
+{
+  return 134.96298 + 477198.867398 * jce + 0.0086972 * std::pow(jce, 2) + std::pow(jce, 3)/56250.;
+}
+
+double argument_latitute_moon(double jce)
+{
+  return 93.27191 + 483202.017538 * jce - 0.0036825 * std::pow(jce, 2) + std::pow(jce, 3)/327270.;
+}
+
+double ascending_longitude_moon(double jce)
+{
+  return 125.04452 - 1934.136261 * jce + 0.0020708 * std::pow(jce, 2) + std::pow(jce, 3)/450000.;
+}
+
+
+
+
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =
 {
