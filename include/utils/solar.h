@@ -46,6 +46,8 @@ extern const std::array<std::array<double, 3>, 20> L2;
 extern const std::array<std::array<double, 3>, 7> L3;
 extern const std::array<std::array<double, 3>, 3> L4;
 extern const std::array<std::array<double, 3>, 1> L5;
+extern const std::array<std::array<double, 3>, 5> B0;
+extern const std::array<std::array<double, 3>, 2> B1;
 
 } // table 1
 

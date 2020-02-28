@@ -44,3 +44,9 @@ print(L)
 
 hl = solar.get_heliocentric_longitude(1)
 print(hl)
+
+
+B0 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_latitude_coeffs[0]])
+print(B0)
+B1 = sum([A * math.cos(B + C) for A,B,C in constants.heliocentric_latitude_coeffs[1]])
+print(B1)
