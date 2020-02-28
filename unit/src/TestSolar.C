@@ -18,7 +18,7 @@
 TEST(PikaUtils, solar)
 {
   double jd = PikaUtils::julian_day(2003, 10, 17, 12, 30, 30, -7, 0);
-  EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526165008545);
+  EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526);
 
   double dt = PikaUtils::delta_t(2003);
   EXPECT_DOUBLE_EQ(dt, 87.164800000000014);
