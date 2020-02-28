@@ -89,4 +89,11 @@ extern const std::array<std::array<double, 3>, 2> R3;
 extern const std::array<std::array<double, 3>, 1> R4;
 } // table 1
 
+namespace Table2
+{
+extern const std::array<std::array<double, 5>, 63> Y;
+extern const std::array<std::array<double, 4>, 63> PE;
+}
+
+
 } // namespace
