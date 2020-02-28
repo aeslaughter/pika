@@ -136,7 +136,7 @@ double mean_elongation_moon(double jce)
   return 297.85036 + 445267.11148 * jce - 0.0019142 * std::pow(jce, 2) + std::pow(jce, 3)/189474.;
 }
 
-double mean_elongation_sun(double jce)
+double mean_anomaly_sun(double jce)
 {
   return 357.52772 + 35999.050340 * jce - 0.0001603 * std::pow(jce, 2) - std::pow(jce, 3)/300000.;
 }
@@ -155,9 +155,6 @@ double ascending_longitude_moon(double jce)
 {
   return 125.04452 - 1934.136261 * jce + 0.0020708 * std::pow(jce, 2) + std::pow(jce, 3)/450000.;
 }
-
-
-
 
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =

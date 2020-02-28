@@ -60,7 +60,7 @@ double geocentric_latitude(double B);
 double mean_elongation_moon(double jce);
 
 // 3.4.2, Eq. 16
-double mean_elongation_sun(double jce);
+double mean_anomaly_sun(double jce);
 
 // 3.4.3, Eq. 17
 double mean_anomaly_moon(double jce);
