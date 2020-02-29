@@ -1,4 +1,3 @@
-//
 #include <array>
 
 namespace PikaUtils
@@ -41,7 +40,7 @@ double equation_ten(const std::array<std::array<double, 3>, N> & data, double jm
 double rad_to_degrees(double rad);
 
 // 3.2.7: Limits degree calculation to 360
-double limit_to_360(double deg);
+double limit_degrees(double deg);
 
 // 3.2.1 - 3.2.6: Eq. 9, 10, 11, 12
 double earth_heliocentric_longitude(double jme);
@@ -97,6 +96,11 @@ double mean_sidereal_time_greenwich(double jd, double jc);
 // 3.8.3: Eq. 29
 double apparent_sidereal_time_greenwich(double nu0, double delta_psi, double eps);
 
+// 3.9: Eq. 30
+double sun_right_ascension(double lambda, double eps, double beta);
+
+// 3.19: Eq. 31
+double geocentric_sun_declination(double lambda, double eps, double beta);
 
 namespace Table1
 {

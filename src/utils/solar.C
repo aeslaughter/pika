@@ -83,15 +83,13 @@ double degrees_to_rad(double deg)
   return (M_PI / 180.0) * deg;
 }
 
-double limit_to_360(double deg)
+double limit_degrees(double deg)
 {
-  double not_used;
-  double f = modf(deg/360., &not_used);
-  if (deg > 0)
-    deg = 360. * f;
-  else if (deg < 0)
-    deg = 360. - 360. * f;
-  return deg;
+  deg /= 360.0;
+  double limited = 360.0*(deg - std::floor(deg));
+  if (limited < 0)
+    limited += 360.0;
+  return limited;
 }
 
 double earth_heliocentric_longitude(double jme)
@@ -103,7 +101,7 @@ double earth_heliocentric_longitude(double jme)
   double L4 = equation_ten<3>(Table1::L4, jme);
   double L5 = equation_ten<1>(Table1::L5, jme);
   double L_rad = (L0 + L1 * jme + L2 * std::pow(jme, 2) + L3 * std::pow(jme, 3) + L4 * std::pow(jme, 4) + L5 * std::pow(jme, 5)) / 1e8;
-  return limit_to_360(rad_to_degrees(L_rad));
+  return limit_degrees(rad_to_degrees(L_rad));
 }
 
 double earth_heliocentric_latitude(double jme)
@@ -175,7 +173,7 @@ double nutation_longitude(double jce)
   for (std::size_t i = 0; i < 63; ++i)
   {
     double inner = degrees_to_rad(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
-    delta_psi += (PE[i][0] + PE[i][1] * jce) * sin(inner);
+    delta_psi += (PE[i][0] + PE[i][1] * jce) * std::sin(inner);
   }
 
   return delta_psi / 36000000.;
@@ -193,7 +191,7 @@ double nutation_obliquity(double jce)
   for (std::size_t i = 0; i < 63; ++i)
   {
     double inner = degrees_to_rad(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
-    delta_eps += (PE[i][2] + PE[i][3] * jce) * cos(inner);
+    delta_eps += (PE[i][2] + PE[i][3] * jce) * std::cos(inner);
   }
   return delta_eps / 36000000.;
 }
@@ -226,12 +224,30 @@ double mean_sidereal_time_greenwich(double jd, double jc)
 {
   double nu0 = 280.46061837 + 360.98564736629 * (jd - 2451545) + 0.000387933 * std::pow(jc, 2) -
     std::pow(jc, 3) / 38710000.;
-  return limit_to_360(nu0);
+  return limit_degrees(nu0);
 }
 
 double apparent_sidereal_time_greenwich(double nu0, double delta_psi, double eps)
 {
-  return nu0 + delta_psi * cos(degrees_to_rad(eps));
+  return nu0 + delta_psi * std::cos(degrees_to_rad(eps));
+}
+
+double sun_right_ascension(double lambda, double eps, double beta)
+{
+  lambda = degrees_to_rad(lambda);
+  eps = degrees_to_rad(eps);
+  beta = degrees_to_rad(beta);
+  double alpha = std::atan2(std::sin(lambda) * std::cos(eps) - std::tan(beta) * std::sin(eps), std::cos(lambda));
+  return limit_degrees(rad_to_degrees(alpha));
+}
+
+double geocentric_sun_declination(double lambda, double eps, double beta)
+{
+  lambda = degrees_to_rad(lambda);
+  eps = degrees_to_rad(eps);
+  beta = degrees_to_rad(beta);
+  double delta = std::asin(std::sin(beta) * std::cos(eps) + std::cos(beta) * std::sin(eps) * std::sin(lambda));
+  return rad_to_degrees(delta);
 }
 
 

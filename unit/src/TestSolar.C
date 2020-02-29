@@ -120,4 +120,11 @@ TEST(PikaUtils, solar)
   double nu = apparent_sidereal_time_greenwich(nu0, delta_psi, eps);
   EXPECT_DOUBLE_EQ(nu, 318.511909841120711917);
 
+  double alpha = sun_right_ascension(lambda, eps, beta);
+  EXPECT_DOUBLE_EQ(alpha, 202.227407827207258606);
+
+  double delta = geocentric_sun_declination(lambda, eps, beta);
+  EXPECT_DOUBLE_EQ(delta, -9.314340090849105636);
+
+
 }
