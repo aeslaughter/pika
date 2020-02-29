@@ -76,6 +76,11 @@ double rad_to_degrees(double rad)
   return (rad * 180.)/M_PI;
 }
 
+double degrees_to_rad(double deg)
+{
+  return (M_PI / 180.0) * deg;
+}
+
 double limit_to_360(double deg)
 {
   double not_used;
@@ -165,23 +170,30 @@ double nutation_longitude(double jce)
   const double X2 = mean_anomaly_moon(jce);
   const double X3 = argument_latitute_moon(jce);
   const double X4 = ascending_longitude_moon(jce);
-  for (std::size_t i = 0; i < 64; ++i)
-    delta_psi += (PE[i][0] + PE[i][1] * jce) * sin(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
+  for (std::size_t i = 0; i < 63; ++i)
+  {
+    double inner = degrees_to_rad(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
+    delta_psi += (PE[i][0] + PE[i][1] * jce) * sin(inner);
+  }
+
   return delta_psi / 36000000.;
 }
 
 double nutation_obliquity(double jce)
 {
   using namespace Table2;
-  double delta_psi = 0;
+  double delta_eps = 0;
   const double X0 = mean_elongation_moon(jce);
   const double X1 = mean_anomaly_sun(jce);
   const double X2 = mean_anomaly_moon(jce);
   const double X3 = argument_latitute_moon(jce);
   const double X4 = ascending_longitude_moon(jce);
-  for (std::size_t i = 0; i < 64; ++i)
-    delta_psi += (PE[i][1] + PE[i][2] * jce) * cos(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
-  return delta_psi / 36000000.;
+  for (std::size_t i = 0; i < 63; ++i)
+  {
+    double inner = degrees_to_rad(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
+    delta_eps += (PE[i][2] + PE[i][3] * jce) * cos(inner);
+  }
+  return delta_eps / 36000000.;
 }
 
 // clang-format off
@@ -434,136 +446,136 @@ const std::array<std::array<double, 3>, 1> Table1::R4 =
 
 const std::array<std::array<double, 5>, 63> Table2::Y =
 {
-  std::array<double, 5>({0, 0, 0, 0, 1}),
-  std::array<double, 5>({-2, 0, 0, 2, 2}),
-  std::array<double, 5>({0, 0, 0, 2, 2}),
-  std::array<double, 5>({0, 0, 0, 0, 2}),
-  std::array<double, 5>({0, 1, 0, 0, 0}),
-  std::array<double, 5>({0, 0, 1, 0, 0}),
-  std::array<double, 5>({-2, 1, 0, 2, 2}),
-  std::array<double, 5>({0, 0, 0, 2, 1}),
-  std::array<double, 5>({0, 0, 1, 2, 2}),
-  std::array<double, 5>({-2, -1, 0, 2, 2}),
-  std::array<double, 5>({-2, 0, 1, 0, 0}),
-  std::array<double, 5>({-2, 0, 0, 2, 1}),
-  std::array<double, 5>({0, 0, -1, 2, 2}),
-  std::array<double, 5>({2, 0, 0, 0, 0}),
-  std::array<double, 5>({0, 0, 1, 0, 1}),
-  std::array<double, 5>({2, 0, -1, 2, 2}),
-  std::array<double, 5>({0, 0, -1, 0, 1}),
-  std::array<double, 5>({0, 0, 1, 2, 1}),
-  std::array<double, 5>({-2, 0, 2, 0, 0}),
-  std::array<double, 5>({0, 0, -2, 2, 1}),
-  std::array<double, 5>({2, 0, 0, 2, 2}),
-  std::array<double, 5>({0, 0, 2, 2, 2}),
-  std::array<double, 5>({0, 0, 2, 0, 0}),
-  std::array<double, 5>({-2, 0, 1, 2, 2}),
-  std::array<double, 5>({0, 0, 0, 2, 0}),
-  std::array<double, 5>({-2, 0, 0, 2, 0}),
-  std::array<double, 5>({0, 0, -1, 2, 1}),
-  std::array<double, 5>({0, 2, 0, 0, 0}),
-  std::array<double, 5>({2, 0, -1, 0, 1}),
-  std::array<double, 5>({-2, 2, 0, 2, 2}),
-  std::array<double, 5>({0, 1, 0, 0, 1}),
-  std::array<double, 5>({-2, 0, 1, 0, 1}),
-  std::array<double, 5>({0, -1, 0, 0, 1}),
-  std::array<double, 5>({0, 0, 2, -2, 0}),
-  std::array<double, 5>({2, 0, -1, 2, 1}),
-  std::array<double, 5>({2, 0, 1, 2, 2}),
-  std::array<double, 5>({0, 1, 0, 2, 2}),
-  std::array<double, 5>({-2, 1, 1, 0, 0}),
-  std::array<double, 5>({0, -1, 0, 2, 2}),
-  std::array<double, 5>({2, 0, 0, 2, 1}),
-  std::array<double, 5>({2, 0, 1, 0, 0}),
-  std::array<double, 5>({-2, 0, 2, 2, 2}),
-  std::array<double, 5>({-2, 0, 1, 2, 1}),
-  std::array<double, 5>({2, 0, -2, 0, 1}),
-  std::array<double, 5>({2, 0, 0, 0, 1}),
-  std::array<double, 5>({0, -1, 1, 0, 0}),
-  std::array<double, 5>({-2, -1, 0, 2, 1}),
-  std::array<double, 5>({-2, 0, 0, 0, 1}),
-  std::array<double, 5>({0, 0, 2, 2, 1}),
-  std::array<double, 5>({-2, 0, 2, 0, 1}),
-  std::array<double, 5>({-2, 1, 0, 2, 1}),
-  std::array<double, 5>({0, 0, 1, -2, 0}),
-  std::array<double, 5>({-1, 0, 1, 0, 0}),
-  std::array<double, 5>({-2, 1, 0, 0, 0}),
-  std::array<double, 5>({1, 0, 0, 0, 0}),
-  std::array<double, 5>({0, 0, 1, 2, 0}),
-  std::array<double, 5>({0, 0, -2, 2, 2}),
-  std::array<double, 5>({-1, -1, 1, 0, 0}),
-  std::array<double, 5>({0, 1, 1, 0, 0}),
-  std::array<double, 5>({0, -1, 1, 2, 2}),
-  std::array<double, 5>({2, -1, -1, 2, 2}),
-  std::array<double, 5>({0, 0, 3, 2, 2}),
-  std::array<double, 5>({2, -1, 0, 2, 2})
+  std::array<double, 5>({ 0,  0,  0,  0,  1}), // 0
+  std::array<double, 5>({-2,  0,  0,  2,  2}), // 1
+  std::array<double, 5>({ 0,  0,  0,  2,  2}), // 2
+  std::array<double, 5>({ 0,  0,  0,  0,  2}), // 3
+  std::array<double, 5>({ 0,  1,  0,  0,  0}), // 4
+  std::array<double, 5>({ 0,  0,  1,  0,  0}), // 5
+  std::array<double, 5>({-2,  1,  0,  2,  2}), // 6
+  std::array<double, 5>({ 0,  0,  0,  2,  1}), // 7
+  std::array<double, 5>({ 0,  0,  1,  2,  2}), // 8
+  std::array<double, 5>({-2, -1,  0,  2,  2}), // 9
+  std::array<double, 5>({-2,  0,  1,  0,  0}), // 10
+  std::array<double, 5>({-2,  0,  0,  2,  1}), // 11
+  std::array<double, 5>({ 0,  0, -1,  2,  2}), // 12
+  std::array<double, 5>({ 2,  0,  0,  0,  0}), // 13
+  std::array<double, 5>({ 0,  0,  1,  0,  1}), // 14
+  std::array<double, 5>({ 2,  0, -1,  2,  2}), // 15
+  std::array<double, 5>({ 0,  0, -1,  0,  1}), // 16
+  std::array<double, 5>({ 0,  0,  1,  2,  1}), // 17
+  std::array<double, 5>({-2,  0,  2,  0,  0}), // 18
+  std::array<double, 5>({ 0,  0, -2,  2,  1}), // 19
+  std::array<double, 5>({ 2,  0,  0,  2,  2}), // 20
+  std::array<double, 5>({ 0,  0,  2,  2,  2}), // 21
+  std::array<double, 5>({ 0,  0,  2,  0,  0}), // 22
+  std::array<double, 5>({-2,  0,  1,  2,  2}), // 23
+  std::array<double, 5>({ 0,  0,  0,  2,  0}), // 24
+  std::array<double, 5>({-2,  0,  0,  2,  0}), // 25
+  std::array<double, 5>({ 0,  0, -1,  2,  1}), // 26
+  std::array<double, 5>({ 0,  2,  0,  0,  0}), // 27
+  std::array<double, 5>({ 2,  0, -1,  0,  1}), // 28
+  std::array<double, 5>({-2,  2,  0,  2,  2}), // 29
+  std::array<double, 5>({ 0,  1,  0,  0,  1}), // 30
+  std::array<double, 5>({-2,  0,  1,  0,  1}), // 31
+  std::array<double, 5>({ 0, -1,  0,  0,  1}), // 32
+  std::array<double, 5>({ 0,  0,  2,  -2, 0}), // 33
+  std::array<double, 5>({ 2,  0, -1,  2,  1}), // 34
+  std::array<double, 5>({ 2,  0,  1,  2,  2}), // 35
+  std::array<double, 5>({ 0,  1,  0,  2,  2}), // 36
+  std::array<double, 5>({-2,  1,  1,  0,  0}), // 37
+  std::array<double, 5>({ 0, -1,  0,  2,  2}), // 38
+  std::array<double, 5>({ 2,  0,  0,  2,  1}), // 39
+  std::array<double, 5>({ 2,  0,  1,  0,  0}), // 40
+  std::array<double, 5>({-2,  0,  2,  2,  2}), // 41
+  std::array<double, 5>({-2,  0,  1,  2,  1}), // 42
+  std::array<double, 5>({ 2,  0, -2,  0,  1}), // 43
+  std::array<double, 5>({ 2,  0,  0,  0,  1}), // 44
+  std::array<double, 5>({ 0, -1,  1,  0,  0}), // 45
+  std::array<double, 5>({-2, -1,  0,  2,  1}), // 46
+  std::array<double, 5>({-2,  0,  0,  0,  1}), // 47
+  std::array<double, 5>({ 0,  0,  2,  2,  1}), // 48
+  std::array<double, 5>({-2,  0,  2,  0,  1}), // 49
+  std::array<double, 5>({-2,  1,  0,  2,  1}), // 50
+  std::array<double, 5>({ 0,  0,  1, -2,  0}), // 51
+  std::array<double, 5>({-1,  0,  1,  0,  0}), // 52
+  std::array<double, 5>({-2,  1,  0,  0,  0}), // 53
+  std::array<double, 5>({ 1,  0,  0,  0,  0}), // 54
+  std::array<double, 5>({ 0,  0,  1,  2,  0}), // 55
+  std::array<double, 5>({ 0,  0, -2,  2,  2}), // 56
+  std::array<double, 5>({-1, -1,  1,  0,  0}), // 57
+  std::array<double, 5>({ 0,  1,  1,  0,  0}), // 58
+  std::array<double, 5>({ 0, -1,  1,  2,  2}), // 59
+  std::array<double, 5>({ 2, -1, -1,  2,  2}), // 60
+  std::array<double, 5>({ 0,  0,  3,  2,  2}), // 61
+  std::array<double, 5>({ 2, -1,  0,  2,  2})  // 62
 };
 
 const std::array<std::array<double, 4>, 63> Table2::PE =
 {
-  std::array<double, 4>({-171996,-174.2,92025,8.9}),
-  std::array<double, 4>({-13187,-1.6,5736,-3.1}),
-  std::array<double, 4>({-2274,-0.2,977,-0.5}),
-  std::array<double, 4>({2062,0.2,-895,0.5}),
-  std::array<double, 4>({1426,-3.4,54,-0.1}),
-  std::array<double, 4>({712,0.1,-7,0}),
-  std::array<double, 4>({-517,1.2,224,-0.6}),
-  std::array<double, 4>({-386,-0.4,200,0}),
-  std::array<double, 4>({-301,0,129,-0.1}),
-  std::array<double, 4>({217,-0.5,-95,0.3}),
-  std::array<double, 4>({-158,0,0,0}),
-  std::array<double, 4>({129,0.1,-70,0}),
-  std::array<double, 4>({123,0,-53,0}),
-  std::array<double, 4>({63,0,0,0}),
-  std::array<double, 4>({63,0.1,-33,0}),
-  std::array<double, 4>({-59,0,26,0}),
-  std::array<double, 4>({-58,-0.1,32,0}),
-  std::array<double, 4>({-51,0,27,0}),
-  std::array<double, 4>({48,0,0,0}),
-  std::array<double, 4>({46,0,-24,0}),
-  std::array<double, 4>({-38,0,16,0}),
-  std::array<double, 4>({-31,0,13,0}),
-  std::array<double, 4>({29,0,0,0}),
-  std::array<double, 4>({29,0,-12,0}),
-  std::array<double, 4>({26,0,0,0}),
-  std::array<double, 4>({-22,0,0,0}),
-  std::array<double, 4>({21,0,-10,0}),
-  std::array<double, 4>({17,-0.1,0,0}),
-  std::array<double, 4>({16,0,-8,0}),
-  std::array<double, 4>({-16,0.1,7,0}),
-  std::array<double, 4>({-15,0,9,0}),
-  std::array<double, 4>({-13,0,7,0}),
-  std::array<double, 4>({-12,0,6,0}),
-  std::array<double, 4>({11,0,0,0}),
-  std::array<double, 4>({-10,0,5,0}),
-  std::array<double, 4>({-8,0,3,0}),
-  std::array<double, 4>({7,0,-3,0}),
-  std::array<double, 4>({-7,0,0,0}),
-  std::array<double, 4>({-7,0,3,0}),
-  std::array<double, 4>({-7,0,3,0}),
-  std::array<double, 4>({6,0,0,0}),
-  std::array<double, 4>({6,0,-3,0}),
-  std::array<double, 4>({6,0,-3,0}),
-  std::array<double, 4>({-6,0,3,0}),
-  std::array<double, 4>({-6,0,3,0}),
-  std::array<double, 4>({5,0,0,0}),
-  std::array<double, 4>({-5,0,3,0}),
-  std::array<double, 4>({-5,0,3,0}),
-  std::array<double, 4>({-5,0,3,0}),
-  std::array<double, 4>({4,0,0,0}),
-  std::array<double, 4>({4,0,0,0}),
-  std::array<double, 4>({4,0,0,0}),
-  std::array<double, 4>({-4,0,0,0}),
-  std::array<double, 4>({-4,0,0,0}),
-  std::array<double, 4>({-4,0,0,0}),
-  std::array<double, 4>({3,0,0,0}),
-  std::array<double, 4>({-3,0,0,0}),
-  std::array<double, 4>({-3,0,0,0}),
-  std::array<double, 4>({-3,0,0,0}),
-  std::array<double, 4>({-3,0,0,0}),
-  std::array<double, 4>({-3,0,0,0}),
-  std::array<double, 4>({-3,0,0,0}),
-  std::array<double, 4>({-3,0,0,0})
+  std::array<double, 4>({-171996, -174.2, 92025,  8.9}), // 0
+  std::array<double, 4>( {-13187,   -1.6,  5736, -3.1}), // 1
+  std::array<double, 4>({  -2274,   -0.2,   977, -0.5}), // 2
+  std::array<double, 4>({   2062,    0.2,  -895,  0.5}), // 3
+  std::array<double, 4>({   1426,   -3.4,    54, -0.1}), // 4
+  std::array<double, 4>({    712,    0.1,    -7,  0}),   // 5
+  std::array<double, 4>({   -517,    1.2,   224, -0.6}), // 6
+  std::array<double, 4>({   -386,   -0.4,   200,  0}),   // 7
+  std::array<double, 4>({   -301,    0,     129, -0.1}), // 8
+  std::array<double, 4>({    217,   -0.5,   -95,  0.3}), // 9
+  std::array<double, 4>({   -158,    0,       0,  0}),   // 10
+  std::array<double, 4>({    129,    0.1,   -70,  0}),   // 11
+  std::array<double, 4>({    123,    0,     -53,  0}),   // 12
+  std::array<double, 4>({     63,    0,       0,  0}),   // 13
+  std::array<double, 4>({     63,    0.1,   -33,  0}),   // 14
+  std::array<double, 4>({    -59,    0,      26,  0}),   // 15
+  std::array<double, 4>({    -58,   -0.1,    32,  0}),   // 16
+  std::array<double, 4>({    -51,    0,      27,  0}),   // 17
+  std::array<double, 4>({     48,    0,       0,  0}),   // 18
+  std::array<double, 4>({     46,    0,     -24,  0}),   // 19
+  std::array<double, 4>({    -38,    0,      16,  0}),   // 20
+  std::array<double, 4>({    -31,    0,      13,  0}),   // 21
+  std::array<double, 4>({     29,    0,       0,  0}),   // 22
+  std::array<double, 4>({     29,    0,     -12,  0}),   // 23
+  std::array<double, 4>({     26,    0,       0,  0}),   // 24
+  std::array<double, 4>({    -22,    0,       0,  0}),   // 25
+  std::array<double, 4>({     21,    0,     -10,  0}),   // 26
+  std::array<double, 4>({     17,   -0.1,     0,  0}),   // 27
+  std::array<double, 4>({     16,    0,      -8,  0}),   // 28
+  std::array<double, 4>({    -16,    0.1,     7,  0}),   // 29
+  std::array<double, 4>({    -15,    0,       9,  0}),   // 30
+  std::array<double, 4>({    -13,    0,       7,  0}),   // 31
+  std::array<double, 4>({    -12,    0,       6,  0}),   // 32
+  std::array<double, 4>({     11,    0,       0,  0}),   // 33
+  std::array<double, 4>({    -10,    0,       5,  0}),   // 34
+  std::array<double, 4>({     -8,    0,       3,  0}),   // 35
+  std::array<double, 4>({      7,    0,      -3,  0}),   // 36
+  std::array<double, 4>({     -7,    0,       0,  0}),   // 37
+  std::array<double, 4>({     -7,    0,       3,  0}),   // 38
+  std::array<double, 4>({     -7,    0,       3,  0}),   // 39
+  std::array<double, 4>({      6,    0,       0,  0}),   // 40
+  std::array<double, 4>({      6,    0,      -3,  0}),   // 41
+  std::array<double, 4>({      6,    0,      -3,  0}),   // 42
+  std::array<double, 4>({     -6,    0,       3,  0}),   // 43
+  std::array<double, 4>({     -6,    0,       3,  0}),   // 44
+  std::array<double, 4>({      5,    0,       0,  0}),   // 45
+  std::array<double, 4>({     -5,    0,       3,  0}),   // 46
+  std::array<double, 4>({     -5,    0,       3,  0}),   // 47
+  std::array<double, 4>({     -5,    0,       3,  0}),   // 48
+  std::array<double, 4>({      4,    0,       0,  0}),   // 49
+  std::array<double, 4>({      4,    0,       0,  0}),   // 50
+  std::array<double, 4>({      4,    0,       0,  0}),   // 51
+  std::array<double, 4>({     -4,    0,       0,  0}),   // 52
+  std::array<double, 4>({     -4,    0,       0,  0}),   // 53
+  std::array<double, 4>({     -4,    0,       0,  0}),   // 54
+  std::array<double, 4>({      3,    0,       0,  0}),   // 55
+  std::array<double, 4>({     -3,    0,       0,  0}),   // 56
+  std::array<double, 4>({     -3,    0,       0,  0}),   // 57
+  std::array<double, 4>({     -3,    0,       0,  0}),   // 58
+  std::array<double, 4>({     -3,    0,       0,  0}),   // 59
+  std::array<double, 4>({     -3,    0,       0,  0}),   // 60
+  std::array<double, 4>({     -3,    0,       0,  0}),   // 61
+  std::array<double, 4>({     -3,    0,       0,  0})    // 62
 };
 // clang-format on
 } // namespace

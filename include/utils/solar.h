@@ -75,7 +75,7 @@ double ascending_longitude_moon(double jce);
 double nutation_longitude(double jce);
 
 // 3.4.8: Eq. 23
-double equation_obliquity(double jce);
+double nutation_obliquity(double jce);
 
 
 namespace Table1

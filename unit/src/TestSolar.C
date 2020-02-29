@@ -76,10 +76,10 @@ TEST(PikaUtils, solar)
   EXPECT_DOUBLE_EQ(R, 0.996542297353970818);
 
   double theta = geocentric_longitude(L);
-  EXPECT_DOUBLE_EQ(theta, L + 180.);
+  EXPECT_DOUBLE_EQ(theta, 204.018261691679413161);
 
   double beta = geocentric_latitude(B);
-  EXPECT_DOUBLE_EQ(beta, -B);
+  EXPECT_DOUBLE_EQ(beta, 0.00010112192480034234);
 
   double x0 = mean_elongation_moon(jce);
   EXPECT_DOUBLE_EQ(x0, 17185.861179064908355940);
@@ -95,5 +95,13 @@ TEST(PikaUtils, solar)
 
   double x4 = ascending_longitude_moon(jce);
   EXPECT_DOUBLE_EQ(x4, 51.686951165383405282);
+
+  double delta_psi = nutation_longitude(jce);
+  EXPECT_DOUBLE_EQ(delta_psi, -0.003998404303332776);
+
+  double delta_eps = nutation_obliquity(jce);
+  EXPECT_DOUBLE_EQ(delta_eps, 0.001666568177249686);
+
+
 
 }
