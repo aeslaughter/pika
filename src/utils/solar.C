@@ -57,8 +57,21 @@ Angle::limit_degrees(double deg)
   return limited;
 }
 
-double julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
-                  unsigned int min, double sec, double timezone, double dut1)
+DateTime::DateTime(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
+                   unsigned int min, double sec, double timezone=0., double dut1=0., double dt=DateTime::UNSET)
+{
+  _jd = julian_day(year, month, day, hour, min, sec, timezone, dut1);
+  if (dt == DateTime::UNSET)
+    dt = delta_t(year);
+  _jde = julian_day_ephemeris(_jd, dt);
+  _jc = julian_century(_jd);
+  _jce = julian_century_ephemeris(_jde);
+  _jme = julian_millennium_ephemeris(_jce);
+}
+
+double
+DateTime::julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
+                     unsigned int min, double sec, double timezone, double dut1)
 {
   // Apply DUT1, which is the difference between Coordinated Universal Time (UTC) and
   // Principal Universal Time (UT1)
@@ -89,7 +102,8 @@ double julian_day(unsigned int year,unsigned int month, unsigned int day, unsign
   return jd;
 }
 
-double delta_t(unsigned int year)
+double
+DateTime::delta_t(unsigned int year)
 {
   // https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
   // ΔT = -20 + 32 * t^2 seconds
@@ -97,22 +111,26 @@ double delta_t(unsigned int year)
   return 32. * std::pow((year - 1820.)/100., 2.) - 20.;
 }
 
-double julian_day_ephemeris(double jd, double dt)
+double
+DateTime::julian_day_ephemeris(double jd, double dt)
 {
   return jd + dt / 86400.;
 }
 
-double julian_century(double jd)
+double
+DateTime::julian_century(double jd)
 {
   return (jd - 2451545.) / 36525.;
 }
 
-double julian_century_ephemeris(double jde)
+double
+DateTime::julian_century_ephemeris(double jde)
 {
   return (jde - 2451545.) / 36525.;
 }
 
-double julian_millennium_ephemeris(double jce)
+double
+DateTime::julian_millennium_ephemeris(double jce)
 {
   return jce / 10.;
 }

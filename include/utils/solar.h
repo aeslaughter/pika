@@ -25,37 +25,63 @@ public:
   double deg() const;
   double rad() const;
 
-private:
-  double _radians;
-  double _degrees;
-
   static double radians_to_degrees(double rad);
   static double degrees_to_radians(double deg);
   static double limit_degrees(double deg);
+
+private:
+  double _radians;
+  double _degrees;
 };
 
+/*
+ * Class for computing the various times required for solar incident angle calculations.
+ */
+class DateTime
+{
+public:
+  // YYYY/MM/DD HH::MM::SS.S
+  //DateTime(const std::string & datetime, double timezone=0., double dut1=0. double dt=DateTime::UNSET);
+  DateTime(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
+           unsigned int min, double sec, double timezone, double dut1, double dt);
 
+  double jd() const { return _jd; }
+  double jde() const { return _jde; }
+  double jc() const { return _jc; }
+  double jce() const { return _jce; }
+  double jme() const { return _jme; }
 
-// 3.1
-// 3.1.1: Eq. 4, Julian Day (JD)
-double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
-                  unsigned int min, double sec, double timezone, double dut1);
+  // 3.1.1: Eq. 4
+  static double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
+                    unsigned int min, double sec, double timezone, double dut1);
 
-// This is an optional estimate of dt for equation below
-// https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
-double delta_t(unsigned int year);
+  // This is an optional estimate of dt for equation below
+  // https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
+  static double delta_t(unsigned int year);
 
-// 3.1.2: Eq. 5, Julian Ephemeris Day (JDE)
-double julian_day_ephemeris(double jd, double dt);
+  // 3.1.2: Eq. 5, Julian Ephemeris Day (JDE)
+  static double julian_day_ephemeris(double jd, double dt);
 
-// 3.1.3: Eq. 6, Julian Century (JC)
-double julian_century(double jd);
+  // 3.1.3: Eq. 6, Julian Century (JC)
+  static double julian_century(double jd);
 
-// 3.1.3: Eq. 7, Julian Ephemeris Century (JCE)
-double julian_century_ephemeris(double jde);
+  // 3.1.3: Eq. 7, Julian Ephemeris Century (JCE)
+  static double julian_century_ephemeris(double jde);
 
-// 3.1.4: Eq. 8, Julian Ephemeris Millennium (JME)
-double julian_millennium_ephemeris(double jce);
+  // 3.1.4: Eq. 8, Julian Ephemeris Millennium (JME)
+  static double julian_millennium_ephemeris(double jce);
+
+private:
+
+  // Used to determine if DeltaT is estimated when computing JDE
+  constexpr static const double UNSET = std::numeric_limits<double>::min();
+
+  double _jd;
+  double _jde;
+  double _jc;
+  double _jce;
+  double _jme;
+};
 
 // 3.2.1: Eq. 10
 template<std::size_t N>
