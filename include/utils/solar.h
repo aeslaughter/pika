@@ -82,7 +82,7 @@ double nutation_obliquity(double jce);
 double mean_obliquity_ecliptic(double jme);
 
 // 3.5.2: Eq. 25
-double true_obliquity_ecliptic(double eps0x3, double delta_eps);
+double true_obliquity_ecliptic(double eps0, double delta_eps);
 
 // 3.6: Eq. 26
 double aberration_correction(double R);
@@ -99,8 +99,47 @@ double apparent_sidereal_time_greenwich(double nu0, double delta_psi, double eps
 // 3.9: Eq. 30
 double sun_right_ascension(double lambda, double eps, double beta);
 
-// 3.19: Eq. 31
+// 3.10: Eq. 31
 double geocentric_sun_declination(double lambda, double eps, double beta);
+
+// 3.11: Eq. 32
+double observer_local_hour_angle(double nu, double longitude, double alpha);
+
+// 3.12.1: Eq. 33
+double equatorial_horizontal_parallax(double R);
+
+// 3.12.2-3.12.5: Eq. 34, 35, 36, 37
+double parallax_sun_right_ascension(double latitude, double elevation, double xi, double H, double delta);
+
+// 3.12.6: Eq. 38
+double topocentric_sun_right_ascension(double alpha, double delta_alpha);
+
+// 3.12.7: Eq. 39
+double topocentric_sun_declination(double latitude, double elevation, double delta, double xi, double delta_alpha, double H);
+
+// 3.13: Eq. 40
+double topocentric_local_hour_angle(double H, double delta_alpha);
+
+// 3.14.1: Eq. 41
+double topocentric_zenith_angle_no_correction(double latitude, double delta_prime, double H_prime);
+
+// 3.14.2: Eq. 42
+double atomspheric_refraction_correction(double P, double T, double e0, double atm_refraction);
+
+// 3.14.3: Eq. 43
+double topocentric_elevation_angle(double e0, double delta_e);
+
+// 3.14.4: Eq. 44
+double topocentric_zenith_angle(double e);
+
+// 3.15.1: Eq. 45
+double topocentric_astronomers_azimuth(double latitude, double H_prime, double delta_prime);
+
+// 3.15.2: Eq. 46
+double topocentric_azimuth_angle(double gamma);
+
+// 3.16: Eq. 47
+double incidence_angle(double zenith, double slope, double azimuth, double gamma);
 
 namespace Table1
 {

@@ -8,9 +8,8 @@ namespace PikaUtils
 namespace SPA
 {
 
-double
-julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
-           unsigned int min, double sec, double timezone, double dut1)
+double julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
+                  unsigned int min, double sec, double timezone, double dut1)
 {
   // Apply DUT1, which is the difference between Coordinated Universal Time (UTC) and
   // Principal Universal Time (UT1)
@@ -41,8 +40,7 @@ julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int 
   return jd;
 }
 
-double
-delta_t(unsigned int year)
+double delta_t(unsigned int year)
 {
   // https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
   // ΔT = -20 + 32 * t^2 seconds
@@ -50,20 +48,17 @@ delta_t(unsigned int year)
   return 32. * std::pow((year - 1820.)/100., 2.) - 20.;
 }
 
-double
-julian_day_ephemeris(double jd, double dt)
+double julian_day_ephemeris(double jd, double dt)
 {
   return jd + dt / 86400.;
 }
 
-double
-julian_century(double jd)
+double julian_century(double jd)
 {
   return (jd - 2451545.) / 36525.;
 }
 
-double
-julian_century_ephemeris(double jde)
+double julian_century_ephemeris(double jde)
 {
   return (jde - 2451545.) / 36525.;
 }
@@ -250,8 +245,110 @@ double geocentric_sun_declination(double lambda, double eps, double beta)
   return rad_to_degrees(delta);
 }
 
+double observer_local_hour_angle(double longitude, double nu, double alpha)
+{
+  return limit_degrees(nu + longitude - alpha);
+}
 
+double equatorial_horizontal_parallax(double R)
+{
+  return 8.794 / (3600. * R);
+}
 
+double parallax_sun_right_ascension(double latitude, double elevation, double xi, double H, double delta)
+{
+  latitude = degrees_to_rad(latitude);
+  H = degrees_to_rad(H);
+  delta = degrees_to_rad(delta);
+  xi = degrees_to_rad(xi);
+
+  double u = std::atan(0.99664719 * std::tan(latitude));
+  double x = std::cos(u) + elevation / 6378140. * std::cos(latitude);
+  double delta_alpha = std::atan2(-x * std::sin(xi) * std::sin(H),
+                                  std::cos(delta) - x * sin(xi) * cos(H));
+  return rad_to_degrees(delta_alpha);
+}
+
+double topocentric_sun_right_ascension(double alpha, double delta_alpha)
+{
+  return alpha + delta_alpha;
+}
+
+double topocentric_sun_declination(double latitude, double elevation, double delta, double xi, double delta_alpha, double H)
+{
+  latitude = degrees_to_rad(latitude);
+  xi = degrees_to_rad(xi);
+  H = degrees_to_rad(H);
+  delta = degrees_to_rad(delta);
+  delta_alpha = degrees_to_rad(delta_alpha);
+  double u = std::atan(0.99664719 * std::tan(latitude));
+  double x = std::cos(u) + elevation / 6378140. * std::cos(latitude);
+  double y = 0.99664719 * std::sin(u) + elevation / 6378140 * std::sin(latitude);
+  double delta_prime = std::atan2((std::sin(delta) - y * std::sin(xi)) * std::cos(delta_alpha),
+                                  std::cos(delta) - x * std::sin(xi) * std::cos(H));
+  return rad_to_degrees(delta_prime);
+}
+
+double topocentric_local_hour_angle(double H, double delta_alpha)
+{
+  return H - delta_alpha;
+}
+
+double topocentric_zenith_angle_no_correction(double latitude, double delta_prime, double H_prime)
+{
+  latitude = degrees_to_rad(latitude);
+  delta_prime = degrees_to_rad(delta_prime);
+  H_prime = degrees_to_rad(H_prime);
+  double e0 = std::asin(std::sin(latitude) * std::sin(delta_prime) +
+                        std::cos(latitude) * std::cos(delta_prime) * std::cos(H_prime));
+  return rad_to_degrees(e0);
+}
+
+double atomspheric_refraction_correction(double P, double T, double e0, double atm_refraction)
+{
+  double del_e = 0.;
+  const double sun_radius = 0.26667;
+  if (e0 >= -sun_radius + atm_refraction)
+  {
+    double arg = degrees_to_rad(e0 + 10.3 / (e0 + 5.11));
+    del_e = P / 1010. * 283. / (273. + T) * 1.02 / (60 * std::tan(arg));
+  }
+  return del_e;
+}
+
+double topocentric_elevation_angle(double e0, double delta_e)
+{
+  return e0 + delta_e;
+}
+
+double topocentric_zenith_angle(double e)
+{
+  return 90. - e;
+}
+
+double topocentric_astronomers_azimuth(double latitude, double H_prime, double delta_prime)
+{
+  latitude = degrees_to_rad(latitude);
+  delta_prime = degrees_to_rad(delta_prime);
+  H_prime = degrees_to_rad(H_prime);
+  double gamma = std::atan2(std::sin(H_prime), std::cos(H_prime) * std::sin(latitude) - std::tan(delta_prime) * std::cos(latitude));
+  return rad_to_degrees(gamma);
+}
+
+double topocentric_azimuth_angle(double gamma)
+{
+  return limit_degrees(gamma + 180.);
+}
+
+double incidence_angle(double zenith, double slope, double rotation, double gamma)
+{
+  zenith = degrees_to_rad(zenith);
+  slope = degrees_to_rad(slope);
+  rotation = degrees_to_rad(rotation);
+  gamma = degrees_to_rad(gamma);
+  double incidence = std::acos(std::cos(zenith) * std::cos(slope) + std::sin(slope) * std::sin(zenith) * std::cos(gamma - rotation));
+  return rad_to_degrees(incidence);
+}
 
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =

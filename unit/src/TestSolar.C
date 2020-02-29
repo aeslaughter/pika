@@ -19,13 +19,31 @@ using namespace PikaUtils::SPA;
 // https://rredc.nrel.gov/solar/codesandalgorithms/spa/
 TEST(PikaUtils, solar)
 {
-  double jd = julian_day(2003, 10, 17, 12, 30, 30, -7, 0);
+  double year = 2003;
+  double month = 10;
+  double day = 17;
+  double hour = 12;
+  double min = 30;
+  double sec = 30;
+  double tzone = -7;
+  double dut1 = 0;
+  double deltat = 67.;
+  double longitude = -105.1786;
+  double latitude = 39.742476;
+  double elevation = 1830.14;
+  double pressure = 820;
+  double temperature = 11;
+  double slope = 30;
+  double azm_rotation = -10;
+  double atm_refract = 0.5667;
+
+  double jd = julian_day(year, month, day, hour, min, sec, tzone, dut1);
   EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526165);
 
   double dt = delta_t(2003);
   EXPECT_DOUBLE_EQ(dt, 87.164800000000014);
 
-  double jde = julian_day_ephemeris(jd, 67.);
+  double jde = julian_day_ephemeris(jd, deltat);
   EXPECT_DOUBLE_EQ(jde, 2452930.313622685149312019);
 
   double jc = julian_century(jd);
@@ -125,6 +143,46 @@ TEST(PikaUtils, solar)
 
   double delta = geocentric_sun_declination(lambda, eps, beta);
   EXPECT_DOUBLE_EQ(delta, -9.314340090849105636);
+
+  double H = observer_local_hour_angle(longitude, nu, alpha);
+  EXPECT_DOUBLE_EQ(H, 11.105902013913436122);
+
+  double xi = equatorial_horizontal_parallax(R);
+  EXPECT_DOUBLE_EQ(xi, 0.002451253483433535);
+
+  double delta_alpha = parallax_sun_right_ascension(latitude, elevation, xi, H, delta);
+  EXPECT_DOUBLE_EQ(delta_alpha, -0.0003685349841678236312);
+
+  double alpha_prime = topocentric_sun_right_ascension(alpha, delta_alpha);
+  EXPECT_DOUBLE_EQ(alpha_prime, 202.227039292223082612);
+
+  double delta_prime = topocentric_sun_declination(latitude, elevation, delta, xi, delta_alpha, H);
+  EXPECT_DOUBLE_EQ(delta_prime, -9.3161786997149071964941);
+
+  double H_prime = topocentric_local_hour_angle(H, delta_alpha);
+  EXPECT_DOUBLE_EQ(H_prime, 11.106270548897603234);
+
+  double e0 = topocentric_zenith_angle_no_correction(latitude, delta_prime, H_prime);
+  EXPECT_DOUBLE_EQ(e0, 39.872045903847180170);
+
+  double delta_e = atomspheric_refraction_correction(pressure, temperature, e0, atm_refract);
+  EXPECT_DOUBLE_EQ(delta_e, 0.016332072123099440);
+
+  double e = topocentric_elevation_angle(e0, delta_e);
+  EXPECT_DOUBLE_EQ(e, 39.888377975970279010);
+
+  double zenith = topocentric_zenith_angle(e);
+  EXPECT_DOUBLE_EQ(zenith, 50.111622024029720990);
+
+  double gamma = topocentric_astronomers_azimuth(latitude, H_prime, delta_prime);
+  EXPECT_DOUBLE_EQ(gamma, 14.340240510191623713);
+
+  double phi = topocentric_azimuth_angle(gamma);
+  EXPECT_DOUBLE_EQ(phi, 194.340240510191620160);
+
+  double incidence = incidence_angle(zenith, slope, azm_rotation, gamma);
+  EXPECT_DOUBLE_EQ(incidence, 25.187000200353150348);
+
 
 
 }
