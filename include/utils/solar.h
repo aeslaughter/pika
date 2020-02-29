@@ -77,6 +77,11 @@ double nutation_longitude(double jce);
 // 3.4.8: Eq. 23
 double nutation_obliquity(double jce);
 
+// 3.5.1: Eq. 24
+double mean_obliquity_ecliptic(double jme);
+
+// 3.5.2: Eq. 25
+double true_obliquity_ecliptic(double eps0, double delta_eps);
 
 namespace Table1
 {

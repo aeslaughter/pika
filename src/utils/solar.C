@@ -196,6 +196,20 @@ double nutation_obliquity(double jce)
   return delta_eps / 36000000.;
 }
 
+double mean_obliquity_ecliptic(double jme)
+{
+  double U = jme / 10.;
+  return 84381.448 - 4680.93*U - 1.55 * std::pow(U, 2) + 1999.25 * std::pow(U, 3) -
+    51.38 * std::pow(U, 4) - 249.67 * std::pow(U, 5) - 39.05 * std::pow(U, 6) +
+    7.12 * std::pow(U, 7) + 27.87 * std::pow(U, 8) + 5.79 * std::pow(U, 9) +
+    2.45 * std::pow(U, 10);
+}
+
+double true_obliquity_ecliptic(double eps0, double delta_eps)
+{
+  return eps0 / 3600. + delta_eps;
+}
+
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =
 {

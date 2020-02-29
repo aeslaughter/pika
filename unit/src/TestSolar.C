@@ -102,6 +102,11 @@ TEST(PikaUtils, solar)
   double delta_eps = nutation_obliquity(jce);
   EXPECT_DOUBLE_EQ(delta_eps, 0.001666568177249686);
 
+  double eps0 = mean_obliquity_ecliptic(jme);
+  EXPECT_DOUBLE_EQ(eps0, 84379.672625184990465641);
+
+  double eps = true_obliquity_ecliptic(eps0, delta_eps);
+  EXPECT_DOUBLE_EQ(eps, 23.440464519617524530);
 
 
 }
