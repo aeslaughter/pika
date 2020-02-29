@@ -12,6 +12,32 @@
 
 using namespace PikaUtils::SPA;
 
+TEST(PikaUtils, Angle)
+{
+  const Angle a(M_PI, Angle::RAD);
+  EXPECT_DOUBLE_EQ(a.rad(), M_PI);
+  EXPECT_DOUBLE_EQ(a.deg(), 180.);
+
+  const Angle b(3*M_PI, Angle::RAD);
+  EXPECT_DOUBLE_EQ(b.rad(), 3*M_PI);
+  EXPECT_DOUBLE_EQ(b.deg(), 540.);
+
+  const Angle c(3*M_PI, Angle::RAD, Angle::LIMIT);
+  EXPECT_DOUBLE_EQ(c.rad(), M_PI);
+  EXPECT_DOUBLE_EQ(c.deg(), 180.);
+
+  const Angle d(720, Angle::DEG);
+  EXPECT_DOUBLE_EQ(d.rad(), 4*M_PI);
+  EXPECT_DOUBLE_EQ(d.deg(), 720.);
+
+  const Angle e(540., Angle::DEG, Angle::LIMIT);
+  EXPECT_DOUBLE_EQ(e.rad(), M_PI);
+  EXPECT_DOUBLE_EQ(e.deg(), 180.);
+
+}
+
+
+
 // Implements tests presented in NREL/TP-560-34302
 // https://www.nrel.gov/docs/fy08osti/34302.pd
 //
@@ -182,7 +208,4 @@ TEST(PikaUtils, solar)
 
   double incidence = incidence_angle(zenith, slope, azm_rotation, gamma);
   EXPECT_DOUBLE_EQ(incidence, 25.187000200353150348);
-
-
-
 }
