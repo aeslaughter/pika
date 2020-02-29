@@ -3,6 +3,8 @@
 
 namespace PikaUtils
 {
+namespace SPA
+{
 
 // 3.1
 // 3.1.1: Eq. 4, Julian Day (JD)
@@ -53,22 +55,22 @@ double earth_radius_vector(double jme);
 // 3.3.1, 3.3.2: Eq. 13
 double geocentric_longitude(double L);
 
-// 3.3.3, Eq. 14
+// 3.3.3: Eq. 14
 double geocentric_latitude(double B);
 
-// 3.4.1, Eq. 15
+// 3.4.1: Eq. 15
 double mean_elongation_moon(double jce);
 
-// 3.4.2, Eq. 16
+// 3.4.2: Eq. 16
 double mean_anomaly_sun(double jce);
 
 // 3.4.3, Eq. 17
 double mean_anomaly_moon(double jce);
 
-// 3.4.4, Eq. 18
+// 3.4.4: Eq. 18
 double argument_latitute_moon(double jce);
 
-// 3.4.5, Eq. 19
+// 3.4.5: Eq. 19
 double ascending_longitude_moon(double jce);
 
 // 3.4.7: Eq. 22
@@ -81,7 +83,20 @@ double nutation_obliquity(double jce);
 double mean_obliquity_ecliptic(double jme);
 
 // 3.5.2: Eq. 25
-double true_obliquity_ecliptic(double eps0, double delta_eps);
+double true_obliquity_ecliptic(double eps0x3, double delta_eps);
+
+// 3.6: Eq. 26
+double aberration_correction(double R);
+
+// 3.7: Eq. 27
+double apparent_sun_longitude(double theta, double delta_psi, double delta_tau);
+
+// 3.8.1, 3.8.2: Eq. 28
+double mean_sidereal_time_greenwich(double jd, double jc);
+
+// 3.8.3: Eq. 29
+double apparent_sidereal_time_greenwich(double nu0, double delta_psi, double eps);
+
 
 namespace Table1
 {
@@ -106,5 +121,5 @@ extern const std::array<std::array<double, 5>, 63> Y;
 extern const std::array<std::array<double, 4>, 63> PE;
 }
 
-
-} // namespace
+} // SPA namespace
+} // PikaUtils namespace

@@ -10,7 +10,7 @@
 #include "gtest/gtest.h"
 #include "solar.h"
 
-using namespace PikaUtils;
+using namespace PikaUtils::SPA;
 
 // Implements tests presented in NREL/TP-560-34302
 // https://www.nrel.gov/docs/fy08osti/34302.pd
@@ -108,5 +108,16 @@ TEST(PikaUtils, solar)
   double eps = true_obliquity_ecliptic(eps0, delta_eps);
   EXPECT_DOUBLE_EQ(eps, 23.440464519617524530);
 
+  double delta_tau = aberration_correction(R);
+  EXPECT_DOUBLE_EQ(delta_tau, -0.005711359293251811);
+
+  double lambda = apparent_sun_longitude(theta, delta_psi, delta_tau);
+  EXPECT_DOUBLE_EQ(lambda, 204.008551928082823679);
+
+  double nu0 = mean_sidereal_time_greenwich(jd, jc);
+  EXPECT_DOUBLE_EQ(nu0, 318.515578272772472701);
+
+  double nu = apparent_sidereal_time_greenwich(nu0, delta_psi, eps);
+  EXPECT_DOUBLE_EQ(nu, 318.511909841120711917);
 
 }

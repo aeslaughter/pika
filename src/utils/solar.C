@@ -5,6 +5,8 @@
 
 namespace PikaUtils
 {
+namespace SPA
+{
 
 double
 julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
@@ -209,6 +211,31 @@ double true_obliquity_ecliptic(double eps0, double delta_eps)
 {
   return eps0 / 3600. + delta_eps;
 }
+
+double aberration_correction(double R)
+{
+  return -20.4898 / (3600. * R);
+}
+
+double apparent_sun_longitude(double theta, double delta_psi, double delta_tau)
+{
+  return theta + delta_psi + delta_tau;
+}
+
+double mean_sidereal_time_greenwich(double jd, double jc)
+{
+  double nu0 = 280.46061837 + 360.98564736629 * (jd - 2451545) + 0.000387933 * std::pow(jc, 2) -
+    std::pow(jc, 3) / 38710000.;
+  return limit_to_360(nu0);
+}
+
+double apparent_sidereal_time_greenwich(double nu0, double delta_psi, double eps)
+{
+  return nu0 + delta_psi * cos(degrees_to_rad(eps));
+}
+
+
+
 
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =
@@ -592,4 +619,5 @@ const std::array<std::array<double, 4>, 63> Table2::PE =
   std::array<double, 4>({     -3,    0,       0,  0})    // 62
 };
 // clang-format on
-} // namespace
+} // SPA namespace
+} // PikaUtils namespace
