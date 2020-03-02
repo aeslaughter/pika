@@ -1,4 +1,5 @@
 #include <array>
+//#include <regex>
 
 namespace PikaUtils
 {
@@ -40,48 +41,47 @@ private:
 class DateTime
 {
 public:
-  // YYYY/MM/DD HH::MM::SS.S
-  //DateTime(const std::string & datetime, double timezone=0., double dut1=0. double dt=DateTime::UNSET);
-  DateTime(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
-           unsigned int min, double sec, double timezone, double dut1, double dt);
+  /* Give Date using ISO8601 format, with optional decimal seconds.
+   * YYYY-MM-DDTHH:MM:SS.S+HH:MM
+  */
+  DateTime(const std::string & datetime);
+  DateTime(int year, int month,int day, int hour, int min, double sec, int tz_hour, int tz_min);
 
-  double jd() const { return _jd; }
-  double jde() const { return _jde; }
-  double jc() const { return _jc; }
-  double jce() const { return _jce; }
-  double jme() const { return _jme; }
+  void add(int year, int month, int day, int hour, int min, double sec);
 
-  // 3.1.1: Eq. 4
-  static double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
-                    unsigned int min, double sec, double timezone, double dut1);
-
-  // This is an optional estimate of dt for equation below
-  // https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
-  static double delta_t(unsigned int year);
-
-  // 3.1.2: Eq. 5, Julian Ephemeris Day (JDE)
-  static double julian_day_ephemeris(double jd, double dt);
-
-  // 3.1.3: Eq. 6, Julian Century (JC)
-  static double julian_century(double jd);
-
-  // 3.1.3: Eq. 7, Julian Ephemeris Century (JCE)
-  static double julian_century_ephemeris(double jde);
-
-  // 3.1.4: Eq. 8, Julian Ephemeris Millennium (JME)
-  static double julian_millennium_ephemeris(double jce);
+  int year() const { return _timeinfo->tm_year; }
+  int month() const { return _timeinfo->tm_mon; }
+  int day() const { return _timeinfo->tm_mday; }
+  int hour() const { return _timeinfo->tm_hour; }
+  int minute() const { return _timeinfo->tm_min; }
+  double second() const { return _timeinfo->tm_sec + _dec_sec; }
 
 private:
+  //static const std::regex RE("foo");//("(\d{4})-(\d{2})-(\d{2})T([0-2][0-9]):([0-6][0-9]):([0-6][0-9])(?:\.(\d+))?(?:([+-])([0-2]\d):([0-6]\d))?");
 
-  // Used to determine if DeltaT is estimated when computing JDE
-  constexpr static const double UNSET = std::numeric_limits<double>::min();
-
-  double _jd;
-  double _jde;
-  double _jc;
-  double _jce;
-  double _jme;
+  std::unique_ptr<struct tm> _timeinfo;
+  double _dec_sec;
 };
+
+// 3.1.1: Eq. 4
+double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
+                  unsigned int min, double sec, double timezone, double dut1);
+
+// This is an optional estimate of dt for equation below
+// https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
+double delta_t(unsigned int year);
+
+// 3.1.2: Eq. 5, Julian Ephemeris Day (JDE)
+double julian_day_ephemeris(double jd, double dt);
+
+// 3.1.3: Eq. 6, Julian Century (JC)
+double julian_century(double jd);
+
+// 3.1.3: Eq. 7, Julian Ephemeris Century (JCE)
+double julian_century_ephemeris(double jde);
+
+// 3.1.4: Eq. 8, Julian Ephemeris Millennium (JME)
+double julian_millennium_ephemeris(double jce);
 
 // 3.2.1: Eq. 10
 template<std::size_t N>

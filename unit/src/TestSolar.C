@@ -12,6 +12,13 @@
 
 using namespace PikaUtils::SPA;
 
+TEST(PikaUtils, DateTime)
+{
+
+
+}
+
+
 TEST(PikaUtils, Angle)
 {
   const Angle a(M_PI, Angle::RAD);
@@ -62,22 +69,22 @@ TEST(PikaUtils, solar)
   double azm_rotation = -10;
   double atm_refract = 0.5667;
 
-  double jd = DateTime::julian_day(year, month, day, hour, min, sec, tzone, dut1);
+  double jd = julian_day(year, month, day, hour, min, sec, tzone, dut1);
   EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526165);
 
-  double dt = DateTime::delta_t(2003);
+  double dt = delta_t(2003);
   EXPECT_DOUBLE_EQ(dt, 87.164800000000014);
 
-  double jde = DateTime::julian_day_ephemeris(jd, deltat);
+  double jde = julian_day_ephemeris(jd, deltat);
   EXPECT_DOUBLE_EQ(jde, 2452930.313622685149312019);
 
-  double jc = DateTime::julian_century(jd);
+  double jc = julian_century(jd);
   EXPECT_DOUBLE_EQ(jc, 0.037927798691915169670974);
 
-  double jce = DateTime::julian_century_ephemeris(jde);
+  double jce = julian_century_ephemeris(jde);
   EXPECT_DOUBLE_EQ(jce, 0.037927819922933585228275);
 
-  double jme = DateTime::julian_millennium_ephemeris(jce);
+  double jme = julian_millennium_ephemeris(jce);
   EXPECT_DOUBLE_EQ(jme, 0.003792781992293358436091);
 
   double L0 = equation_ten<64>(Table1::L0, jme);

@@ -1,5 +1,7 @@
 #include "solar.h"
 #include <cmath>
+#include <ctime>
+#include <regex>
 #include <iostream>
 #include <iomanip>
 
@@ -57,21 +59,46 @@ Angle::limit_degrees(double deg)
   return limited;
 }
 
-DateTime::DateTime(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
-                   unsigned int min, double sec, double timezone=0., double dut1=0., double dt=DateTime::UNSET)
+DateTime::DateTime(const std::string & datetime)
 {
-  _jd = julian_day(year, month, day, hour, min, sec, timezone, dut1);
-  if (dt == DateTime::UNSET)
-    dt = delta_t(year);
-  _jde = julian_day_ephemeris(_jd, dt);
-  _jc = julian_century(_jd);
-  _jce = julian_century_ephemeris(_jde);
-  _jme = julian_millennium_ephemeris(_jce);
+  const std::regex re("([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-2][0-9]):([0-6][0-9]):([0-6][0-9])(?:\\.([0-9]+))?(?:([+-])([0-2][0-9]):([0-6][0-9]))?");
+
+  std::smatch match;
+  std::regex_match(datetime, match, re);
+  std::cout << match.size() << std::endl;
+
+
 }
 
-double
-DateTime::julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
-                     unsigned int min, double sec, double timezone, double dut1)
+DateTime::DateTime(int year, int month, int day, int hour, int min, double sec, int tz_hour, int tz_min)
+{
+  _timeinfo->tm_year = year - 1900;
+  _timeinfo->tm_mon = month;
+  _timeinfo->tm_mday = day;
+  _timeinfo->tm_hour = hour - tz_hour;
+  _timeinfo->tm_min = min - tz_min;
+  _timeinfo->tm_sec = static_cast<int>(sec);
+  _dec_sec = sec - _timeinfo->tm_sec;
+  mktime(_timeinfo.get());
+}
+
+void
+DateTime::add(int year, int month, int day, int hour, int min, double sec)
+{
+  _timeinfo->tm_year += year;
+  _timeinfo->tm_mon += month;
+  _timeinfo->tm_mday += day;
+  _timeinfo->tm_hour += hour;
+  _timeinfo->tm_min += min;
+
+  sec += _timeinfo->tm_sec + _dec_sec;
+  _timeinfo->tm_sec = static_cast<int>(sec);
+  _dec_sec = sec - _timeinfo->tm_sec;
+  mktime(_timeinfo.get());
+}
+
+double julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
+                  unsigned int min, double sec, double timezone, double dut1)
 {
   // Apply DUT1, which is the difference between Coordinated Universal Time (UTC) and
   // Principal Universal Time (UT1)
@@ -102,8 +129,7 @@ DateTime::julian_day(unsigned int year,unsigned int month, unsigned int day, uns
   return jd;
 }
 
-double
-DateTime::delta_t(unsigned int year)
+double delta_t(unsigned int year)
 {
   // https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html
   // ΔT = -20 + 32 * t^2 seconds
@@ -111,26 +137,22 @@ DateTime::delta_t(unsigned int year)
   return 32. * std::pow((year - 1820.)/100., 2.) - 20.;
 }
 
-double
-DateTime::julian_day_ephemeris(double jd, double dt)
+double julian_day_ephemeris(double jd, double dt)
 {
   return jd + dt / 86400.;
 }
 
-double
-DateTime::julian_century(double jd)
+double julian_century(double jd)
 {
   return (jd - 2451545.) / 36525.;
 }
 
-double
-DateTime::julian_century_ephemeris(double jde)
+double julian_century_ephemeris(double jde)
 {
   return (jde - 2451545.) / 36525.;
 }
 
-double
-DateTime::julian_millennium_ephemeris(double jce)
+double julian_millennium_ephemeris(double jce)
 {
   return jce / 10.;
 }
