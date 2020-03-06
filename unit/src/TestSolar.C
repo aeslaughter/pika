@@ -14,8 +14,35 @@ using namespace PikaUtils::SPA;
 
 TEST(PikaUtils, DateTime)
 {
+  DateTime t("2020-02-29T19:42:35");
+  EXPECT_EQ(t.year(), 2020);
+  EXPECT_EQ(t.month(), 2);
+  EXPECT_EQ(t.day(), 29);
+  EXPECT_EQ(t.hour(), 19);
+  EXPECT_EQ(t.minute(), 42);
+  EXPECT_EQ(t.second(), 35);
 
+  //t.add(0, 0, 1, 0, 0, 0);
+  //EXPECT_EQ(t.year(), 2020);
+  //EXPECT_EQ(t.month(), 2);
+  //EXPECT_EQ(t.day(), 29);
+  //EXPECT_EQ(t.hour(), 19);
+  //EXPECT_EQ(t.minute(), 42);
+  //EXPECT_EQ(t.second(), 35);
 
+  //t.add(0, 0, 0, 0, 0, 172800);
+  //EXPECT_EQ(t.year(), 2020);
+  //EXPECT_EQ(t.month(), 3);
+  //EXPECT_EQ(t.day(), 2);
+  //EXPECT_EQ(t.hour(), 19);
+  //EXPECT_EQ(t.minute(), 42);
+  //EXPECT_EQ(t.second(), 35);
+
+//2020-02-29T19:42:35+00:00
+//2020-02-29T19:42:35+01:00
+//2020-02-29T19:42:35-00:30
+//2020-02-29T19:42:35.032+00:00
+//2020-02-29T19:42:35
 }
 
 

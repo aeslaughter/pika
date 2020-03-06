@@ -1,9 +1,9 @@
-#include "solar.h"
 #include <cmath>
 #include <ctime>
-#include <regex>
 #include <iostream>
 #include <iomanip>
+#include <regex>
+#include "solar.h"
 
 namespace PikaUtils
 {
@@ -59,45 +59,62 @@ Angle::limit_degrees(double deg)
   return limited;
 }
 
-DateTime::DateTime(const std::string & datetime)
+DateTime::DateTime(const std::string & datetime, Format format)
 {
-  const std::regex re("([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-2][0-9]):([0-6][0-9]):([0-6][0-9])(?:\\.([0-9]+))?(?:([+-])([0-2][0-9]):([0-6][0-9]))?");
+  std::regex re;
+  switch (format)
+  {
+  case DateTime::Format::ISO8601:
+    re = "([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\\.([0-9]+))?(?:([+-])([0-2][0-9]):([0-6][0-9]))?";
+    break;
+  }
 
   std::smatch match;
   std::regex_match(datetime, match, re);
-  std::cout << match.size() << std::endl;
 
+  int year = std::stoi(match[1]);
+  int month = std::stoi(match[2]);
+  int day = std::stoi(match[3]);
+  int hour = std::stoi(match[4]);
+  int min = std::stoi(match[5]);
+  double sec = std::stoi(match[6]);
+  sec += match[7].matched ? 1./std::stod(match[7]) : 0;
 
+  int sign = match[8] == "-" ? -1 : 1;
+  int tz_hour = match[9].matched ? sign * std::stoi(match[9]) : 0;
+  int tz_min = match[10].matched ? sign * std::stoi(match[10]) : 0;
+
+  add(year, month - 1, day, hour - tz_hour, min - tz_min, sec);
 }
 
 DateTime::DateTime(int year, int month, int day, int hour, int min, double sec, int tz_hour, int tz_min)
 {
-  _timeinfo->tm_year = year - 1900;
-  _timeinfo->tm_mon = month;
-  _timeinfo->tm_mday = day;
-  _timeinfo->tm_hour = hour - tz_hour;
-  _timeinfo->tm_min = min - tz_min;
-  _timeinfo->tm_sec = static_cast<int>(sec);
-  _dec_sec = sec - _timeinfo->tm_sec;
-  mktime(_timeinfo.get());
+  add(year, month - 1, day, hour - tz_hour, min - tz_min, sec);
 }
 
 void
 DateTime::add(int year, int month, int day, int hour, int min, double sec)
 {
-  _timeinfo->tm_year += year;
-  _timeinfo->tm_mon += month;
-  _timeinfo->tm_mday += day;
-  _timeinfo->tm_hour += hour;
-  _timeinfo->tm_min += min;
+  struct tm timeinfo;
+  timeinfo.tm_year = year - 1900;
+  timeinfo.tm_mon = month;
+  timeinfo.tm_mday = day;
+  timeinfo.tm_hour = hour;
+  timeinfo.tm_min = min;
+  timeinfo.tm_sec = static_cast<int>(sec);
+  double dec_sec = sec - timeinfo.tm_sec;
 
-  sec += _timeinfo->tm_sec + _dec_sec;
-  _timeinfo->tm_sec = static_cast<int>(sec);
-  _dec_sec = sec - _timeinfo->tm_sec;
-  mktime(_timeinfo.get());
+  mktime(&timeinfo);
+
+  _year = timeinfo.tm_year + 1900;
+  _month = timeinfo.tm_mon + 1;
+  _day = timeinfo.tm_mday;
+  _hour = timeinfo.tm_hour;
+  _minute = timeinfo.tm_min;
+  _second = timeinfo.tm_sec + dec_sec;
 }
 
-double julian_day(unsigned int year,unsigned int month, unsigned int day, unsigned int hour,
+double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
                   unsigned int min, double sec, double timezone, double dut1)
 {
   // Apply DUT1, which is the difference between Coordinated Universal Time (UTC) and
@@ -120,7 +137,7 @@ double julian_day(unsigned int year,unsigned int month, unsigned int day, unsign
   // Compute the Julian Day using Eq. 4
   double jd = std::floor(365.25*(year + 4716.)) + std::floor(30.6001*(month+1)) + dec_day - 1524.5;
 
-  // Adjust for the 1582 Gregorian calander change
+  // Adjust for the 1582 Gregorian calender change
   if (jd > 2299160.)
   {
     double A = std::floor(year/100.);

@@ -41,26 +41,30 @@ private:
 class DateTime
 {
 public:
-  /* Give Date using ISO8601 format, with optional decimal seconds.
+  enum class Format{ISO8601};
+
+  /* Give Date using ISO8601 format, with optional decimal seconds and optional timezone.
    * YYYY-MM-DDTHH:MM:SS.S+HH:MM
   */
-  DateTime(const std::string & datetime);
+  DateTime(const std::string & datetime, Format format = Format::ISO8601);
   DateTime(int year, int month,int day, int hour, int min, double sec, int tz_hour, int tz_min);
 
   void add(int year, int month, int day, int hour, int min, double sec);
 
-  int year() const { return _timeinfo->tm_year; }
-  int month() const { return _timeinfo->tm_mon; }
-  int day() const { return _timeinfo->tm_mday; }
-  int hour() const { return _timeinfo->tm_hour; }
-  int minute() const { return _timeinfo->tm_min; }
-  double second() const { return _timeinfo->tm_sec + _dec_sec; }
+  int year() const { return _year; }
+  int month() const { return _month; }
+  int day() const { return _day; }
+  int hour() const { return _hour; }
+  int minute() const { return _minute; }
+  double second() const { return _second; }
 
 private:
-  //static const std::regex RE("foo");//("(\d{4})-(\d{2})-(\d{2})T([0-2][0-9]):([0-6][0-9]):([0-6][0-9])(?:\.(\d+))?(?:([+-])([0-2]\d):([0-6]\d))?");
-
-  std::unique_ptr<struct tm> _timeinfo;
-  double _dec_sec;
+  int _year = 0;
+  int _month = 0;
+  int _day = 0;
+  int _hour = 0;
+  int _minute = 0;
+  double _second = 0.;
 };
 
 // 3.1.1: Eq. 4
