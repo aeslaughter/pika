@@ -42,29 +42,19 @@ class DateTime
 {
 public:
   enum class Format{ISO8601};
+  DateTime(const std::string & date, Format format = Format::ISO8601);
+  void add(int years, int months, int day, int hours, int minutes, double seconds);
 
-  /* Give Date using ISO8601 format, with optional decimal seconds and optional timezone.
-   * YYYY-MM-DDTHH:MM:SS.S+HH:MM
-  */
-  DateTime(const std::string & datetime, Format format = Format::ISO8601);
-  DateTime(int year, int month,int day, int hour, int min, double sec, int tz_hour, int tz_min);
-
-  void add(int year, int month, int day, int hour, int min, double sec);
-
-  int year() const { return _year; }
-  int month() const { return _month; }
-  int day() const { return _day; }
-  int hour() const { return _hour; }
-  int minute() const { return _minute; }
-  double second() const { return _second; }
+  int year() const {return _tinfo.tm_year + 1900;}
+  int month() const {return _tinfo.tm_mon + 1;}
+  int day() const {return _tinfo.tm_mday;}
+  int hour() const {return _tinfo.tm_hour;}
+  int minute() const {return _tinfo.tm_min;}
+  int second() const {return _fraction_sec + _tinfo.tm_sec;}
 
 private:
-  int _year = 0;
-  int _month = 0;
-  int _day = 0;
-  int _hour = 0;
-  int _minute = 0;
-  double _second = 0.;
+  struct tm _tinfo;
+  double _fraction_sec = 0;
 };
 
 // 3.1.1: Eq. 4

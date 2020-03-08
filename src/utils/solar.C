@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <regex>
+#include <sstream>
 #include "solar.h"
 
 namespace PikaUtils
@@ -59,59 +60,54 @@ Angle::limit_degrees(double deg)
   return limited;
 }
 
-DateTime::DateTime(const std::string & datetime, Format format)
+DateTime::DateTime(const std::string & date, Format format)
 {
   std::regex re;
   switch (format)
   {
-  case DateTime::Format::ISO8601:
-    re = "([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\\.([0-9]+))?(?:([+-])([0-2][0-9]):([0-6][0-9]))?";
-    break;
+  case Format::ISO8601:
+    re ="([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\\.([0-9]+))?(?:([+-])([0-2][0-9]):([0-6][0-9]))?";
   }
-
   std::smatch match;
-  std::regex_match(datetime, match, re);
+  std::regex_match(date, match, re);
 
-  int year = std::stoi(match[1]);
-  int month = std::stoi(match[2]);
-  int day = std::stoi(match[3]);
-  int hour = std::stoi(match[4]);
-  int min = std::stoi(match[5]);
-  double sec = std::stoi(match[6]);
-  sec += match[7].matched ? 1./std::stod(match[7]) : 0;
+  _tinfo.tm_year = std::stoi(match[1]) - 1900;
+  _tinfo.tm_mon = std::stoi(match[2]) - 1;
+  _tinfo.tm_mday = std::stoi(match[3]);
+  _tinfo.tm_hour = std::stoi(match[4]);
+  _tinfo.tm_min = std::stoi(match[5]);
+  _tinfo.tm_sec = std::stoi(match[6]);
+  _tinfo.tm_isdst = 0;
+
+  if (match[7].matched)
+  {
+    std::ostringstream oss;
+    oss << "0." << match[7];
+    _fraction_sec = std::stod(oss.str());
+  }
 
   int sign = match[8] == "-" ? -1 : 1;
   int tz_hour = match[9].matched ? sign * std::stoi(match[9]) : 0;
   int tz_min = match[10].matched ? sign * std::stoi(match[10]) : 0;
+  _tinfo.tm_hour -= tz_hour;
+  _tinfo.tm_min -= tz_min;
 
-  add(year, month - 1, day, hour - tz_hour, min - tz_min, sec);
-}
-
-DateTime::DateTime(int year, int month, int day, int hour, int min, double sec, int tz_hour, int tz_min)
-{
-  add(year, month - 1, day, hour - tz_hour, min - tz_min, sec);
+  mktime(&_tinfo);
 }
 
 void
-DateTime::add(int year, int month, int day, int hour, int min, double sec)
+DateTime::add(int years, int months, int days, int hours, int minutes, double seconds)
 {
-  struct tm timeinfo;
-  timeinfo.tm_year = year - 1900;
-  timeinfo.tm_mon = month;
-  timeinfo.tm_mday = day;
-  timeinfo.tm_hour = hour;
-  timeinfo.tm_min = min;
-  timeinfo.tm_sec = static_cast<int>(sec);
-  double dec_sec = sec - timeinfo.tm_sec;
+  _tinfo.tm_year += years;
+  _tinfo.tm_mon += months;
+  _tinfo.tm_mday += days;
+  _tinfo.tm_hour += hours;
+  _tinfo.tm_min += minutes;
 
-  mktime(&timeinfo);
-
-  _year = timeinfo.tm_year + 1900;
-  _month = timeinfo.tm_mon + 1;
-  _day = timeinfo.tm_mday;
-  _hour = timeinfo.tm_hour;
-  _minute = timeinfo.tm_min;
-  _second = timeinfo.tm_sec + dec_sec;
+  seconds += _tinfo.tm_sec;
+  _fraction_sec = modf(seconds , &seconds);
+  _tinfo.tm_sec = static_cast<int>(seconds);
+  mktime(&_tinfo);
 }
 
 double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
