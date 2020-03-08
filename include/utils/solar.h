@@ -43,6 +43,7 @@ class DateTime
 public:
   enum class Format{ISO8601};
   DateTime(const std::string & date, Format format = Format::ISO8601);
+  DateTime(int year, int month, int day, int hours, int minutes, double seconds);
   void add(int years, int months, int day, int hours, int minutes, double seconds);
 
   int year() const {return _tinfo.tm_year + 1900;}
@@ -58,8 +59,7 @@ private:
 };
 
 // 3.1.1: Eq. 4
-double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
-                  unsigned int min, double sec, double timezone, double dut1);
+double julian_day(const DateTime & datetime);
 
 // This is an optional estimate of dt for equation below
 // https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html

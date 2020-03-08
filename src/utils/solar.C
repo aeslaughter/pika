@@ -94,6 +94,19 @@ DateTime::DateTime(const std::string & date, Format format)
   mktime(&_tinfo);
 }
 
+DateTime::DateTime(int year, int month, int day, int hours, int minutes, double seconds)
+{
+  _tinfo.tm_year = year - 1900;
+  _tinfo.tm_mon = month - 1;
+  _tinfo.tm_mday = day;
+  _tinfo.tm_hour = hours;
+  _tinfo.tm_min = minutes;
+  _fraction_sec = modf(seconds , &seconds);
+  _tinfo.tm_sec = seconds;
+  mktime(&_tinfo);
+}
+
+
 void
 DateTime::add(int years, int months, int days, int hours, int minutes, double seconds)
 {
@@ -109,15 +122,21 @@ DateTime::add(int years, int months, int days, int hours, int minutes, double se
   mktime(&_tinfo);
 }
 
-double julian_day(unsigned int year, unsigned int month, unsigned int day, unsigned int hour,
-                  unsigned int min, double sec, double timezone, double dut1)
+double julian_day(const DateTime & datetime)
 {
   // Apply DUT1, which is the difference between Coordinated Universal Time (UTC) and
   // Principal Universal Time (UT1)
-  sec += dut1;
+  //sec += dut1;
 
   // Remove the timezone, which is given by the hours from UTC
-  hour -= timezone;
+  //hour -= timezone;
+
+  double year = datetime.year();
+  double month = datetime.month();
+  double day = datetime.day();
+  double hour = datetime.hour();
+  double min = datetime.minute();
+  double sec = datetime.second();
 
   // Compute decimal day
   double dec_day = day + hour/24. + min/1440. + sec/86400.;

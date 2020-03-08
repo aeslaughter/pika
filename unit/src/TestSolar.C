@@ -44,7 +44,7 @@ TEST(DateTime, add)
   EXPECT_EQ(t.day(), 3);
   EXPECT_EQ(t.hour(), 19);
   EXPECT_EQ(t.minute(), 43);
-  EXPECT_EQ(t.second(), 35);
+  EXPECT_DOUBLE_EQ(t.second(), 35.12);
 }
 
 TEST(DateTime, timezone_zero)
@@ -160,7 +160,9 @@ TEST(PikaUtils, solar)
   double azm_rotation = -10;
   double atm_refract = 0.5667;
 
-  double jd = julian_day(year, month, day, hour, min, sec, tzone, dut1);
+  DateTime datetime(year, month, day, hour-tzone, min, sec + dut1);
+
+  double jd = julian_day(datetime);
   EXPECT_DOUBLE_EQ(jd, 2452930.312847222201526165);
 
   double dt = delta_t(2003);
