@@ -12,7 +12,7 @@
 
 using namespace PikaUtils::SPA;
 
-TEST(PikaUtils, DateTime)
+TEST(DateTime, add)
 {
   DateTime t("2020-02-29T19:42:35");
   EXPECT_EQ(t.year(), 2020);
@@ -38,35 +38,99 @@ TEST(PikaUtils, DateTime)
   EXPECT_EQ(t.minute(), 42);
   EXPECT_EQ(t.second(), 35);
 
-//2020-02-29T19:42:35+00:00
-//2020-02-29T19:42:35+01:00
-//2020-02-29T19:42:35-00:30
-//2020-02-29T19:42:35.032+00:00
-//2020-02-29T19:42:35
+  t.add(0, 0, 0, 0, 0, 60.12);
+  EXPECT_EQ(t.year(), 2020);
+  EXPECT_EQ(t.month(), 3);
+  EXPECT_EQ(t.day(), 3);
+  EXPECT_EQ(t.hour(), 19);
+  EXPECT_EQ(t.minute(), 43);
+  EXPECT_EQ(t.second(), 35);
 }
 
+TEST(DateTime, timezone_zero)
+{
+  DateTime t("2020-02-29T19:42:35+00:00");
+  EXPECT_EQ(t.year(), 2020);
+  EXPECT_EQ(t.month(), 2);
+  EXPECT_EQ(t.day(), 29);
+  EXPECT_EQ(t.hour(), 19);
+  EXPECT_EQ(t.minute(), 42);
+  EXPECT_EQ(t.second(), 35);
+}
 
-TEST(PikaUtils, Angle)
+TEST(DateTime, timezone_positive)
+{
+  DateTime t("2020-02-29T19:42:35+01:00");
+  EXPECT_EQ(t.year(), 2020);
+  EXPECT_EQ(t.month(), 2);
+  EXPECT_EQ(t.day(), 29);
+  EXPECT_EQ(t.hour(), 18);
+  EXPECT_EQ(t.minute(), 42);
+  EXPECT_EQ(t.second(), 35);
+}
+
+TEST(DateTime, timezone_negative)
+{
+  DateTime t("2020-02-29T19:42:35-00:30");
+  EXPECT_EQ(t.year(), 2020);
+  EXPECT_EQ(t.month(), 2);
+  EXPECT_EQ(t.day(), 29);
+  EXPECT_EQ(t.hour(), 20);
+  EXPECT_EQ(t.minute(), 12);
+  EXPECT_EQ(t.second(), 35);
+}
+
+TEST(DateTime, second_fraction)
+{
+  DateTime t("2020-02-29T19:42:35.032+00:00");
+  EXPECT_EQ(t.year(), 2020);
+  EXPECT_EQ(t.month(), 2);
+  EXPECT_EQ(t.day(), 29);
+  EXPECT_EQ(t.hour(), 19);
+  EXPECT_EQ(t.minute(), 42);
+  EXPECT_EQ(t.second(), 35.032);
+}
+
+TEST(Angle, radian)
 {
   const Angle a(M_PI, Angle::RAD);
   EXPECT_DOUBLE_EQ(a.rad(), M_PI);
   EXPECT_DOUBLE_EQ(a.deg(), 180.);
+}
 
-  const Angle b(3*M_PI, Angle::RAD);
-  EXPECT_DOUBLE_EQ(b.rad(), 3*M_PI);
-  EXPECT_DOUBLE_EQ(b.deg(), 540.);
+TEST(Angle, radian_over)
+{
+  const Angle a(3*M_PI, Angle::RAD);
+  EXPECT_DOUBLE_EQ(a.rad(), 3*M_PI);
+  EXPECT_DOUBLE_EQ(a.deg(), 540.);
+}
 
-  const Angle c(3*M_PI, Angle::RAD, Angle::LIMIT);
-  EXPECT_DOUBLE_EQ(c.rad(), M_PI);
-  EXPECT_DOUBLE_EQ(c.deg(), 180.);
+TEST(Angle, radian_over_limited)
+{
+  const Angle a(3*M_PI, Angle::RAD, Angle::LIMIT);
+  EXPECT_DOUBLE_EQ(a.rad(), M_PI);
+  EXPECT_DOUBLE_EQ(a.deg(), 180.);
+}
 
-  const Angle d(720, Angle::DEG);
-  EXPECT_DOUBLE_EQ(d.rad(), 4*M_PI);
-  EXPECT_DOUBLE_EQ(d.deg(), 720.);
+TEST(Angle, degree)
+{
+  const Angle a(180., Angle::DEG);
+  EXPECT_DOUBLE_EQ(a.rad(), M_PI);
+  EXPECT_DOUBLE_EQ(a.deg(), 180.);
+}
 
-  const Angle e(540., Angle::DEG, Angle::LIMIT);
-  EXPECT_DOUBLE_EQ(e.rad(), M_PI);
-  EXPECT_DOUBLE_EQ(e.deg(), 180.);
+TEST(Angle, degree_over)
+{
+  const Angle a(720, Angle::DEG);
+  EXPECT_DOUBLE_EQ(a.rad(), 4*M_PI);
+  EXPECT_DOUBLE_EQ(a.deg(), 720.);
+}
+
+TEST(Angle, degree_over_limit)
+{
+  const Angle a(540., Angle::DEG, Angle::LIMIT);
+  EXPECT_DOUBLE_EQ(a.rad(), M_PI);
+  EXPECT_DOUBLE_EQ(a.deg(), 180.);
 }
 
 

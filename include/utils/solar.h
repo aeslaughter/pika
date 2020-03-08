@@ -50,7 +50,7 @@ public:
   int day() const {return _tinfo.tm_mday;}
   int hour() const {return _tinfo.tm_hour;}
   int minute() const {return _tinfo.tm_min;}
-  int second() const {return _fraction_sec + _tinfo.tm_sec;}
+  double second() const {return _fraction_sec + static_cast<double>(_tinfo.tm_sec);}
 
 private:
   struct tm _tinfo;

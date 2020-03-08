@@ -91,7 +91,6 @@ DateTime::DateTime(const std::string & date, Format format)
   int tz_min = match[10].matched ? sign * std::stoi(match[10]) : 0;
   _tinfo.tm_hour -= tz_hour;
   _tinfo.tm_min -= tz_min;
-
   mktime(&_tinfo);
 }
 
