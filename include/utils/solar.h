@@ -103,64 +103,73 @@ Angle earth_heliocentric_latitude(double jme);
 double earth_radius_vector(double jme);
 
 // 3.3.1, 3.3.2: Eq. 13
-double geocentric_longitude(Angle L);
+Angle geocentric_longitude(Angle L);
 
 // 3.3.3: Eq. 14
-double geocentric_latitude(Angle B);
+Angle geocentric_latitude(Angle B);
 
 // 3.4.1: Eq. 15
-double mean_elongation_moon(double jce);
+Angle mean_elongation_moon(double jce);
 
 // 3.4.2: Eq. 16
-double mean_anomaly_sun(double jce);
+Angle mean_anomaly_sun(double jce);
 
 // 3.4.3, Eq. 17
-double mean_anomaly_moon(double jce);
+Angle mean_anomaly_moon(double jce);
 
 // 3.4.4: Eq. 18
-double argument_latitute_moon(double jce);
+Angle argument_latitute_moon(double jce);
 
 // 3.4.5: Eq. 19
-double ascending_longitude_moon(double jce);
+Angle ascending_longitude_moon(double jce);
 
 // 3.4.7: Eq. 22
-double nutation_longitude(double jce);
+Angle nutation_longitude(double jce);
 
 // 3.4.8: Eq. 23
-double nutation_obliquity(double jce);
+Angle nutation_obliquity(double jce);
 
 // 3.5.1: Eq. 24
 double mean_obliquity_ecliptic(double jme);
 
 // 3.5.2: Eq. 25
-double true_obliquity_ecliptic(double eps0, double delta_eps);
+Angle true_obliquity_ecliptic(const Angle & eps0, const Angle & delta_eps);
 
 // 3.6: Eq. 26
-double aberration_correction(double R);
+Angle aberration_correction(double R);
 
 // 3.7: Eq. 27
-double apparent_sun_longitude(double theta, double delta_psi, double delta_tau);
+Angle apparent_sun_longitude(const Angle & theta, const Angle & delta_psi, const Angle & delta_tau);
 
 // 3.8.1, 3.8.2: Eq. 28
-double mean_sidereal_time_greenwich(double jd, double jc);
+Angle mean_sidereal_time_greenwich(double jd, double jc);
 
 // 3.8.3: Eq. 29
-double apparent_sidereal_time_greenwich(double nu0, double delta_psi, double eps);
+Angle apparent_sidereal_time_greenwich(const Angle & nu0, const Angle & delta_psi, const Angle & eps);
 
 // 3.9: Eq. 30
-double sun_right_ascension(double lambda, double eps, double beta);
+Angle sun_right_ascension(const Angle & lambda, const Angle & eps, const Angle & beta);
 
 // 3.10: Eq. 31
-double geocentric_sun_declination(double lambda, double eps, double beta);
+Angle geocentric_sun_declination(const Angle & lambda, const Angle & eps, const Angle & beta);
 
 // 3.11: Eq. 32
-double observer_local_hour_angle(double nu, double longitude, double alpha);
+Angle observer_local_hour_angle(const Angle & nu, const Angle & longitude, const Angle & alpha);
 
 // 3.12.1: Eq. 33
-double equatorial_horizontal_parallax(double R);
+Angle equatorial_horizontal_parallax(double R);
 
-// 3.12.2-3.12.5: Eq. 34, 35, 36, 37
-double parallax_sun_right_ascension(double latitude, double elevation, double xi, double H, double delta);
+// 3.12.2: Eq. 34
+Angle u_term(const Angle & latitude);
+
+// 3.12.3: Eq. 35
+Angle x_term(const Angle & u, const Angle & latitude);
+
+// 3.12.4: Eq. 36
+Angle y_term(double elevation, const Angle & u, const Angle & latitude);
+
+// 3.12.5: Eq. 37
+Angle parallax_sun_right_ascension(double elevation, const Angle & u, double xi, double H, double delta);
 
 // 3.12.6: Eq. 38
 double topocentric_sun_right_ascension(double alpha, double delta_alpha);

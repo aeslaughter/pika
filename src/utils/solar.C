@@ -238,45 +238,45 @@ double earth_radius_vector(double jme)
   return R;
 }
 
-double geocentric_longitude(Angle L)
+Angle geocentric_longitude(Angle L)
 {
   double theta = L.deg() + 180.;
   if (theta > 360.)
     theta -= 360.;
-  return theta;
+  return Angle(theta, Angle::DEG);
 }
 
-double geocentric_latitude(Angle B)
+Angle geocentric_latitude(Angle B)
 {
-  return -B.deg();
+  return Angle(-B.deg(), Angle::DEG);
 }
 
-double mean_elongation_moon(double jce)
+Angle mean_elongation_moon(double jce)
 {
-  return 297.85036 + 445267.11148 * jce - 0.0019142 * std::pow(jce, 2) + std::pow(jce, 3)/189474.;
+  return Angle(297.85036 + 445267.11148 * jce - 0.0019142 * std::pow(jce, 2) + std::pow(jce, 3)/189474., Angle::DEG);
 }
 
-double mean_anomaly_sun(double jce)
+Angle mean_anomaly_sun(double jce)
 {
-  return 357.52772 + 35999.050340 * jce - 0.0001603 * std::pow(jce, 2) - std::pow(jce, 3)/300000.;
+  return Angle(357.52772 + 35999.050340 * jce - 0.0001603 * std::pow(jce, 2) - std::pow(jce, 3)/300000., Angle::DEG);
 }
 
-double mean_anomaly_moon(double jce)
+Angle mean_anomaly_moon(double jce)
 {
-  return 134.96298 + 477198.867398 * jce + 0.0086972 * std::pow(jce, 2) + std::pow(jce, 3)/56250.;
+  return Angle(134.96298 + 477198.867398 * jce + 0.0086972 * std::pow(jce, 2) + std::pow(jce, 3)/56250., Angle::DEG);
 }
 
-double argument_latitute_moon(double jce)
+Angle argument_latitute_moon(double jce)
 {
-  return 93.27191 + 483202.017538 * jce - 0.0036825 * std::pow(jce, 2) + std::pow(jce, 3)/327270.;
+  return Angle(93.27191 + 483202.017538 * jce - 0.0036825 * std::pow(jce, 2) + std::pow(jce, 3)/327270., Angle::DEG);
 }
 
-double ascending_longitude_moon(double jce)
+Angle ascending_longitude_moon(double jce)
 {
-  return 125.04452 - 1934.136261 * jce + 0.0020708 * std::pow(jce, 2) + std::pow(jce, 3)/450000.;
+  return Angle(125.04452 - 1934.136261 * jce + 0.0020708 * std::pow(jce, 2) + std::pow(jce, 3)/450000., Angle::DEG);
 }
 
-double nutation_longitude(double jce)
+Angle nutation_longitude(double jce)
 {
   using namespace Table2;
   double delta_psi = 0;
@@ -291,10 +291,10 @@ double nutation_longitude(double jce)
     delta_psi += (PE[i][0] + PE[i][1] * jce) * std::sin(inner);
   }
 
-  return delta_psi / 36000000.;
+  return Angle(delta_psi / 36000000., Angle::DEG);
 }
 
-double nutation_obliquity(double jce)
+Angle nutation_obliquity(double jce)
 {
   using namespace Table2;
   double delta_eps = 0;
@@ -308,7 +308,7 @@ double nutation_obliquity(double jce)
     double inner = degrees_to_rad(X0*Y[i][0] + X1*Y[i][1] + X2*Y[i][2] + X3*Y[i][3] + X4*Y[i][4]);
     delta_eps += (PE[i][2] + PE[i][3] * jce) * std::cos(inner);
   }
-  return delta_eps / 36000000.;
+  return Angle(delta_eps / 36000000., Angle::DEG);
 }
 
 double mean_obliquity_ecliptic(double jme)
@@ -320,78 +320,80 @@ double mean_obliquity_ecliptic(double jme)
     2.45 * std::pow(U, 10);
 }
 
-double true_obliquity_ecliptic(double eps0, double delta_eps)
+Angle true_obliquity_ecliptic(const Angle & eps0, const Angle & delta_eps)
 {
-  return eps0 / 3600. + delta_eps;
+  return Angle(eps0.deg() / 3600. + delta_eps.deg(), Angle::DEG);
 }
 
-double aberration_correction(double R)
+Angle aberration_correction(double R)
 {
-  return -20.4898 / (3600. * R);
+  return Angle(-20.4898 / (3600. * R), Angle::DEG);
 }
 
-double apparent_sun_longitude(double theta, double delta_psi, double delta_tau)
+Angle apparent_sun_longitude(const Angle & theta, const Angle & delta_psi, const Angle & delta_tau)
 {
-  return theta + delta_psi + delta_tau;
+  return Angle(theta.deg() + delta_psi.deg() + delta_tau.deg(), Angle::DEG);
 }
 
-double mean_sidereal_time_greenwich(double jd, double jc)
+Angle mean_sidereal_time_greenwich(double jd, double jc)
 {
   double nu0 = 280.46061837 + 360.98564736629 * (jd - 2451545) + 0.000387933 * std::pow(jc, 2) -
     std::pow(jc, 3) / 38710000.;
-  return limit_degrees(nu0);
+  return Angle(nu0, Angle::DEG, Angle::LIMIT);
 }
 
-double apparent_sidereal_time_greenwich(double nu0, double delta_psi, double eps)
+Angle apparent_sidereal_time_greenwich(const Angle & nu0, const Angle & delta_psi, const Angle & eps)
 {
-  return nu0 + delta_psi * std::cos(degrees_to_rad(eps));
+  return Angle(nu0.deg() + delta_psi.deg() * std::cos(eps.rad());
 }
 
-double sun_right_ascension(double lambda, double eps, double beta)
+Angle sun_right_ascension(const Angle & lambda, const Angle & eps, cosnst Angle & beta)
 {
-  lambda = degrees_to_rad(lambda);
-  eps = degrees_to_rad(eps);
-  beta = degrees_to_rad(beta);
-  double alpha = std::atan2(std::sin(lambda) * std::cos(eps) - std::tan(beta) * std::sin(eps), std::cos(lambda));
-  return limit_degrees(rad_to_degrees(alpha));
+  double alpha = std::atan2(std::sin(lambda.rad()) * std::cos(eps.rad()) - std::tan(beta.rad()) * std::sin(eps.rad()), std::cos(lambda.rad()));
+  return Angle(alpha, Angle::RAD, Angle::LIMIT);
 }
 
-double geocentric_sun_declination(double lambda, double eps, double beta)
+Angle geocentric_sun_declination(const Angle & lambda, const Angle & eps, cosnst Angle & beta)
 {
-  lambda = degrees_to_rad(lambda);
-  eps = degrees_to_rad(eps);
-  beta = degrees_to_rad(beta);
-  double delta = std::asin(std::sin(beta) * std::cos(eps) + std::cos(beta) * std::sin(eps) * std::sin(lambda));
-  return rad_to_degrees(delta);
+  double delta = std::asin(std::sin(beta.rad()) * std::cos(eps.rad()) + std::cos(beta.rad()) * std::sin(eps.rad()) * std::sin(lambda.rad()));
+  return Angle(delta, Angle::RAD);
 }
 
-double observer_local_hour_angle(double longitude, double nu, double alpha)
+Angle observer_local_hour_angle(const Angle & longitude, const Angle & nu, const Angle & alpha)
 {
-  return limit_degrees(nu + longitude - alpha);
+  return Angle(nu.deg() + longitude.deg() - alpha.deg(), Angle::DEG);
 }
 
-double equatorial_horizontal_parallax(double R)
+Angle equatorial_horizontal_parallax(double R)
 {
-  return 8.794 / (3600. * R);
+  return Angle(8.794 / (3600. * R), Angle::DEG);
 }
 
-double parallax_sun_right_ascension(double latitude, double elevation, double xi, double H, double delta)
+Angle u_term(const Angle & latitude)
 {
-  latitude = degrees_to_rad(latitude);
-  H = degrees_to_rad(H);
-  delta = degrees_to_rad(delta);
-  xi = degrees_to_rad(xi);
-
-  double u = std::atan(0.99664719 * std::tan(latitude));
-  double x = std::cos(u) + elevation / 6378140. * std::cos(latitude);
-  double delta_alpha = std::atan2(-x * std::sin(xi) * std::sin(H),
-                                  std::cos(delta) - x * sin(xi) * cos(H));
-  return rad_to_degrees(delta_alpha);
+  return Angle(std::atan(0.99664719 * std::tan(latitude.rad())), Angle::RAD);
 }
 
-double topocentric_sun_right_ascension(double alpha, double delta_alpha)
+Angle x_term(const Angle & u, const Angle & latitude)
 {
-  return alpha + delta_alpha;
+  return Angle(std::cos(u) + elevation / 6378140. * std::cos(latitude), Angle::RAD);
+}
+
+Angle y_term(double elevation, const Angle & u, const Angle & latitude)
+{
+  return Angle(0.99664719 * std::sin(u.rad()) + elevation / 6378140 * std::sin(latitude.rad()), Angle::RAD);
+}
+
+Angle parallax_sun_right_ascension(double elevation, const Angle & x, const Angle & xi, consat Angle & H, const Angle & delta)
+{
+  double delta_alpha = std::atan2(-x.rad() * std::sin(xi.rad()) * std::sin(H.rad()),
+                                  std::cos(delta.rad()) - x.rad() * sin(xi.rad()) * cos(H.rad()));
+  return Angle(delta_alpha, Angle::RAD);
+}
+
+Angle topocentric_sun_right_ascension(const Angle & alpha, const Angle & delta_alpha)
+{
+  return Angle(alpha + delta_alpha, Angle::DEG);
 }
 
 double topocentric_sun_declination(double latitude, double elevation, double delta, double xi, double delta_alpha, double H)

@@ -216,35 +216,35 @@ TEST(PikaUtils, solar)
   double R = earth_radius_vector(jme);
   EXPECT_DOUBLE_EQ(R, 0.996542297353970818);
 
-  double theta = geocentric_longitude(L);
-  EXPECT_DOUBLE_EQ(theta, 204.018261691679413161);
+  Angle theta = geocentric_longitude(L);
+  EXPECT_DOUBLE_EQ(theta.deg(), 204.018261691679413161);
 
-  double beta = geocentric_latitude(B);
-  EXPECT_DOUBLE_EQ(beta, 0.00010112192480034234);
+  Angle beta = geocentric_latitude(B);
+  EXPECT_DOUBLE_EQ(beta.deg(), 0.00010112192480034234);
 
-  double x0 = mean_elongation_moon(jce);
-  EXPECT_DOUBLE_EQ(x0, 17185.861179064908355940);
+  Angle x0 = mean_elongation_moon(jce);
+  EXPECT_DOUBLE_EQ(x0.deg(), 17185.861179064908355940);
 
-  double x1 = mean_anomaly_sun(jce);
-  EXPECT_DOUBLE_EQ(x1, 1722.893218461364767791);
+  Angle x1 = mean_anomaly_sun(jce);
+  EXPECT_DOUBLE_EQ(x1.deg(), 1722.893218461364767791);
 
-  double x2 = mean_anomaly_moon(jce);
-  EXPECT_DOUBLE_EQ(x2, 18234.075702611266024178);
+  Angle x2 = mean_anomaly_moon(jce);
+  EXPECT_DOUBLE_EQ(x2.deg(), 18234.075702611266024178);
 
-  double x3 = argument_latitute_moon(jce);
-  EXPECT_DOUBLE_EQ(x3, 18420.071012282278388739);
+  Angle x3 = argument_latitute_moon(jce);
+  EXPECT_DOUBLE_EQ(x3.deg(), 18420.071012282278388739);
 
-  double x4 = ascending_longitude_moon(jce);
-  EXPECT_DOUBLE_EQ(x4, 51.686951165383405282);
+  Angle x4 = ascending_longitude_moon(jce);
+  EXPECT_DOUBLE_EQ(x4.deg(), 51.686951165383405282);
 
-  double delta_psi = nutation_longitude(jce);
-  EXPECT_DOUBLE_EQ(delta_psi, -0.003998404303332776);
+  Angle delta_psi = nutation_longitude(jce);
+  EXPECT_DOUBLE_EQ(delta_psi.deg(), -0.003998404303332776);
 
-  double delta_eps = nutation_obliquity(jce);
-  EXPECT_DOUBLE_EQ(delta_eps, 0.001666568177249686);
+  Angle delta_eps = nutation_obliquity(jce);
+  EXPECT_DOUBLE_EQ(delta_eps.deg(), 0.001666568177249686);
 
-  double eps0 = mean_obliquity_ecliptic(jme);
-  EXPECT_DOUBLE_EQ(eps0, 84379.672625184990465641);
+  Angle eps0 = mean_obliquity_ecliptic(jme);
+  EXPECT_DOUBLE_EQ(eps0.deg(), 84379.672625184990465641);
 
   double eps = true_obliquity_ecliptic(eps0, delta_eps);
   EXPECT_DOUBLE_EQ(eps, 23.440464519617524530);
