@@ -207,7 +207,7 @@ double limit_degrees(double deg)
   return limited;
 }
 
-double earth_heliocentric_longitude(double jme)
+Angle earth_heliocentric_longitude(double jme)
 {
   double L0 = equation_ten<64>(Table1::L0, jme);
   double L1 = equation_ten<34>(Table1::L1, jme);
@@ -216,15 +216,15 @@ double earth_heliocentric_longitude(double jme)
   double L4 = equation_ten<3>(Table1::L4, jme);
   double L5 = equation_ten<1>(Table1::L5, jme);
   double L_rad = (L0 + L1 * jme + L2 * std::pow(jme, 2) + L3 * std::pow(jme, 3) + L4 * std::pow(jme, 4) + L5 * std::pow(jme, 5)) / 1e8;
-  return limit_degrees(rad_to_degrees(L_rad));
+  return Angle(L_rad, Angle::RAD, Angle::LIMIT);
 }
 
-double earth_heliocentric_latitude(double jme)
+Angle earth_heliocentric_latitude(double jme)
 {
   double B0 = equation_ten<5>(Table1::B0, jme);
   double B1 = equation_ten<2>(Table1::B1, jme);
   double B_rad = (B0 + B1 * jme) / 1e8;
-  return rad_to_degrees(B_rad);
+  return Angle(B_rad, Angle::RAD);
 }
 
 double earth_radius_vector(double jme)
@@ -238,17 +238,17 @@ double earth_radius_vector(double jme)
   return R;
 }
 
-double geocentric_longitude(double L)
+double geocentric_longitude(Angle L)
 {
-  double theta = L + 180.;
+  double theta = L.deg() + 180.;
   if (theta > 360.)
     theta -= 360.;
   return theta;
 }
 
-double geocentric_latitude(double B)
+double geocentric_latitude(Angle B)
 {
-  return -B;
+  return -B.deg();
 }
 
 double mean_elongation_moon(double jce)

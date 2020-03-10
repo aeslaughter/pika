@@ -133,8 +133,6 @@ TEST(Angle, degree_over_limit)
   EXPECT_DOUBLE_EQ(a.deg(), 180.);
 }
 
-
-
 // Implements tests presented in NREL/TP-560-34302
 // https://www.nrel.gov/docs/fy08osti/34302.pd
 //
@@ -193,16 +191,16 @@ TEST(PikaUtils, solar)
   double L5 = equation_ten<1>(Table1::L5, jme);
   EXPECT_DOUBLE_EQ(L5, -0.999998731727539502678326);
 
-  double L = earth_heliocentric_longitude(jme);
-  EXPECT_DOUBLE_EQ(L, 24.0182616916793989503275955);
+  Angle L = earth_heliocentric_longitude(jme);
+  EXPECT_DOUBLE_EQ(L.deg(), 24.0182616916793989503275955);
 
   double B0 = equation_ten<5>(Table1::B0, jme);
   EXPECT_DOUBLE_EQ(B0, -176.502688041069120573);
   double B1 = equation_ten<2>(Table1::B1, jme);
   EXPECT_DOUBLE_EQ(B1, 3.067581813142713720);
 
-  double B = earth_heliocentric_latitude(jme);
-  EXPECT_DOUBLE_EQ(B, -0.00010112192480034234);
+  Angle B = earth_heliocentric_latitude(jme);
+  EXPECT_DOUBLE_EQ(B.deg(), -0.00010112192480034234);
 
   double R0 = equation_ten<40>(Table1::R0, jme);
   EXPECT_DOUBLE_EQ(R0, 99653849.037795737385749817);

@@ -94,19 +94,19 @@ double rad_to_degrees(double rad);
 double limit_degrees(double deg);
 
 // 3.2.1 - 3.2.6: Eq. 9, 10, 11, 12
-double earth_heliocentric_longitude(double jme);
+Angle earth_heliocentric_longitude(double jme);
 
 // 3.2.7: Eq. 9, 10, 11, 12
-double earth_heliocentric_latitude(double jme);
+Angle earth_heliocentric_latitude(double jme);
 
 // 3.2.8: Eq. 9, 10, 11, 12
 double earth_radius_vector(double jme);
 
 // 3.3.1, 3.3.2: Eq. 13
-double geocentric_longitude(double L);
+double geocentric_longitude(Angle L);
 
 // 3.3.3: Eq. 14
-double geocentric_latitude(double B);
+double geocentric_latitude(Angle B);
 
 // 3.4.1: Eq. 15
 double mean_elongation_moon(double jce);
