@@ -175,7 +175,7 @@ Angle parallax_sun_right_ascension(const Angle & x, const Angle & xi, const Angl
 Angle topocentric_sun_right_ascension(const Angle & alpha, const Angle & delta_alpha);
 
 // 3.12.7: Eq. 39
-Angle topocentric_sun_declination(Angle & x, const Angle & y, const Angle & delta, const Angle & xi, const Angle & delta_alpha, const Angle & H);
+Angle topocentric_sun_declination(const Angle & x, const Angle & y, const Angle & delta, const Angle & xi, const Angle & delta_alpha, const Angle & H);
 
 // 3.13: Eq. 40
 Angle topocentric_local_hour_angle(const Angle & H, const Angle & delta_alpha);
