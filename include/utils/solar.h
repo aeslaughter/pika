@@ -124,16 +124,16 @@ Angle argument_latitute_moon(double jce);
 Angle ascending_longitude_moon(double jce);
 
 // 3.4.7: Eq. 22
-Angle nutation_longitude(double jce);
+Angle nutation_longitude(double jce, const Angle & X0, const Angle & X1, const Angle & X2, const Angle & X3, const Angle & X4);
 
 // 3.4.8: Eq. 23
-Angle nutation_obliquity(double jce);
+Angle nutation_obliquity(double jce, const Angle & X0, const Angle & X1, const Angle & X2, const Angle & X3, const Angle & X4);
 
 // 3.5.1: Eq. 24
 double mean_obliquity_ecliptic(double jme);
 
 // 3.5.2: Eq. 25
-Angle true_obliquity_ecliptic(const Angle & eps0, const Angle & delta_eps);
+Angle true_obliquity_ecliptic(double eps0, const Angle & delta_eps);
 
 // 3.6: Eq. 26
 Angle aberration_correction(double R);
@@ -163,13 +163,13 @@ Angle equatorial_horizontal_parallax(double R);
 Angle u_term(const Angle & latitude);
 
 // 3.12.3: Eq. 35
-Angle x_term(const Angle & u, const Angle & latitude);
+Angle x_term(double elevation, const Angle & latitude, const Angle & u);
 
 // 3.12.4: Eq. 36
-Angle y_term(double elevation, const Angle & u, const Angle & latitude);
+Angle y_term(double elevation, const Angle & latitude, const Angle & u);
 
 // 3.12.5: Eq. 37
-Angle parallax_sun_right_ascension(double elevation, const Angle & u, double xi, double H, double delta);
+Angle parallax_sun_right_ascension(const Angle & x, const Angle & xi, const Angle & H, const Angle & delta);
 
 // 3.12.6: Eq. 38
 Angle topocentric_sun_right_ascension(const Angle & alpha, const Angle & delta_alpha);
@@ -184,7 +184,7 @@ Angle topocentric_local_hour_angle(const Angle & H, const Angle & delta_alpha);
 Angle topocentric_zenith_angle_no_correction(const Angle & latitude, const Angle & delta_prime, const Angle & H_prime);
 
 // 3.14.2: Eq. 42
-Angle atomspheric_refraction_correction(double P, double T, const Angle & e0, const Angle & atm_refraction);
+Angle atomspheric_refraction_correction(double P, double T, const Angle & e0, double atm_refraction);
 
 // 3.14.3: Eq. 43
 Angle topocentric_elevation_angle(const Angle & e0, const Angle & delta_e);

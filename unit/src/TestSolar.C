@@ -149,13 +149,13 @@ TEST(PikaUtils, solar)
   double tzone = -7;
   double dut1 = 0;
   double deltat = 67.;
-  double longitude = -105.1786;
-  double latitude = 39.742476;
+  const Angle longitude = Angle(-105.1786, Angle::DEG);
+  const Angle latitude = Angle(39.742476, Angle::DEG);
   double elevation = 1830.14;
   double pressure = 820;
   double temperature = 11;
-  double slope = 30;
-  double azm_rotation = -10;
+  const Angle slope(30, Angle::DEG);
+  const Angle azm_rotation(-10, Angle::DEG);
   double atm_refract = 0.5667;
 
   DateTime datetime(year, month, day, hour-tzone, min, sec + dut1);
@@ -237,72 +237,75 @@ TEST(PikaUtils, solar)
   Angle x4 = ascending_longitude_moon(jce);
   EXPECT_DOUBLE_EQ(x4.deg(), 51.686951165383405282);
 
-  Angle delta_psi = nutation_longitude(jce);
+  Angle delta_psi = nutation_longitude(jce, x0, x1, x2, x3, x4);
   EXPECT_DOUBLE_EQ(delta_psi.deg(), -0.003998404303332776);
 
-  Angle delta_eps = nutation_obliquity(jce);
+  Angle delta_eps = nutation_obliquity(jce, x0, x1, x2, x3, x4);
   EXPECT_DOUBLE_EQ(delta_eps.deg(), 0.001666568177249686);
 
-  Angle eps0 = mean_obliquity_ecliptic(jme);
-  EXPECT_DOUBLE_EQ(eps0.deg(), 84379.672625184990465641);
+  double eps0 = mean_obliquity_ecliptic(jme);
+  EXPECT_DOUBLE_EQ(eps0, 84379.672625184990465641);
 
-  double eps = true_obliquity_ecliptic(eps0, delta_eps);
-  EXPECT_DOUBLE_EQ(eps, 23.440464519617524530);
+  Angle eps = true_obliquity_ecliptic(eps0, delta_eps);
+  EXPECT_DOUBLE_EQ(eps.deg(), 23.440464519617524530);
 
-  double delta_tau = aberration_correction(R);
-  EXPECT_DOUBLE_EQ(delta_tau, -0.005711359293251811);
+  Angle delta_tau = aberration_correction(R);
+  EXPECT_DOUBLE_EQ(delta_tau.deg(), -0.005711359293251811);
 
-  double lambda = apparent_sun_longitude(theta, delta_psi, delta_tau);
-  EXPECT_DOUBLE_EQ(lambda, 204.008551928082823679);
+  Angle lambda = apparent_sun_longitude(theta, delta_psi, delta_tau);
+  EXPECT_DOUBLE_EQ(lambda.deg(), 204.008551928082823679);
 
-  double nu0 = mean_sidereal_time_greenwich(jd, jc);
-  EXPECT_DOUBLE_EQ(nu0, 318.515578272772472701);
+  Angle nu0 = mean_sidereal_time_greenwich(jd, jc);
+  EXPECT_DOUBLE_EQ(nu0.deg(), 318.515578272772472701);
 
-  double nu = apparent_sidereal_time_greenwich(nu0, delta_psi, eps);
-  EXPECT_DOUBLE_EQ(nu, 318.511909841120711917);
+  Angle nu = apparent_sidereal_time_greenwich(nu0, delta_psi, eps);
+  EXPECT_DOUBLE_EQ(nu.deg(), 318.511909841120711917);
 
-  double alpha = sun_right_ascension(lambda, eps, beta);
-  EXPECT_DOUBLE_EQ(alpha, 202.227407827207258606);
+  Angle alpha = sun_right_ascension(lambda, eps, beta);
+  EXPECT_DOUBLE_EQ(alpha.deg(), 202.227407827207258606);
 
-  double delta = geocentric_sun_declination(lambda, eps, beta);
-  EXPECT_DOUBLE_EQ(delta, -9.314340090849105636);
+  Angle delta = geocentric_sun_declination(lambda, eps, beta);
+  EXPECT_DOUBLE_EQ(delta.deg() , -9.314340090849105636);
 
-  double H = observer_local_hour_angle(longitude, nu, alpha);
-  EXPECT_DOUBLE_EQ(H, 11.105902013913436122);
+  Angle H = observer_local_hour_angle(longitude, nu, alpha);
+  EXPECT_DOUBLE_EQ(H.deg(), 11.105902013913436122);
 
-  double xi = equatorial_horizontal_parallax(R);
-  EXPECT_DOUBLE_EQ(xi, 0.002451253483433535);
+  Angle xi = equatorial_horizontal_parallax(R);
+  EXPECT_DOUBLE_EQ(xi.deg(), 0.002451253483433535);
 
-  double delta_alpha = parallax_sun_right_ascension(latitude, elevation, xi, H, delta);
-  EXPECT_DOUBLE_EQ(delta_alpha, -0.0003685349841678236312);
+  Angle u = u_term(latitude);
+  Angle x = x_term(elevation, latitude, u);
+  Angle y = y_term(elevation, latitude, u);
+  Angle delta_alpha = parallax_sun_right_ascension(x, xi, H, delta);
+  EXPECT_DOUBLE_EQ(delta_alpha.deg(), -0.0003685349841678236312);
 
-  double alpha_prime = topocentric_sun_right_ascension(alpha, delta_alpha);
-  EXPECT_DOUBLE_EQ(alpha_prime, 202.227039292223082612);
+  Angle alpha_prime = topocentric_sun_right_ascension(alpha, delta_alpha);
+  EXPECT_DOUBLE_EQ(alpha_prime.deg(), 202.227039292223082612);
 
-  double delta_prime = topocentric_sun_declination(elevation, latitude, delta, xi, delta_alpha, H);
-  EXPECT_DOUBLE_EQ(delta_prime, -9.3161786997149071964941);
+  Angle delta_prime = topocentric_sun_declination(x, y, delta, xi, delta_alpha, H);
+  EXPECT_DOUBLE_EQ(delta_prime.deg(), -9.3161786997149071964941);
 
-  double H_prime = topocentric_local_hour_angle(H, delta_alpha);
-  EXPECT_DOUBLE_EQ(H_prime, 11.106270548897603234);
+  Angle H_prime = topocentric_local_hour_angle(H, delta_alpha);
+  EXPECT_DOUBLE_EQ(H_prime.deg(), 11.106270548897603234);
 
-  double e0 = topocentric_zenith_angle_no_correction(latitude, delta_prime, H_prime);
-  EXPECT_DOUBLE_EQ(e0, 39.872045903847180170);
+  Angle e0 = topocentric_zenith_angle_no_correction(latitude, delta_prime, H_prime);
+  EXPECT_DOUBLE_EQ(e0.deg(), 39.872045903847180170);
 
-  double delta_e = atomspheric_refraction_correction(pressure, temperature, e0, atm_refract);
-  EXPECT_DOUBLE_EQ(delta_e, 0.016332072123099440);
+  Angle delta_e = atomspheric_refraction_correction(pressure, temperature, e0, atm_refract);
+  EXPECT_DOUBLE_EQ(delta_e.deg(), 0.016332072123099440);
 
-  double e = topocentric_elevation_angle(e0, delta_e);
-  EXPECT_DOUBLE_EQ(e, 39.888377975970279010);
+  Angle e = topocentric_elevation_angle(e0, delta_e);
+  EXPECT_DOUBLE_EQ(e.deg(), 39.888377975970279010);
 
-  double zenith = topocentric_zenith_angle(e);
-  EXPECT_DOUBLE_EQ(zenith, 50.111622024029720990);
+  Angle zenith = topocentric_zenith_angle(e);
+  EXPECT_DOUBLE_EQ(zenith.deg(), 50.111622024029720990);
 
-  double gamma = topocentric_astronomers_azimuth(latitude, H_prime, delta_prime);
-  EXPECT_DOUBLE_EQ(gamma, 14.340240510191623713);
+  Angle gamma = topocentric_astronomers_azimuth(latitude, H_prime, delta_prime);
+  EXPECT_DOUBLE_EQ(gamma.deg(), 14.340240510191623713);
 
-  double phi = topocentric_azimuth_angle(gamma);
-  EXPECT_DOUBLE_EQ(phi, 194.340240510191620160);
+  Angle phi = topocentric_azimuth_angle(gamma);
+  EXPECT_DOUBLE_EQ(phi.deg(), 194.340240510191620160);
 
-  double incidence = incidence_angle(zenith, slope, azm_rotation, gamma);
-  EXPECT_DOUBLE_EQ(incidence, 25.187000200353150348);
+  Angle incidence = incidence_angle(zenith, slope, azm_rotation, gamma);
+  EXPECT_DOUBLE_EQ(incidence.deg(), 25.187000200353150348);
 }
