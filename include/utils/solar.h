@@ -58,6 +58,54 @@ private:
   double _fraction_sec = 0;
 };
 
+/*
+ * Storage container for temporal data
+ */
+struct SolarTemporalData
+{
+  const double UNSET = std::numeric_limits<double>::min();
+  double dt = UNSET;
+
+  double jd;
+  double jde;
+  double jc;
+  double jce;
+  double jme;
+  //Angle L;
+  //Angle B:
+   //Angle R;
+  Angle theta;
+  Angle beta;
+};
+
+/*
+ * Storage container for spatial data
+ */
+struct SolarSpatialData
+{
+
+};
+
+/*
+ * Storage container for location data
+ */
+struct LocationData
+{
+  LocationData(doule elevation, double latitude, double longitude, double temperature, double pressure, double slope, double azm, double atm_refract);
+
+  const elevation;
+  const Angle latitude;
+  const Angle longitude;
+  const temperature;
+  const pressure;
+  const Angle slope;
+  const Angle azm;
+  const double atm_refract;
+};
+
+SolarTemporalData compute_temporal_data(const DateTime & datetime, double dt = SolarTemporalData::UNSET);
+SolarSpatialData compute_spatial_data(const LocationData & location, const SolarTemporalData & tdata);
+
 // 3.1.1: Eq. 4
 double julian_day(const DateTime & datetime);
 

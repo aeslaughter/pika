@@ -138,7 +138,7 @@ TEST(Angle, degree_over_limit)
 //
 // The "gold" values were created using the SPA code from the above report
 // https://rredc.nrel.gov/solar/codesandalgorithms/spa/
-TEST(PikaUtils, solar)
+TEST(Solar, NREL)
 {
   double year = 2003;
   double month = 10;
@@ -308,4 +308,20 @@ TEST(PikaUtils, solar)
 
   Angle incidence = incidence_angle(zenith, slope, azm_rotation, gamma);
   EXPECT_DOUBLE_EQ(incidence.deg(), 25.187000200353150348);
+}
+
+TEST(Solar, NREL)
+{
+  const Angle longitude = Angle(-105.1786, Angle::DEG);
+  const Angle latitude = Angle(39.742476, Angle::DEG);
+  double elevation = 1830.14;
+  double pressure = 820;
+  double temperature = 11;
+  const Angle slope(30, Angle::DEG);
+  const Angle azm_rotation(-10, Angle::DEG);
+  double atm_refract = 0.5667;
+
+  DateTime datetime(2003, 10, 17, 12-7, 30, 30 + 0);
+  SolarTemporalData compeute_temporal_data(datetime, 67.);
+
 }

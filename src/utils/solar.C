@@ -444,6 +444,99 @@ Angle incidence_angle(const Angle & zenith, const Angle & slope, const Angle & r
   return Angle(incidence, Angle::RAD);
 }
 
+LocationData::LocationData(doule elevation, double latitude, double longitude, double temperature,
+                           double pressure, double slope, double azimuth, double atm_refract),
+  this->elevation(elevation),
+  this->latitude(latitude, Angle::DEG),
+  this->longitude(longitude, Angle::DEG),
+  this->temperature(temperature),
+  this->pressure(pressure),
+  this->slope(slope, Angle::DEG),
+  this->azimuth(azimuth, Angle::DEG),
+  this->atm_refract(atm_refract)
+{
+}
+
+
+
+SolarTemporalData
+void compute_temporal_data(const DateTime & datetime, double dt)
+{
+  SolarTemporalData data;
+
+
+  if (dt == SolarTemporalData::UNSET)
+    data.dt = delta_t(datetime.year());
+
+  data.jd = julian_day(datetime);
+  data.jde = julian_day_ephemeris(data.jd, data.dt);
+  data.jc = julian_century(data.jd);
+  data.jce = julian_century_ephemeris(data.jc);
+  data.jme = julian_millennium_ephemeris(data.jce);
+
+  const Angle L = earth_heliocentric_longitude(data.jme);
+  const Angle B = earth_heliocentric_latitude(data.jme);
+  const Angle R = earth_radius_vector(data.jme);
+
+  data.theta = geocentric_longitude(L);
+  data.beta = geocentric_latitude(B);
+
+  Angle x0 = mean_elongation_moon(jce);
+  Angle x1 = mean_anomaly_sun(jce);
+  Angle x2 = mean_anomaly_moon(jce);
+  Angle x3 = argument_latitute_moon(jce);
+  Angle x4 = ascending_longitude_moon(jce);
+
+  Angle delta_psi = nutation_longitude(jce, x0, x1, x2, x3, x4);
+  Angle delta_eps = nutation_obliquity(jce, x0, x1, x2, x3, x4);
+
+  double eps0 = mean_obliquity_ecliptic(jme);
+  Angle eps = true_obliquity_ecliptic(eps0, delta_eps);
+
+  Angle delta_tau = aberration_correction(R);
+
+  Angle lambda = apparent_sun_longitude(theta, delta_psi, delta_tau);
+
+  Angle nu0 = mean_sidereal_time_greenwich(jd, jc);
+
+  Angle nu = apparent_sidereal_time_greenwich(nu0, delta_psi, eps);
+
+  Angle alpha = sun_right_ascension(lambda, eps, beta);
+
+  Angle delta = geocentric_sun_declination(lambda, eps, beta);
+
+  Angle H = observer_local_hour_angle(longitude, nu, alpha);
+
+  Angle xi = equatorial_horizontal_parallax(R);
+
+  return data;
+}
+
+SolarSpatialData
+void compute_spatial_data(const LocationData & location, const SolarTemporalData & tdata)
+{
+  SolarSpatialData data;
+
+  Angle u = u_term(latitude);
+  Angle x = x_term(elevation, latitude, u);
+  Angle y = y_term(elevation, latitude, u);
+  Angle delta_alpha = parallax_sun_right_ascension(x, xi, H, delta);
+  Angle alpha_prime = topocentric_sun_right_ascension(alpha, delta_alpha);
+  Angle delta_prime = topocentric_sun_declination(x, y, delta, xi, delta_alpha, H);
+  Angle H_prime = topocentric_local_hour_angle(H, delta_alpha);
+  Angle e0 = topocentric_zenith_angle_no_correction(latitude, delta_prime, H_prime);
+  Angle delta_e = atomspheric_refraction_correction(pressure, temperature, e0, atm_refract);
+  Angle e = topocentric_elevation_angle(e0, delta_e);
+  Angle zenith = topocentric_zenith_angle(e);
+  Angle gamma = topocentric_astronomers_azimuth(latitude, H_prime, delta_prime);
+  Angle phi = topocentric_azimuth_angle(gamma);
+  Angle incidence = incidence_angle(zenith, slope, azm_rotation, gamma);
+
+  return data;
+}
+
+
+
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =
 {
