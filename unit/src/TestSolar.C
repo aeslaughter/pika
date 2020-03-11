@@ -279,7 +279,7 @@ TEST(PikaUtils, solar)
   double alpha_prime = topocentric_sun_right_ascension(alpha, delta_alpha);
   EXPECT_DOUBLE_EQ(alpha_prime, 202.227039292223082612);
 
-  double delta_prime = topocentric_sun_declination(latitude, elevation, delta, xi, delta_alpha, H);
+  double delta_prime = topocentric_sun_declination(elevation, latitude, delta, xi, delta_alpha, H);
   EXPECT_DOUBLE_EQ(delta_prime, -9.3161786997149071964941);
 
   double H_prime = topocentric_local_hour_angle(H, delta_alpha);

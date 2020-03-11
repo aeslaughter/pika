@@ -396,80 +396,62 @@ Angle topocentric_sun_right_ascension(const Angle & alpha, const Angle & delta_a
   return Angle(alpha + delta_alpha, Angle::DEG);
 }
 
-double topocentric_sun_declination(double latitude, double elevation, double delta, double xi, double delta_alpha, double H)
+Angle topocentric_sun_declination(const Angle & x, const Angle & y, const Angle & delta, const Angle & xi, const Angle & delta_alpha, const Angle & H)
 {
-  latitude = degrees_to_rad(latitude);
-  xi = degrees_to_rad(xi);
-  H = degrees_to_rad(H);
-  delta = degrees_to_rad(delta);
-  delta_alpha = degrees_to_rad(delta_alpha);
-  double u = std::atan(0.99664719 * std::tan(latitude));
-  double x = std::cos(u) + elevation / 6378140. * std::cos(latitude);
-  double y = 0.99664719 * std::sin(u) + elevation / 6378140 * std::sin(latitude);
-  double delta_prime = std::atan2((std::sin(delta) - y * std::sin(xi)) * std::cos(delta_alpha),
-                                  std::cos(delta) - x * std::sin(xi) * std::cos(H));
-  return rad_to_degrees(delta_prime);
+  double delta_prime = std::atan2((std::sin(delta.rad()) - y * std::sin(xi.rad())) * std::cos(delta_alpha.rad()),
+                                  std::cos(delta.rad()) - x * std::sin(xi.rad()) * std::cos(H.rad()));
+  return Angle(delta_prime, Angle::RAD);
 }
 
-double topocentric_local_hour_angle(double H, double delta_alpha)
+Angle topocentric_local_hour_angle(const Angle & H, const Angle & delta_alpha)
 {
-  return H - delta_alpha;
+  return Angle(H.deg() - delta_alpha.deg(), Angle::DEG);
 }
 
-double topocentric_zenith_angle_no_correction(double latitude, double delta_prime, double H_prime)
+Angle topocentric_zenith_angle_no_correction(const Angle & latitude, const Angle & delta_prime, const Angle & H_prime)
 {
-  latitude = degrees_to_rad(latitude);
-  delta_prime = degrees_to_rad(delta_prime);
-  H_prime = degrees_to_rad(H_prime);
-  double e0 = std::asin(std::sin(latitude) * std::sin(delta_prime) +
-                        std::cos(latitude) * std::cos(delta_prime) * std::cos(H_prime));
-  return rad_to_degrees(e0);
+  double e0 = std::asin(std::sin(latitude.rad()) * std::sin(delta_prime.rad()) +
+                        std::cos(latitude.rad()) * std::cos(delta_prime.rad()) * std::cos(H_prime.rad()));
+  return Angle(e0, Angle::RAD);
 }
 
-double atomspheric_refraction_correction(double P, double T, double e0, double atm_refraction)
+Angle atomspheric_refraction_correction(double P, double T, const Angle & e0, const Angle & atm_refraction)
 {
   double del_e = 0.;
   const double sun_radius = 0.26667;
   if (e0 >= -sun_radius + atm_refraction)
   {
-    double arg = degrees_to_rad(e0 + 10.3 / (e0 + 5.11));
-    del_e = P / 1010. * 283. / (273. + T) * 1.02 / (60 * std::tan(arg));
+    double arg = Angle(e0.deg() + 10.3 / (e0.deg() + 5.11), Angle::DEG);
+    del_e = P / 1010. * 283. / (273. + T) * 1.02 / (60 * std::tan(arg.rad()));
   }
-  return del_e;
+  return Angle(del_e, Angle::DEG);
 }
 
-double topocentric_elevation_angle(double e0, double delta_e)
+Angle topocentric_elevation_angle(const Angle & e0, const Angle & delta_e)
 {
-  return e0 + delta_e;
+  return Angle(e0 + delta_e, Angle::DEG);
 }
 
-double topocentric_zenith_angle(double e)
+Angle topocentric_zenith_angle(const Angle & e)
 {
-  return 90. - e;
+  return Angle(90. - e, Angle::DEG);
 }
 
-double topocentric_astronomers_azimuth(double latitude, double H_prime, double delta_prime)
+Angle topocentric_astronomers_azimuth(const Angle & latitude, const Angle & H_prime, const Angle & delta_prime)
 {
-  latitude = degrees_to_rad(latitude);
-  delta_prime = degrees_to_rad(delta_prime);
-  H_prime = degrees_to_rad(H_prime);
-  double gamma = std::atan2(std::sin(H_prime), std::cos(H_prime) * std::sin(latitude) - std::tan(delta_prime) * std::cos(latitude));
-  return rad_to_degrees(gamma);
+  double gamma = std::atan2(std::sin(H_prime.rad()), std::cos(H_prime.rad()) * std::sin(latitude.rad()) - std::tan(delta_prime.rad()) * std::cos(latitude.rad()));
+  return Angle(gamma, Angle::RAD);
 }
 
-double topocentric_azimuth_angle(double gamma)
+Angle topocentric_azimuth_angle(const Angle & gamma)
 {
-  return limit_degrees(gamma + 180.);
+  return Angle(gamma + 180., Angle::DEG, Angle::LIMIT);
 }
 
-double incidence_angle(double zenith, double slope, double rotation, double gamma)
+Angle incidence_angle(const Angle & zenith, const Angle & slope, const Angle & rotation, const Angle & gamma)
 {
-  zenith = degrees_to_rad(zenith);
-  slope = degrees_to_rad(slope);
-  rotation = degrees_to_rad(rotation);
-  gamma = degrees_to_rad(gamma);
-  double incidence = std::acos(std::cos(zenith) * std::cos(slope) + std::sin(slope) * std::sin(zenith) * std::cos(gamma - rotation));
-  return rad_to_degrees(incidence);
+  double incidence = std::acos(std::cos(zenith.rad()) * std::cos(slope.rad()) + std::sin(slope.rad()) * std::sin(zenith.rad()) * std::cos(gamma.rad() - rotation.rad()));
+  return Angle(incidence, Angle::RAD);
 }
 
 // clang-format off

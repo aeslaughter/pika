@@ -172,34 +172,34 @@ Angle y_term(double elevation, const Angle & u, const Angle & latitude);
 Angle parallax_sun_right_ascension(double elevation, const Angle & u, double xi, double H, double delta);
 
 // 3.12.6: Eq. 38
-double topocentric_sun_right_ascension(double alpha, double delta_alpha);
+Angle topocentric_sun_right_ascension(const Angle & alpha, const Angle & delta_alpha);
 
 // 3.12.7: Eq. 39
-double topocentric_sun_declination(double latitude, double elevation, double delta, double xi, double delta_alpha, double H);
+Angle topocentric_sun_declination(Angle & x, const Angle & y, const Angle & delta, const Angle & xi, const Angle & delta_alpha, const Angle & H);
 
 // 3.13: Eq. 40
-double topocentric_local_hour_angle(double H, double delta_alpha);
+Angle topocentric_local_hour_angle(const Angle & H, const Angle & delta_alpha);
 
 // 3.14.1: Eq. 41
-double topocentric_zenith_angle_no_correction(double latitude, double delta_prime, double H_prime);
+Angle topocentric_zenith_angle_no_correction(const Angle & latitude, const Angle & delta_prime, const Angle & H_prime);
 
 // 3.14.2: Eq. 42
-double atomspheric_refraction_correction(double P, double T, double e0, double atm_refraction);
+Angle atomspheric_refraction_correction(double P, double T, const Angle & e0, const Angle & atm_refraction);
 
 // 3.14.3: Eq. 43
-double topocentric_elevation_angle(double e0, double delta_e);
+Angle topocentric_elevation_angle(const Angle & e0, const Angle & delta_e);
 
 // 3.14.4: Eq. 44
-double topocentric_zenith_angle(double e);
+Angle topocentric_zenith_angle(const Angle & e);
 
 // 3.15.1: Eq. 45
-double topocentric_astronomers_azimuth(double latitude, double H_prime, double delta_prime);
+Angle topocentric_astronomers_azimuth(const Angle & latitude, const Angle & H_prime, const Angle & delta_prime);
 
 // 3.15.2: Eq. 46
-double topocentric_azimuth_angle(double gamma);
+Angle topocentric_azimuth_angle(const Angle & gamma);
 
 // 3.16: Eq. 47
-double incidence_angle(double zenith, double slope, double azimuth, double gamma);
+Angle incidence_angle(const Angle & zenith, const Angle & slope, const Angle & azimuth, const Angle & gamma);
 
 namespace Table1
 {
