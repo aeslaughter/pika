@@ -21,6 +21,7 @@ public:
   static const Limit LIMIT = Limit::LIMIT;
 
   Angle(double value, Type type, Limit limit = Limit::NOLIMIT);
+  Angle(const Angle & other);
   ~Angle() = default;
 
   double deg() const;
@@ -63,27 +64,11 @@ private:
  */
 struct SolarTemporalData
 {
-  const double UNSET = std::numeric_limits<double>::min();
-  double dt = UNSET;
-
-  double jd;
-  double jde;
-  double jc;
-  double jce;
-  double jme;
-  //Angle L;
-  //Angle B:
-   //Angle R;
-  Angle theta;
-  Angle beta;
-};
-
-/*
- * Storage container for spatial data
- */
-struct SolarSpatialData
-{
-
+  SolarTemporalData(const Angle & nu, const Angle & alpha, const Angle & delta, const Angle & xi);
+  const Angle nu;
+  const Angle alpha;
+  const Angle delta;
+  const Angle xi;
 };
 
 /*
@@ -91,20 +76,20 @@ struct SolarSpatialData
  */
 struct LocationData
 {
-  LocationData(doule elevation, double latitude, double longitude, double temperature, double pressure, double slope, double azm, double atm_refract);
-
-  const elevation;
+  LocationData(double elevation, double latitude, double longitude, double temperature, double pressure, double slope, double azm, double atm_refract);
+  const double elevation;
   const Angle latitude;
   const Angle longitude;
-  const temperature;
-  const pressure;
+  const double temperature;
+  const double pressure;
   const Angle slope;
-  const Angle azm;
+  const Angle azimuth;
   const double atm_refract;
 };
 
-SolarTemporalData compute_temporal_data(const DateTime & datetime, double dt = SolarTemporalData::UNSET);
-SolarSpatialData compute_spatial_data(const LocationData & location, const SolarTemporalData & tdata);
+const double UNSET = std::numeric_limits<double>::min();
+SolarTemporalData compute_temporal_data(const DateTime & datetime, double dt = UNSET);
+Angle compute_incidence(const LocationData & location, const SolarTemporalData & tdata);
 
 // 3.1.1: Eq. 4
 double julian_day(const DateTime & datetime);

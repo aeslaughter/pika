@@ -158,6 +158,8 @@ TEST(Solar, NREL)
   const Angle azm_rotation(-10, Angle::DEG);
   double atm_refract = 0.5667;
 
+  // Apply DUT1, which is the difference between Coordinated Universal Time (UTC) and
+  // Principal Universal Time (UT1)
   DateTime datetime(year, month, day, hour-tzone, min, sec + dut1);
 
   double jd = julian_day(datetime);
@@ -310,18 +312,17 @@ TEST(Solar, NREL)
   EXPECT_DOUBLE_EQ(incidence.deg(), 25.187000200353150348);
 }
 
-TEST(Solar, NREL)
+TEST(Solar, functions)
 {
-  const Angle longitude = Angle(-105.1786, Angle::DEG);
-  const Angle latitude = Angle(39.742476, Angle::DEG);
-  double elevation = 1830.14;
-  double pressure = 820;
-  double temperature = 11;
-  const Angle slope(30, Angle::DEG);
-  const Angle azm_rotation(-10, Angle::DEG);
-  double atm_refract = 0.5667;
+  LocationData location(1830.14, 39.742476, -105.1786, 11, 820, 30, -10, 0.5667);
+  DateTime datetime(2003, 10, 17, 12+7, 30, 30);
 
-  DateTime datetime(2003, 10, 17, 12-7, 30, 30 + 0);
-  SolarTemporalData compeute_temporal_data(datetime, 67.);
+  SolarTemporalData tdata = compute_temporal_data(datetime, 67.);
+  EXPECT_DOUBLE_EQ(tdata.nu.deg(), 318.511909841120711917);
+  EXPECT_DOUBLE_EQ(tdata.alpha.deg(), 202.227407827207258606);
+  EXPECT_DOUBLE_EQ(tdata.delta.deg() , -9.314340090849105636);
+  EXPECT_DOUBLE_EQ(tdata.xi.deg(), 0.002451253483433535);
 
+  Angle incidence = compute_incidence(location, tdata);
+  EXPECT_DOUBLE_EQ(incidence.deg(), 25.187000200353150348);
 }
