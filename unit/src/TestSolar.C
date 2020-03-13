@@ -10,6 +10,7 @@
 #include "gtest/gtest.h"
 #include "solar.h"
 
+using namespace PikaUtils;
 using namespace PikaUtils::SPA;
 
 TEST(DateTime, add)

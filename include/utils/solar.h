@@ -1,63 +1,12 @@
 #include <array>
-//#include <regex>
+#include "Angle.h"
+#include "DateTime.h"
+
 
 namespace PikaUtils
 {
 namespace SPA
 {
-
-/*
- * Class for defining an angle that automatically computes the value in degrees and radians and
- * optionally limits the angle between 0 and 360.
- */
-class Angle
-{
-public:
-  enum class Type{RAD=1, DEG=2};
-  enum class Limit{LIMIT=1, NOLIMIT=0};
-
-  static const Type RAD = Type::RAD;
-  static const Type DEG = Type::DEG;
-  static const Limit LIMIT = Limit::LIMIT;
-
-  Angle(double value, Type type, Limit limit = Limit::NOLIMIT);
-  Angle(const Angle & other);
-  ~Angle() = default;
-
-  double deg() const;
-  double rad() const;
-
-  static double radians_to_degrees(double rad);
-  static double degrees_to_radians(double deg);
-  static double limit_degrees(double deg);
-
-private:
-  double _radians;
-  double _degrees;
-};
-
-/*
- * Class for computing the various times required for solar incident angle calculations.
- */
-class DateTime
-{
-public:
-  enum class Format{ISO8601};
-  DateTime(const std::string & date, Format format = Format::ISO8601);
-  DateTime(int year, int month, int day, int hours, int minutes, double seconds);
-  void add(int years, int months, int day, int hours, int minutes, double seconds);
-
-  int year() const {return _tinfo.tm_year + 1900;}
-  int month() const {return _tinfo.tm_mon + 1;}
-  int day() const {return _tinfo.tm_mday;}
-  int hour() const {return _tinfo.tm_hour;}
-  int minute() const {return _tinfo.tm_min;}
-  double second() const {return _fraction_sec + static_cast<double>(_tinfo.tm_sec);}
-
-private:
-  struct tm _tinfo;
-  double _fraction_sec = 0;
-};
 
 /*
  * Storage container for temporal data
