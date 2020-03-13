@@ -8,11 +8,18 @@
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 #pragma once
 
-struct UTMCoordinate
+#include "Angle.h"
+
+namespace PikaUtils
+{
+namespace Coordinates
+{
+
+struct UTM
 {
   enum class Hemisphere: int{NORTH=1, SOUTH=-1};
 
-  UTMCoordinate(double easting, double northing, unsigned int zone, Hemisphere hemi = Hemisphere::NORTH);
+  UTM(double easting, double northing, unsigned int zone, Hemisphere hemi = Hemisphere::NORTH);
 
   const double easting;
   const double northing;
@@ -20,12 +27,13 @@ struct UTMCoordinate
   const Hemisphere hemisphere;
 };
 
-/*
-struct WGS84Coordinate
+struct WGS84
 {
-  WGS84Coordinate(double latitude, double longitude);
+  WGS84(double latitude, double longitude);
 
-  const Angle latitude;
-  const Angle longitude;
+  const PikaUtils::Angle latitude;
+  const PikaUtils::Angle longitude;
+};
+
 }
-*/
+} // namespace

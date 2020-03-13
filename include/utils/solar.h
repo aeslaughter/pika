@@ -2,6 +2,7 @@
 #include "Angle.h"
 #include "DateTime.h"
 
+#pragma once
 
 namespace PikaUtils
 {

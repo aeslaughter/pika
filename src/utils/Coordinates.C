@@ -6,13 +6,29 @@
 //*
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
-#include "utm_to_latlong.h"
 
-UTMCoordinate::UTMCoordinate(double easting, double northing, unsigned int zone, Hemisphere hemi) :
+#include "Coordinates.h"
+#include "Angle.h"
+
+namespace PikaUtils
+{
+namespace Coordinates
+{
+
+UTM::UTM(double easting, double northing, unsigned int zone, UTM::Hemisphere hemi) :
     easting(easting),
     northing(northing),
     zone(zone),
     hemisphere(hemi)
 {
-  assert(zone < 61);
+  //assert(zone < 61);
 }
+
+WGS84::WGS84(double latitude, double longitude) :
+    latitude(Angle(latitude, Angle::DEG)),
+    longitude(Angle(longitude, Angle::DEG))
+{
+}
+
+}
+} // namespace
