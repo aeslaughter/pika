@@ -21,3 +21,10 @@ TEST(WGS84, constructor)
   EXPECT_EQ(coord.latitude.deg(), 43.507179);
   EXPECT_EQ(coord.longitude.deg(), -110.949567);
 }
+
+TEST(convert, UTMtoWGS84)
+{
+  WGS84 coord = convert(UTM(504076.71, 4817139.95, 12));
+  EXPECT_EQ(coord.latitude.deg(), 43.507179);
+  EXPECT_EQ(coord.longitude.deg(), -110.949567);
+}
