@@ -40,6 +40,7 @@ struct LocationData
 const double UNSET = std::numeric_limits<double>::min();
 SolarTemporalData compute_temporal_data(const DateTime & datetime, double dt = UNSET);
 Angle compute_incidence(const LocationData & location, const SolarTemporalData & tdata);
+std::pair<Angle, Angle> compute_azimuth_and_zenith(const LocationData & location, const SolarTemporalData & tdata);
 
 // 3.1.1: Eq. 4
 double julian_day(const DateTime & datetime);

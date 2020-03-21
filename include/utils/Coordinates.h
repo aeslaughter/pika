@@ -44,8 +44,8 @@ extern const double a;
 extern const double f;
 extern const double n;
 extern const double A;
-//extern const std::array<double, 3> alpha;
-extern const std::array<double, 4> beta;
+
+extern const std::array<double, 3> beta;
 extern const std::array<double, 3> delta;
 
 

@@ -205,4 +205,9 @@ TEST(Solar, functions)
 
   Angle incidence = compute_incidence(location, tdata);
   EXPECT_DOUBLE_EQ(incidence.deg(), 25.187000200353150348);
+
+  std::pair<Angle, Angle> angles = compute_azimuth_and_zenith(location, tdata);
+  EXPECT_DOUBLE_EQ(angles.first.deg(), 194.340240510191620160);
+  EXPECT_DOUBLE_EQ(angles.second.deg(), 50.111622024029720990);
+
 }

@@ -407,6 +407,26 @@ compute_incidence(const LocationData & location, const SolarTemporalData & tdata
   return incidence;
 }
 
+std::pair<Angle, Angle>
+compute_azimuth_and_zenith(const LocationData & location, const SolarTemporalData & tdata)
+{
+  const Angle H = observer_local_hour_angle(location.longitude, tdata.nu, tdata.alpha);
+  const Angle u = u_term(location.latitude);
+  const Angle x = x_term(location.elevation, location.latitude, u);
+  const Angle y = y_term(location.elevation, location.latitude, u);
+  const Angle delta_alpha = parallax_sun_right_ascension(x, tdata.xi, H, tdata.delta);
+  //const Angle alpha_prime = topocentric_sun_right_ascension(tdata.alpha, delta_alpha);
+  const Angle delta_prime = topocentric_sun_declination(x, y, tdata.delta, tdata.xi, delta_alpha, H);
+  const Angle H_prime = topocentric_local_hour_angle(H, delta_alpha);
+  const Angle e0 = topocentric_zenith_angle_no_correction(location.latitude, delta_prime, H_prime);
+  const Angle delta_e = atomspheric_refraction_correction(location.pressure, location.temperature, e0, location.atm_refract);
+  const Angle e = topocentric_elevation_angle(e0, delta_e);
+  const Angle zenith = topocentric_zenith_angle(e);
+  const Angle gamma = topocentric_astronomers_azimuth(location.latitude, H_prime, delta_prime);
+  const Angle phi = topocentric_azimuth_angle(gamma);
+  return std::make_pair(phi, zenith);
+}
+
 // clang-format off
 const std::array<std::array<double, 3>, 64> Table1::L0 =
 {
