@@ -2,8 +2,8 @@
   [elevation]
     type = ElevationMeshGenerator
     file = mount_glory.csv
-   #nx = 50
-   # ny = 50
+    nx = 50
+    ny = 50
     nz = 5
     grid_size = 3
     depth = 2
