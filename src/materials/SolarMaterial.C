@@ -26,6 +26,9 @@ InputParameters validParams<SolarMaterial>()
   params.addRequiredParam<MooseEnum>("hemisphere", hemi, "The hemisphere");
   params.addRequiredParam<std::string>("datetime", "The starting date and time for the solar calculation in ISO8601 UTC format (YYYY-MM-DDTHH:MM:SS.S+HH:MM)");
   return params;
+
+
+  // TODO: limit to boundary only
 }
 
 SolarMaterial::SolarMaterial(const InputParameters & parameters) :
@@ -33,7 +36,14 @@ SolarMaterial::SolarMaterial(const InputParameters & parameters) :
     _datetime(getParam<std::string>("datetime")),
     _zone(getParam<unsigned int>("zone")),
     _hemi(getParam<MooseEnum>("hemisphere") == "NORTHERN" ? PikaUtils::Coordinates::UTM::Hemisphere::NORTH : PikaUtils::Coordinates::UTM::Hemisphere::SOUTH),
-    _slope(declareProperty<Real>("slope"))
+    _slope(declareProperty<Real>("slope")),
+    _surface_azimuth(declareProperty<Real>("surface_azimuth")),
+    _normal(declareProperty<RealVectorValue>("normal")),
+    _solar_zenith(declareProperty<Real>("solar_zenith")),
+    _solar_azimuth(declareProperty<Real>("solar_azimuth")),
+    _solar_incidence(declareProperty<Real>("solar_incidence"))
+
+
 {
 }
 
@@ -54,14 +64,29 @@ SolarMaterial::computeQpProperties()
   PikaUtils::Coordinates::WGS84 wgs = PikaUtils::Coordinates::convert(utm);
 
   const Point & n = _normals[_qp];
+  _normal[_qp] = n;
   PikaUtils::Angle slope(atan(n(2) / std::sqrt(n(0)*n(0) + n(1)*n(1))), PikaUtils::Angle::RAD);
-  PikaUtils::Angle azimuth(atan(n(0)/n(1)), PikaUtils::Angle::RAD);
+  PikaUtils::Angle surface_azimuth(atan(std::abs(n(1))/std::abs(n(0))), PikaUtils::Angle::RAD);
 
+  if (n(0) >= 0 && n(1) >= 0)
+    _surface_azimuth[_qp] = 90. + surface_azimuth.deg();  // alpha_1 = atan2(dy, dx) + 90.
+  else if (n(0) < 0 && n(1) >=0)
+    _surface_azimuth[_qp] = 270. - surface_azimuth.deg(); // alpha_2 = 270. - atan2(dy, dx).
+  else if (n(0) < 0 && n(1) < 0)
+    _surface_azimuth[_qp] = 360. - surface_azimuth.deg(); // alpha_3 = 270. + atan2(dy, dx).
+  else // if (n(0) >= 0 && n(1) < 0)
+    _surface_azimuth[_qp] = 90. - surface_azimuth.deg();  // alpha_4 = 90. - atan2(dy, dx)
 
-  _slope[_qp] = slope.deg();
+  _slope[_qp] = 90. - slope.deg();
 
-  //std::pair<PikaUtils::Angle, PikaUtils::Angle> angles = PikaUtils::SPA::compute_azimuth_and_zenith(
-  // PikaUtils::SPA::LocationData location(pt(2), wgs.latitude, wgs.longitude, 20, );
+  PikaUtils::SPA::LocationData location(pt(2), wgs.latitude.deg(), wgs.longitude.deg(), _temperature, _pressure, slope.deg(), surface_azimuth.deg(), _atm_refraction);
+  std::pair<PikaUtils::Angle, PikaUtils::Angle> angles = PikaUtils::SPA::compute_azimuth_and_zenith(location, _temporal_data);
 
+  _solar_azimuth[_qp] = angles.first.deg();
+  _solar_zenith[_qp] = angles.second.deg();
+
+  // TODO: Combine the two functions and return a data structure with the three angles (SolarAngles)
+  PikaUtils::Angle incidence = PikaUtils::SPA::compute_incidence(location, _temporal_data);
+  _solar_incidence[_qp] = incidence.deg();
 
 }

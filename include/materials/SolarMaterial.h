@@ -47,5 +47,10 @@ private:
   int _temporal_data_t_step = std::numeric_limits<int>::min();
 
   MaterialProperty<Real> & _slope;
+  MaterialProperty<Real> & _surface_azimuth;
+  MaterialProperty<RealVectorValue> & _normal;
 
+  MaterialProperty<Real> & _solar_zenith;
+  MaterialProperty<Real> & _solar_azimuth;
+  MaterialProperty<Real> & _solar_incidence;
 };
