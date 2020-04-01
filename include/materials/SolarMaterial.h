@@ -23,14 +23,13 @@ class SolarMaterial;
 template<>
 InputParameters validParams<SolarMaterial>();
 
-class SolarMaterial : public AuxKernel
+class SolarMaterial : public Material
 {
 public:
   SolarMaterial(const InputParameters & parameters);
-  virtual void timestepSetup() override;
 
 protected:
-  virtual Real computeValue() override;
+  virtual void computeQpProperties() override;
 
 private:
 
@@ -45,5 +44,8 @@ private:
   Real _pressure = 820;
   Real _atm_refraction = 0.5667;
 
+  int _temporal_data_t_step = std::numeric_limits<int>::min();
+
+  MaterialProperty<Real> & _slope;
 
 };

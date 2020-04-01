@@ -327,6 +327,14 @@ Angle incidence_angle(const Angle & zenith, const Angle & slope, const Angle & r
   return Angle(incidence, Angle::RAD);
 }
 
+SolarTemporalData::SolarTemporalData() :
+    nu(0, Angle::DEG),
+    alpha(0, Angle::DEG),
+    delta(0, Angle::DEG),
+    xi(0, Angle::DEG)
+{
+}
+
 SolarTemporalData::SolarTemporalData(const Angle & nu, const Angle & alpha, const Angle & delta, const Angle & xi) :
   nu(nu),
   alpha(alpha),
