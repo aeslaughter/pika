@@ -14,11 +14,14 @@ namespace SPA
  */
 struct SolarTemporalData
 {
+  SolarTemporalData();
   SolarTemporalData(const Angle & nu, const Angle & alpha, const Angle & delta, const Angle & xi);
-  const Angle nu;
-  const Angle alpha;
-  const Angle delta;
-  const Angle xi;
+  SolarTemporalData(const SolarTemporalData & other);
+  SolarTemporalData & operator=(const SolarTemporalData & other);
+  Angle nu;
+  Angle alpha;
+  Angle delta;
+  Angle xi;
 };
 
 /*

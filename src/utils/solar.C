@@ -335,6 +335,22 @@ SolarTemporalData::SolarTemporalData(const Angle & nu, const Angle & alpha, cons
 {
 }
 
+SolarTemporalData::SolarTemporalData(const SolarTemporalData & other) : nu(other.nu), alpha(other.alpha), delta(other.delta), xi(other.xi)
+{
+}
+
+SolarTemporalData &
+SolarTemporalData::operator=(const SolarTemporalData & other)
+{
+  nu = other.nu;
+  alpha = other.alpha;
+  delta = other.delta;
+  xi = other.xi;
+  return *this;
+}
+
+
+
 LocationData::LocationData(double elevation, double latitude, double longitude, double temperature,
                            double pressure, double slope, double azimuth, double atm_refract) :
   elevation(elevation),
