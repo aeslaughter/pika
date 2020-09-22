@@ -14,11 +14,11 @@ reader = chigger.exodus.ExodusReader('solar_out.e')
 reader.setOptions(block=['0'])
 
 result = chigger.exodus.ExodusResult(reader)
-result.setOptions(edge_color=[0, 0, 0], cmap='inferno', variable='solar_incidence', block=['0'], min=0.0, max=180.0, local_range=True, camera=camera)
+result.setOptions(edge_color=[0, 0, 0], cmap='inferno', variable='solar_incidence', block=['0'], min=90.0, max=180.0, local_range=True, camera=camera)
 
 cbar = chigger.exodus.ExodusColorBar(result)
 cbar.setOptions(colorbar_origin=(0.8, 0.25, 0.0))
-cbar.setOptions('primary', lim=[0.0, 180.0], font_color=[0,0,0], title='Solar Incidence (degress)')
+cbar.setOptions('primary', lim=[90.0, 180.0], font_color=[0,0,0], title='Solar Incidence (degress)')
 
 window = chigger.RenderWindow(result, cbar, background=[1,1,1])
 window.update()

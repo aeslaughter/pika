@@ -21,7 +21,7 @@
   [solar]
     type = SolarMaterial
     boundary = surface
-    datetime = '2020-03-26T00:00:00-06:00'
+    datetime = '2020-03-26T00:00:00+06:00'
     zone = 12
     outputs = exodus
   []
