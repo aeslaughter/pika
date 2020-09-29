@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PROPERTYUSEROBJECT_H
-#define PROPERTYUSEROBJECT_H
+#pragma once
 
 // MOOSE includes
 #include "GeneralUserObject.h"
@@ -140,5 +139,3 @@ private:
   /// Fitting coefficients for saturation vapor pressure, Wexler, 2007, Table 2
   std::vector<Real> _K;
 };
-
-#endif // PROPERTYUSEROBJECT_H

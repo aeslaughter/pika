@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKADIFFUSION_H
-#define PIKADIFFUSION_H
+#pragma once
 
 // MOOSE includes
 #include "Diffusion.h"
@@ -66,5 +65,3 @@ protected:
   virtual Real computeQpJacobian();
 
 };
-
-#endif //MATDIFFUSION_H

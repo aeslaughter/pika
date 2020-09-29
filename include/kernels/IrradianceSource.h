@@ -8,15 +8,12 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
-
-#ifndef IRRADIANCESOURCE_H
-#define IRRADIANCESOURCE_H
+#pragma once
 
 // MOOSE includes
 #include "ADKernel.h"
 
-template <ComputeStage compute_stage>
-class IrradianceSource : public ADKernel<compute_stage>
+class IrradianceSource : public ADKernel
 {
 public:
   static InputParameters validParams();
@@ -29,8 +26,4 @@ protected:
 private:
 
   const ADVariableGradient & _grad_irradiance;
-
-  usingKernelMembers;
 };
-
-#endif

@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKAMATERIALACTION_H
-#define PIKAMATERIALACTION_H
+#pragma once
 
 // MOOSE includes
 #include "Action.h"
@@ -68,5 +67,3 @@ private:
    */
   void create(std::string action_name, std::string type, std::string object_name);
 };
-
-#endif //PIKAMATERIALACTION_H

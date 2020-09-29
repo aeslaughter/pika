@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKACHEMICALPOTENTIALBC_H
-#define PIKACHEMICALPOTENTIALBC_H
+#pragma once
 
 // MOOSE includes
 #include "NodalBC.h"
@@ -51,5 +50,3 @@ private:
   /// Coupled phase-field variable
   const VariableValue & _phase;
 };
-
-#endif // PIKACHEMICALPOTENTIALBC_H

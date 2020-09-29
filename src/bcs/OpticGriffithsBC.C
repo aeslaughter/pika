@@ -11,29 +11,26 @@
 
 #include "OpticGriffithsBC.h"
 
-registerADMooseObject("PikaApp", OpticGriffithsBC);
+registerMooseObject("PikaApp", OpticGriffithsBC);
 
-template <ComputeStage compute_stage>
 InputParameters
-OpticGriffithsBC<compute_stage>::validParams()
+OpticGriffithsBC::validParams()
 {
-    InputParameters params = ADIntegratedBC<compute_stage>::validParams();
+    InputParameters params = ADIntegratedBC::validParams();
   params.addParam<MaterialPropertyName>("diffusion_coefficient", "optic_diffusion_coefficient",
                                         "The diffusion coefficient (D) name for the radiative transfer equation with a diffusion approximation.");
 
 return params;
 }
 
-template <ComputeStage compute_stage>
-OpticGriffithsBC<compute_stage>::OpticGriffithsBC(const InputParameters & parameters) :
-    ADIntegratedBC<compute_stage>(parameters),
+OpticGriffithsBC::OpticGriffithsBC(const InputParameters & parameters) :
+    ADIntegratedBC(parameters),
     _diffusion_coef(getADMaterialProperty<Real>("diffusion_coefficient"))
 {
 }
 
-template <ComputeStage compute_stage>
 ADReal
-OpticGriffithsBC<compute_stage>::computeQpResidual()
+OpticGriffithsBC::computeQpResidual()
 {
   return - _test[_i][_qp] * _diffusion_coef[_qp] * _grad_u[_qp] * _normals[_qp];
 }

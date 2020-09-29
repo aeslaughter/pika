@@ -9,14 +9,12 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef SNOWSURFACEFLUXBC_H
-#define SNOWSURFACEFLUXBC_H
+#pragma once
 
 // MOOSE includes
 #include "ADIntegratedBC.h"
 
-template <ComputeStage compute_stage>
-class SnowSurfaceFluxBC : public ADIntegratedBC<compute_stage>
+class SnowSurfaceFluxBC : public ADIntegratedBC
 {
 public:
   static InputParameters validParams();
@@ -72,8 +70,4 @@ private:
   const Real & _reference_vapor_pressure;
 
   const Real & _specific_heat_air;
-
-  usingIntegratedBCMembers;
 };
-
-#endif //SNOWSURFACEFLUXBC_H

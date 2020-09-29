@@ -9,8 +9,6 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PROPERTYUSEROBJECTINTERFACE_H
-#define PROPERTYUSEROBJECTINTERFACE_H
 
 // PIKA includes
 #include "PropertyUserObject.h"
@@ -43,5 +41,3 @@ protected:
   bool _temporal_scaling;
 
 };
-
-#endif // PROPERTYUSEROBJECTINTERFACE_H

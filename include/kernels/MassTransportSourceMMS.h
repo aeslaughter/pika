@@ -8,9 +8,7 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
-
-#ifndef MASSTRANSPORTSOURCEMMS_H
-#define MASSTRANSPORTSOURCEMMS_H
+#pragma once
 
 // MOOSE includes
 #include "Kernel.h"
@@ -52,5 +50,3 @@ private:
   const Real & _xi;
 
 };
-
-#endif //MASSTRANSPORTSOURCEMMS_H

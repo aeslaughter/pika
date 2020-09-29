@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef IBEXSHORTWAVEFORCINGFUNCTION_H
-#define IBEXSHORTWAVEFORCINGFUNCTION_H
+#pragma once
 
 #include "Kernel.h"
 
@@ -52,5 +51,3 @@ private:
   RealVectorValue _direction_vector;
   Real _surface;
 };
-
-#endif // IBEXSHORTWAVEFORCINGFUNCTION_H

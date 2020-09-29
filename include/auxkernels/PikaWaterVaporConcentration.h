@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKAWATERVAPORCONCENTRATION_H
-#define PIKAWATERVAPORCONCENTRATION_H
+#pragma once
 
 // MOOSE includes
 #include "AuxKernel.h"
@@ -64,5 +63,3 @@ private:
   const Real & _T_0;
 
 };
-
-#endif //PIKAWATERVAPORCONCENTRATION_H

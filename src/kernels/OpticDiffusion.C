@@ -11,29 +11,26 @@
 
 #include "OpticDiffusion.h"
 
-registerADMooseObject("PikaApp", OpticDiffusion);
+registerMooseObject("PikaApp", OpticDiffusion);
 
-template <ComputeStage compute_stage>
 InputParameters
-OpticDiffusion<compute_stage>::validParams()
+OpticDiffusion::validParams()
 {
-    InputParameters params = ADDiffusion<compute_stage>::validParams();
+    InputParameters params = ADDiffusion::validParams();
   params.addParam<MaterialPropertyName>("diffusion_coefficient", "optic_diffusion_coefficient",
                                         "The diffusion coefficient (D) name for the radiative transfer equation with a diffusion approximation.");
 
 return params;
 }
 
-template <ComputeStage compute_stage>
-OpticDiffusion<compute_stage>::OpticDiffusion(const InputParameters & parameters) :
-ADDiffusion<compute_stage>(parameters),
+OpticDiffusion::OpticDiffusion(const InputParameters & parameters) :
+ADDiffusion(parameters),
   _diffusion_coef(getADMaterialProperty<Real>("diffusion_coefficient"))
 {
 }
 
-template <ComputeStage compute_stage>
 ADRealVectorValue
-OpticDiffusion<compute_stage>::precomputeQpResidual()
+OpticDiffusion::precomputeQpResidual()
 {
-  return _diffusion_coef[_qp] * ADDiffusion<compute_stage>::precomputeQpResidual();
+  return _diffusion_coef[_qp] * ADDiffusion::precomputeQpResidual();
 }

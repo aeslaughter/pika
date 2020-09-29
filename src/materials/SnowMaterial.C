@@ -11,21 +11,19 @@
 
 #include "SnowMaterial.h"
 
-registerADMooseObject("PikaApp", SnowMaterial);
+registerMooseObject("PikaApp", SnowMaterial);
 
-template <ComputeStage compute_stage>
 InputParameters
-SnowMaterial<compute_stage>::validParams()
+SnowMaterial::validParams()
 {
-  InputParameters params = ADMaterial<compute_stage>::validParams();
+  InputParameters params = ADMaterial::validParams();
   params.addRequiredCoupledVar("temperature", "The snow temperature variable to couple");
   params.addParam<MaterialPropertyName>("density", "density", "Density of snow [kg/m^3]");
   return params;
 }
 
-template <ComputeStage compute_stage>
-SnowMaterial<compute_stage>::SnowMaterial(const InputParameters & parameters) :
-    ADMaterial<compute_stage>(parameters),
+SnowMaterial::SnowMaterial(const InputParameters & parameters) :
+    ADMaterial(parameters),
     _temperature(adCoupledValue("temperature")),
     _density(getADMaterialProperty<Real>("density")),
     _thermal_conductivity(declareADProperty<Real>("thermal_conductivity")),
@@ -33,9 +31,8 @@ SnowMaterial<compute_stage>::SnowMaterial(const InputParameters & parameters) :
 {
 }
 
-template <ComputeStage compute_stage>
 void
-SnowMaterial<compute_stage>::computeQpProperties()
+SnowMaterial::computeQpProperties()
 {
   _thermal_conductivity[_qp] = 0.021 + 2.5 * std::pow(_density[_qp] / 1000, 2);
   _specific_heat[_qp] = 1000 * (2.115 + 0.00779 * (273.15 - _temperature[_qp]));

@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef IBEXSNOWMATERIAL_H
-#define IBEXSNOWMATERIAL_H
+#pragma once
 
 // MOOSE includes
 #include "Material.h"
@@ -58,5 +57,3 @@ private:
   const VariableValue & _conductivity_variable;
 
 };
-
-#endif //IBEXSNOWMATERIAL_H

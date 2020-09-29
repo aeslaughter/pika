@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PHASEEVOLUTIONSOURCEMMS_H
-#define PHASEEVOLUTIONSOURCEMMS_H
+#pragma once
 #include "PropertyUserObjectInterface.h"
 // MOOSE includes
 #include "Kernel.h"
@@ -52,5 +51,3 @@ private:
   const Real & _xi;
 
 };
-
-#endif //PHASEEVOLUTIONSOURCEMMS_H

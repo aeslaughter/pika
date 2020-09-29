@@ -8,9 +8,8 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
+#pragma once
 
-#ifndef ERRORFUNCTIONAUX_H
-#define ERRORFUNCTIONAUX_H
 
 // MOOSE includes
 #include "FunctionAux.h"
@@ -51,5 +50,3 @@ private:
   MooseEnum _error_type;
 
 };
-
-#endif //ERRORFUNCTIONAUX_H

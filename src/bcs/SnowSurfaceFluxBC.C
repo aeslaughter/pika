@@ -13,13 +13,12 @@
 
 #include "Function.h"
 
-registerADMooseObject("PikaApp", SnowSurfaceFluxBC);
+registerMooseObject("PikaApp", SnowSurfaceFluxBC);
 
-template <ComputeStage compute_stage>
 InputParameters
-SnowSurfaceFluxBC<compute_stage>::validParams()
+SnowSurfaceFluxBC::validParams()
 {
-  InputParameters params = ADIntegratedBC<compute_stage>::validParams();
+  InputParameters params = ADIntegratedBC::validParams();
 
   // Define the general parameters
   params.addParam<Real>("air_temperature", 268.15, "Air temperature above the snow surface [K]");
@@ -42,9 +41,8 @@ SnowSurfaceFluxBC<compute_stage>::validParams()
   return params;
 }
 
-template <ComputeStage compute_stage>
-SnowSurfaceFluxBC<compute_stage>::SnowSurfaceFluxBC(const InputParameters & parameters) :
-    ADIntegratedBC<compute_stage>(parameters),
+SnowSurfaceFluxBC::SnowSurfaceFluxBC(const InputParameters & parameters) :
+    ADIntegratedBC(parameters),
     _boltzmann(5.670e-8),
     _gas_constant_air(0.622),
     _gas_constant_water_vapor(0.287),
@@ -64,23 +62,20 @@ SnowSurfaceFluxBC<compute_stage>::SnowSurfaceFluxBC(const InputParameters & para
 {
 }
 
-template <ComputeStage compute_stage>
 ADReal
-SnowSurfaceFluxBC<compute_stage>::computeQpResidual()
+SnowSurfaceFluxBC::computeQpResidual()
 {
   return -_test[_i][_qp] * (longwave() + latent() + sensible());
 }
 
-template <ComputeStage compute_stage>
 ADReal
-SnowSurfaceFluxBC<compute_stage>::longwave()
+SnowSurfaceFluxBC::longwave()
 {
   return _long_wave.value(_t, _q_point[_qp]) - _emissivity * _boltzmann * std::pow(_u[_qp], 4);
 }
 
-template <ComputeStage compute_stage>
 ADReal
-SnowSurfaceFluxBC<compute_stage>::latent()
+SnowSurfaceFluxBC::latent()
 {
   Real e_a = _reference_vapor_pressure * std::exp( _latent_heat / _gas_constant_water_vapor * (1/_reference_temperature - 1/_air_temperature));
   ADReal e_s = _reference_vapor_pressure * std::exp( _latent_heat / _gas_constant_water_vapor * (1/_reference_temperature - 1/_u[_qp]));
@@ -92,32 +87,28 @@ SnowSurfaceFluxBC<compute_stage>::latent()
 
 }
 
-template <ComputeStage compute_stage>
 ADReal
-SnowSurfaceFluxBC<compute_stage>::sensible()
+SnowSurfaceFluxBC::sensible()
 {
   return airDensity() * _specific_heat_air * _transport_coefficient * _air_velocity * (_air_temperature - _u[_qp]);
 }
 
 /*
-template <ComputeStage compute_stage>
 ADReal
-SnowSurfaceFluxBC<compute_stage>::clausiusClapeyron(const ADReal & T)
+SnowSurfaceFluxBC::clausiusClapeyron(const ADReal & T)
 {
   return _reference_vapor_pressure * std::exp( _latent_heat / _gas_constant_water_vapor * (1/_reference_temperature - 1/T));
 }
 
-template <ComputeStage compute_stage>
 Real
-SnowSurfaceFluxBC<compute_stage>::clausiusClapeyron(const Real & T)
+SnowSurfaceFluxBC::clausiusClapeyron(const Real & T)
 {
   return _reference_vapor_pressure * std::exp( _latent_heat / _gas_constant_water_vapor * (1/_reference_temperature - 1/T));
 }
 */
 
-template <ComputeStage compute_stage>
 ADReal
-SnowSurfaceFluxBC<compute_stage>::airDensity()
+SnowSurfaceFluxBC::airDensity()
 {
   return _atmospheric_pressure / (_gas_constant_air * _air_temperature);
 }

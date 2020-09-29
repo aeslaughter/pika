@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef TENSORMOBILITYMATERIAL_H
-#define TENSORMOBILITYMATERIAL_H
+#pragma once
 
 // MOOSE includes
 #include "Material.h"
@@ -60,5 +59,3 @@ private:
   MaterialProperty<Real> & _M_perpendicular;
   MaterialProperty<RealTensorValue> & _M_tensor;
 };
-
-#endif //TENSORMOBILITYMATERIAL_H

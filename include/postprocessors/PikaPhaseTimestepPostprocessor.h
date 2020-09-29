@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKAPHASETIMESTEPPOSTPROCESSOR_H
-#define PIKAPHASETIMESTEPPOSTPROCESSOR_H
+#pragma once
 
 #include "NodalVariablePostprocessor.h"
 
@@ -52,5 +51,3 @@ protected:
 
 
 };
-
-#endif // PIKAPHASETIMESTEPPOSTPROCESSOR_H

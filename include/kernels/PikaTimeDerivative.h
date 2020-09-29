@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKATIMEDERIVATIVE_H
-#define PIKATIMEDERIVATIVE_H
+#pragma once
 
 // MOOSE includes
 #include "TimeDerivative.h"
@@ -65,5 +64,3 @@ protected:
    */
   virtual Real computeQpJacobian();
 };
-
-#endif //PIKATIMEDERIVATIVE

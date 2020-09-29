@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKACOUPLEDTIMEDERIVATIVE_H
-#define PIKACOUPLEDTIMEDERIVATIVE_H
+#pragma once
 
 // Pika includes
 #include "PikaTimeDerivative.h"
@@ -73,5 +72,3 @@ private:
   unsigned int _v_var;
 
 };
-
-#endif //COUPLEDPIKATIMEDERIVATIVE

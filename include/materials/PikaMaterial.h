@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKAMATERIAL_H
-#define PIKAMATERIAL_H
+#pragma once
 
 // Pika includes
 #include "PropertyUserObjectInterface.h"
@@ -125,5 +124,3 @@ private:
   MaterialProperty<Real> * _interface_kinetic_coefficient_prime;
   ///@}
 };
-
-#endif // PIKAMATERIAL_H

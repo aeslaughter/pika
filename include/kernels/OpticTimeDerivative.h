@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef OPTICTIMEDERIVATIVE_H
-#define OPTICTIMEDERIVATIVE_H
+#pragma once
 
 // MOOSE includes
 #include "TimeDerivative.h"
@@ -35,5 +34,3 @@ private:
 
   const MaterialProperty<Real> & _light_speed;
 };
-
-#endif

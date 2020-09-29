@@ -9,8 +9,8 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKAPHASEINITIALIZEAUX_H
-#define PIKAPHASEINITIALIZEAUX_H
+#pragma once
+
 
 // MOOSE includes
 #include "AuxKernel.h"
@@ -54,5 +54,3 @@ private:
   Real _lower;
 
 };
-
-#endif //PIKAPHASEINITIALIZEAUX_H

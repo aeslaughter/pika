@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef HEATEQUATIONSOURCEMMS_H
-#define HEATEQUATIONSOURCEMMS_H
+#pragma once
 
 // MOOSE includes
 #include "Kernel.h"
@@ -53,5 +52,3 @@ private:
   const Real & _xi;
 
 };
-
-#endif //HEATEQUATIONSOURCEMMS_H

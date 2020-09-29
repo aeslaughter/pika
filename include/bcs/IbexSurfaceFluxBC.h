@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef IBEXSURFACEFLUXBC_H
-#define IBEXSURFACEFLUXBC_H
+#pragma once
 
 // MOOSE includes
 #include "IntegratedBC.h"
@@ -93,5 +92,3 @@ private:
 
   Real _specific_heat_air;
 };
-
-#endif //IBEXSURFACEFLUXBC_H

@@ -9,8 +9,6 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef MATERIALUSERFORCINGFUNCTION_H
-#define MATERIALUSERFORCINGFUNCTION_H
 
 #include "UserForcingFunction.h"
 
@@ -41,5 +39,3 @@ protected:
   const MaterialProperty<Real> & _material_coefficient;
   Real _scale;
 };
-
-#endif //MATERIALUSERFORCINGFUNCTION_H

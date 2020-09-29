@@ -8,15 +8,12 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
-
-#ifndef OPTICABSORPTION_H
-#define OPTICABSORPTION_H
+#pragma once
 
 // MOOSE includes
 #include "ADKernelValue.h"
 
-template <ComputeStage compute_stage>
-class OpticAbsorption : public ADKernelValue<compute_stage>
+class OpticAbsorption : public ADKernelValue
 {
 public:
   static InputParameters validParams();
@@ -28,9 +25,5 @@ protected:
 
 private:
 
-  const ADMaterialProperty(Real) & _absorption_coef;
-
-  usingKernelMembers;
+  const ADMaterialProperty<Real> & _absorption_coef;
 };
-
-#endif

@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef TENSORDIFFUSION_H
-#define TENSORDIFFUSION_H
+#pragma once
 
 // MOOSE includes
 #include "Diffusion.h"
@@ -52,5 +51,3 @@ protected:
 private:
   const MaterialProperty<RealTensorValue> & _coef;
 };
-
-#endif //TENSORDIFFUSION_H

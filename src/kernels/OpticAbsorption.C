@@ -11,29 +11,26 @@
 
 #include "OpticAbsorption.h"
 
-registerADMooseObject("PikaApp", OpticAbsorption);
+registerMooseObject("PikaApp", OpticAbsorption);
 
-template <ComputeStage compute_stage>
 InputParameters
-OpticAbsorption<compute_stage>::validParams()
+OpticAbsorption::validParams()
 {
-    InputParameters params = ADKernelValue<compute_stage>::validParams();
+  InputParameters params = ADKernelValue::validParams();
   params.addParam<MaterialPropertyName>("absorption_coefficient", "optic_absorption_coefficient",
                                         "The absorption coefficient ($\\sigma_a$) name for the radiative transfer equation with a diffusion approximation.");
 
-return params;
+  return params;
 }
 
-template <ComputeStage compute_stage>
-OpticAbsorption<compute_stage>::OpticAbsorption(const InputParameters & parameters) :
-    ADKernelValue<compute_stage>(parameters),
+OpticAbsorption::OpticAbsorption(const InputParameters & parameters) :
+    ADKernelValue(parameters),
     _absorption_coef(getADMaterialProperty<Real>("absorption_coefficient"))
-{\
+{
 }
 
-template <ComputeStage compute_stage>
 ADReal
-OpticAbsorption<compute_stage>::precomputeQpResidual()
+OpticAbsorption::precomputeQpResidual()
 {
   return _absorption_coef[_qp]  * _u[_qp];
 }

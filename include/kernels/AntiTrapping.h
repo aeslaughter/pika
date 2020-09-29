@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef ANTITRAPPING_H
-#define ANTITRAPPING_H
+#pragma once
 
 //Moose Includes
 #include "Kernel.h"
@@ -73,5 +72,3 @@ private:
  const Real & _w;
 
 };
-
-#endif // ANTITRAPPING_H

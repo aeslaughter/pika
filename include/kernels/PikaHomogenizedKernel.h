@@ -8,8 +8,7 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
-#ifndef PIKAHOMOGENIZEDKERNEL_H
-#define PIKAHOMOGENIZEDKERNEL_H
+#pragma once
 
 #include "HomogenizedHeatConduction.h"
 
@@ -32,5 +31,3 @@ protected:
 
 template<>
 InputParameters validParams<PikaHomogenizedKernel>();
-
-#endif //PIKAHOMOGENIZEDKERNEL_H

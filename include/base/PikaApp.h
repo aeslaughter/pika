@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKAAPP_H
-#define PIKAAPP_H
+#pragma once
 
 #include "MooseApp.h"
 
@@ -30,5 +29,3 @@ public:
   static void registerApps();
   static void registerAll(Factory &, ActionFactory &, Syntax &);
 };
-
-#endif /* PIKAAPP_H */

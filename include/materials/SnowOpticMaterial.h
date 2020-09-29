@@ -1,10 +1,8 @@
-#ifndef SNOWOPTICMATERIAL_H
-#define SNOWOPTICMATERIAL_H
+#pragma once
 
 #include "ADMaterial.h"
 
-template <ComputeStage compute_stage>
-class SnowOpticMaterial : public ADMaterial<compute_stage>
+class SnowOpticMaterial : public ADMaterial
 {
 public:
   static InputParameters validParams();
@@ -15,17 +13,15 @@ public:
 
 protected:
 
-  const ADMaterialProperty(Real) & _alpha;
+  const ADMaterialProperty<Real> & _alpha;
 
-  const ADMaterialProperty(Real) & _kappa;
+  const ADMaterialProperty<Real> & _kappa;
 
-  const ADMaterialProperty(Real) & _anisotropy;
+  const ADMaterialProperty<Real> & _anisotropy;
 
-  ADMaterialProperty(Real) & _diffusion_coefficient;
+  ADMaterialProperty<Real> & _diffusion_coefficient;
 
-  ADMaterialProperty(Real) & _absorption_coefficient;
-
-  usingMaterialMembers;
+  ADMaterialProperty<Real> & _absorption_coefficient;
 };
 
 #endif

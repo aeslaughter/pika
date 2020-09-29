@@ -8,9 +8,8 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
+#pragma once
 
-#ifndef PIKASUPERSATURATION_H
-#define PIKASUPERSATURATION_H
 
 // MOOSE includes
 #include "AuxKernel.h"
@@ -69,5 +68,3 @@ private:
   /// If true, the supersaturation is normalized as in Eq. 18 by rho_vs
   bool _normalize;
 };
-
-#endif //PIKASUPERSATURATION_H

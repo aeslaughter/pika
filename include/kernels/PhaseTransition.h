@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PHASETRANSITION_H
-#define PHASETRANSITION_H
+#pragma once
 
 // modules/phase_field includes
 #include "ACBulk.h"
@@ -42,5 +41,3 @@ private:
 
   const MaterialProperty<Real> & _s_eq;
 };
-
-#endif // PHASETRANSITION_H

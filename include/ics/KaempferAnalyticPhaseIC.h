@@ -9,8 +9,7 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef KAEMPFERANALYTICPHASEIC_H
-#define KAEMPFERANALYTICPHASEIC_H
+#pragma once
 
 
 #include "InitialCondition.h"
@@ -32,5 +31,3 @@ protected:
   Real _phi_new;
   Real _phi_old;
 };
-
-#endif // KAEMPFERANALYTICPHASEIC_H

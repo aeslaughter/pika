@@ -9,8 +9,6 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef PIKACHEMICALPOTENTIALIC_H
-#define PIKACHEMICALPOTENTIALIC_H
 
 // MOOSE includes
 #include "InitialCondition.h"
@@ -46,5 +44,3 @@ private:
   /// The coupled phase-field variable
   const VariableValue & _phase;
 };
-
-#endif // PIKACHEMICALPOTENTIALIC_H

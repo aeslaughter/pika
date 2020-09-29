@@ -8,9 +8,7 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
-
-#ifndef PIKAINTERFACEVELOCITY_H
-#define PIKAINTERFACEVELOCITY_H
+#pragma once
 
 // MOOSE includes
 #include "AuxKernel.h"
@@ -61,5 +59,3 @@ private:
   /// Gradient of the chemical potential variable
   const VariableGradient & _grad_s;
 };
-
-#endif //PIKAINTERFACEVELOCITY_H

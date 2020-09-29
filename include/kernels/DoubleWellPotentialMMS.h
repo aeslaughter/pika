@@ -8,9 +8,7 @@
 /*                      Under Contract No. DE-AC07-05ID14517                      */
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
-
-#ifndef DOUBLEWELLPOTENTIALMMSMMS_H
-#define DOUBLEWELLPOTENTIALMMSMMS_H
+#pragma once
 
 // MOOSE includes
 #include "Kernel.h"
@@ -38,5 +36,3 @@ protected:
   virtual Real computeQpResidual();
 
 };
-
-#endif //DOUBLEWELLPOTENTIALMMSMMS_H

@@ -1,13 +1,12 @@
 // MOOSE includes
 #include "SnowOpticMaterial.h"
 
-registerADMooseObject("PikaApp", SnowOpticMaterial);
+registerMooseObject("PikaApp", SnowOpticMaterial);
 
-template <ComputeStage compute_stage>
 InputParameters
-SnowOpticMaterial<compute_stage>::validParams()
+SnowOpticMaterial::validParams()
 {
-    InputParameters params = ADMaterial<compute_stage>::validParams();
+    InputParameters params = ADMaterial::validParams();
     params.addParam<MaterialPropertyName>("effective_attenuation_coefficient", "effective_attenuation_coefficient",
                                           "The effective attenuation coefficient ($\\mu_{eff}$) property name.");
     params.addParam<MaterialPropertyName>("single_scattering_albedo", "single_scattering_albedo",
@@ -17,9 +16,8 @@ SnowOpticMaterial<compute_stage>::validParams()
     return params;
 }
 
-template <ComputeStage compute_stage>
-SnowOpticMaterial<compute_stage>::SnowOpticMaterial(const InputParameters & parameters) :
-    ADMaterial<compute_stage>(parameters),
+SnowOpticMaterial::SnowOpticMaterial(const InputParameters & parameters) :
+    ADMaterial(parameters),
     _alpha(getADMaterialProperty<Real>("single_scattering_albedo")),
     _kappa(getADMaterialProperty<Real>("effective_attenuation_coefficient")),
     _anisotropy(getADMaterialProperty<Real>("scattering_anisotropy")),
@@ -28,9 +26,8 @@ SnowOpticMaterial<compute_stage>::SnowOpticMaterial(const InputParameters & para
 {
 }
 
-template <ComputeStage compute_stage>
 void
-SnowOpticMaterial<compute_stage>::computeQpProperties()
+SnowOpticMaterial::computeQpProperties()
 {
   ADReal u_a = _kappa[_qp] * std::sqrt(1 / (3 * (1 + _alpha[_qp]/(1 - _alpha[_qp]) - _anisotropy[_qp] * _alpha[_qp] / (1 - _alpha[_qp]))));
   ADReal u_s = _alpha[_qp] * u_a / (1 - _alpha[_qp]);
@@ -38,5 +35,3 @@ SnowOpticMaterial<compute_stage>::computeQpProperties()
   _diffusion_coefficient[_qp] = 1 / (3 * (u_a + (1 - _anisotropy[_qp]) * u_s));
   _absorption_coefficient[_qp] = u_a;
 }
-
-adBaseClass(SnowOpticMaterial);

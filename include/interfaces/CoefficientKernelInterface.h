@@ -9,8 +9,6 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef COEFFICIENTKERNELTINTERFACE_H
-#define COEFFICIENTKERNELTINTERFACE_H
 
 // libMesh includes
 #include "libmesh/libmesh_common.h"
@@ -82,4 +80,3 @@ protected:
   libMesh::Real _time_scale;
 
 };
-#endif // COEFFICIENTKERNELINTERFACE_H

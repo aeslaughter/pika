@@ -9,14 +9,12 @@
 /*                      With the U. S. Department of Energy                       */
 /**********************************************************************************/
 
-#ifndef SNOWMATERIAL_H
-#define SNOWMATERIAL_H
+#pragma once
 
 // MOOSE includes
 #include "ADMaterial.h"
 
-template <ComputeStage compute_stage>
-class SnowMaterial : public ADMaterial<compute_stage>
+class SnowMaterial : public ADMaterial
 {
 public:
   static InputParameters validParams();
@@ -28,11 +26,7 @@ public:
 protected:
 
   const ADVariableValue & _temperature;
-  const ADMaterialProperty(Real) & _density;
-  ADMaterialProperty(Real) & _thermal_conductivity;
-  ADMaterialProperty(Real) & _specific_heat;
-
-  usingMaterialMembers;
+  const ADMaterialProperty<Real> & _density;
+  ADMaterialProperty<Real> & _thermal_conductivity;
+  ADMaterialProperty<Real> & _specific_heat;
 };
-
-#endif

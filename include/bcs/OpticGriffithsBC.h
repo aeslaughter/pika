@@ -1,11 +1,9 @@
-#ifndef OPTICGRIFFITHSBC_H
-#define OPTICGRIFFITHSBC_H
+#pragma once
 
 // MOOSE includes
 #include "ADIntegratedBC.h"
 
-template <ComputeStage compute_stage>
-class OpticGriffithsBC : public ADIntegratedBC<compute_stage>
+class OpticGriffithsBC : public ADIntegratedBC
 {
 public:
   static InputParameters validParams();
@@ -17,9 +15,5 @@ protected:
 
 private:
 
-  const ADMaterialProperty(Real) & _diffusion_coef;
-
-  usingIntegratedBCMembers;
+  const ADMaterialProperty<Real> & _diffusion_coef;
 };
-
-#endif
